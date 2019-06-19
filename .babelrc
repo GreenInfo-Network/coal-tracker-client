@@ -1,0 +1,13 @@
+{
+  "presets": [
+    ["env", {
+      "modules": false,
+      "useBuiltIns": "entry"
+    }],
+    "stage-0",
+    "react"
+  ],
+  "plugins": [
+    "syntax-dynamic-import"
+  ]
+}

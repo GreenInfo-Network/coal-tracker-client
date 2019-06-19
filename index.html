@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head profile="http://gmpg.org/xfn/11">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Coal Tracker</title>
+
+    <!-- the favicon -->
+    <link rel="shortcut icon" href="./images/favicon.ico'" type="image/x-icon" />
+
+    <!-- jQuery, jQuery UI, and a Google-hosted jQueryUI theme -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+
+    <!-- Twitter Bootstrap: jQuery plugins and a responsive grid -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <!-- gmap api to enable satellite tiles -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyBjJsS26aqbFWkWSzsg00U8tFLRUN9rr9U"></script>
+
+    <!-- leaflet cdns, leaflet custom controls, and leaflet plugins -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@0.7.3/dist/leaflet.js"></script>
+
+    <!-- leaflet plugins: -->
+    <!-- google satellite tiles -->
+    <script src="./libs/leaflet.google.js" type="text/javascript"></script>    
+    <!-- prunecluster clustering library -->
+    <script src="./libs/leaflet.prunecluster.js" type="text/javascript"></script>
+    <script src="./libs/leaflet.prunecluster.markercluster.js" type="text/javascript"></script>
+    
+    <!-- additional jQuery libraries and plugins -->
+    <!-- DataTables -->
+    <script src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.min.js"></script>
+   <!-- jQuery function to detect mobile -->
+    <script src="./libs/mobilecheck.js" type="text/javascript"></script>
+    <!-- purl url parser -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-url-parser/2.3.1/purl.min.js"></script>
+
+    <!-- datatables responsive and bootstrap plugin -->
+    <script src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script src="./libs/datatables.responsive.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="./libs/datatables.responsive.css" />
+    <link rel="stylesheet" href="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css"/>
+
+<!-- google analytics for map page. account name: coal-tracker -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57273261-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+</head>
+<body>
+<!-- modal with additional MAP choices -->
+<!-- add class="fade" to include fade animation-->
+<div class="modal" id="map-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Choose a location:</h4>
+            </div>
+            <div class="modal-body">
+                <form id="map-form" role="form">
+                    <!-- option to select a region -->
+                    <!-- stub here, options populated in initMapForm(); -->
+                    <div class="form-group">
+                        <label for="region-select-map">Select a region:</label>
+                        <select id="region-select-map" class="form-control select-region" data-select="region" data-type="map">
+                            <option selected disabled value="placeholder">Select a region...</option>
+                        </select>
+                    </div>
+
+                    <!-- option to select a country -->
+                    <!-- stub here, options populated in initMapForm(); -->
+                    <div class="form-group">
+                        <!-- populated when a region is selected -->
+                        <label for="country-select-map">Select a map:</label>
+                        <select id="country-select-map" class="form-control select-country" data-select="country" data-type="map" disabled>
+                            <option selected disabled value="placeholder">Select a map...</option>
+                            <!-- <option>Placeholder</option> -->
+                        </select>
+                    </div>
+
+                    <!-- button to launch the selection. See initDialogSearch() -->
+                    <button type="submit" class="btn btn-primary btn-search-place" data-dismiss="modal" data-type="map" disabled>GO</button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <!-- <p class="pull-left"><a href="#" class="back-link" data-dismiss="modal" data-back="startup-modal">Back</a></p> -->
+                <p>Published by <a href="http://coalswarm.org/" target="_blank">CoalSwarm</a> | <a href="#" class="about-link" data-dismiss="modal">About</a></p>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- modal to display individual tracker data when user clicks on a given tracker point -->
+<!-- add class="fade" to include fade animation-->
+<div class="modal fade" id="tracker-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Tracker info</h4>
+            </div>
+            <div class="row">
+                <div class="modal-body">
+                    <div class="col-md-6">
+                        <p><b>Unit Name: </b><span data-name="unit"></span></p>
+                        <p><b>Plant: </b><span data-name="plant"></span></p>
+                        <p><b>Other Names: </b><span data-name="other_names"></span></p>
+                        <p><b>Wiki Page: </b><span data-name="wiki_page"></span></p>
+                        <p><b>Sponsor: </b><span data-name="sponsor"></span></p>
+                        <p><b>Capacity (MW): </b><span data-name="capacity_mw"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><b>Status: </b><span data-name="status"></span></p>
+                        <p><b>Sub-national unit: </b><span data-name="subnational_unit"></span></p>
+                        <p><b>Country: </b><span data-name="country"></span></p>
+                        <p><b>Region: </b><span data-name="region"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary pull-left" data-dismiss="modal">Close</button>
+                <button type="button" id="btn-zoom" class="btn btn-success pull-left" data-dismiss="modal" data-zoom="123,456">Zoom In</button>
+                <p>Published by <a href="http://coalswarm.org/" target="_blank">CoalSwarm</a> | <a href="#" class="about-link" data-dismiss="modal">About</a></p>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- main page container, holding the nav tabs and content -->
+<div id="container">
+
+    <!-- please wait spinner -->
+    <div id="pleasewait">
+        <img src="./images/spinner.gif" />
+    </div>
+
+    <!-- tab navigation -->
+    <ul class="nav nav-tabs" role="tablist" id="index-tabs">
+
+        <!-- nav bar left side: tabs -the map, table, about nav tabs, for content, see below -->
+        <li class="active"><a href="#map-content" data-toggle="tab" id="map-tab">Map</a></li>
+        <li><a href="#table-content" data-toggle="tab" id="table-tab">Table</a></li>
+        <li><a href="#about-content" data-toggle="tab" id="about-tab">About</a></li>
+        <!-- hijack the summary tab link and send to the end-coal summary page  -->
+        <li class="hidden-xs-custom"><a href="https://endcoal.org/global-coal-plant-tracker/summary-statistics/" target="_blank" id="summary-tab" onclick="window.open($(this).attr('href'));">Sum<span class="hidden-sm">marie</span>s</a></li>
+
+        <!-- nav bar right side -->
+        <!-- menu button/icon -->
+        <li class="pull-right">
+            <!-- menu icon: hidden for desktop   see initNavBar() .nav-menu-button for event handler -->
+            <a href="#menu" class="nav-menu-button navbar-toggle visible-xs" id="nav-panel-menu-button">
+                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </a>
+            <!-- menu button: hidden for mobile   see initNavBar() .nav-menu-button for event handler -->
+            <button type="button" id="btn-main-menu" class="nav-menu-button btn btn-default visible-sm visible-md visible-lg"><span class="glyphicon glyphicon-chevron-left"></span> Main Menu</button>
+        </li>
+
+        <!-- search input/icon -->
+        <li class="pull-right">
+            <!-- search icon: hidden for desktop -->
+            <a href="#search" id="nav-panel-search-icon" class="visible-xs"><i class="glyphicon glyphicon-search" style="color:#555;"></i></a>
+            <!-- search forms: both hidden for mobile, one shows on map tab, the other on table tab -->
+            <!-- this div needed as container for input w/button -->
+            <div style="width:250px; margin-right:8px;" class="visible-sm visible-md visible-lg">
+                <form role="form" id="nav-place-search" class="free-search" data-type="nav">
+                    <div class="input-group">
+                        <input type="text" class="form-control" data-type="nav" placeholder="Search the map...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">GO</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </form>
+                <form role="form" id="nav-table-search" style="display:none;">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search within the table...">
+                    </div><!-- /input-group -->
+                </form>
+            </div>
+        </li>
+    </ul>
+
+    <!-- content for the nav tabs -->
+    <div class="tab-content">
+
+        <!-- left side slide panels for searching map/table. Launched on mobile only by search icon -->
+        <div id="sidebar-map" class="sidebar-closed">
+            <div class="sidebar-wrapper">
+                <div class="panel panel-default" id="search-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Search
+                        <button type="button" class="btn btn-xs btn-default pull-right sidebar-hide-btn"><i class="glyphicon glyphicon-chevron-left"></i></button></h3>
+                    </div>
+                    <div class="panel-body sidebar-panels">
+                        <p></p>
+                        <form role="form" id="panel-place-search" class="free-search" data-type="sidebar">
+                            <div class="form-group">
+                                <label for="panel-place-search">Search for a place:</label>
+                                <input type="text" class="form-control" placeholder="Search for a country or location..." data-type="sidebar">
+                            </div>
+                            <button id="panel-place-search-button" type="submit" class="btn btn-primary">GO</button>
+                        </form>
+                    </div><!-- panel body -->
+                </div><!-- panel -->
+            </div><!-- sidebar wrapper -->
+        </div><!-- sidebar -->
+
+        <div id="sidebar-table" class="sidebar-closed">
+            <div class="sidebar-wrapper">
+                <div class="panel panel-default" id="search-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Search
+                        <button type="button" class="btn btn-xs btn-default pull-right sidebar-hide-btn"><i class="glyphicon glyphicon-chevron-left"></i></button></h3>
+                    </div>
+                    <div class="panel-body sidebar-panels">
+                        <p></p>
+                        <form role="form" id="panel-table-search" class="free-search" data-type="sidebar">
+                            <div class="form-group">
+                                <label for="panel-table-search-button">Search within the table:</label>
+                                <input type="text" class="form-control" placeholder="Search within table..." data-type="sidebar">
+                            </div>
+                            <button id="panel-table-search-button" type="submit" class="btn btn-primary">GO</button>
+                        </form>
+                    </div><!-- panel body -->
+                </div><!-- panel -->
+            </div><!-- sidebar wrapper -->
+        </div><!-- sidebar -->
+
+        <!-- map content tab -->
+        <div class="tab-pane active fade in" id="map-content">
+            <div id="map"></div>
+
+            <!-- div to hold the layers icon, for mobile only -->
+            <div id="layers-icon"></div>
+            <div data-panel="layers" class="layer-control">
+                <!-- basemaps: radio buttons, see initMapLayerControl() -->
+                <div id="layers-base">
+                    <label><input type="radio" name="basemaps" data-baselayer="basemap" checked="checked"><span> Basemap</span></label>
+                    <label><input type="radio" name="basemaps" data-baselayer="hybrid"><span> Hybrid</span></label>
+                    <label><input type="radio" name="basemaps" data-baselayer="satellite"><span> Satellite</span></label>
+                </div>
+
+                <div id="layers-trackers" style="display:none;">
+                    <!-- a seperator between the basemap layers and the other layers, hidden until coal plants added to the map -->
+                    <div class="leaflet-control-layers-separator"></div>
+
+                    <!-- coal plant units (e.g. 'trackers') sybmolized by status type -->
+                    <!-- tracker entries are hidden at first, shown depending on what is on the map -->
+                    <div class="leaflet-control-layers-overlays">
+                        <div class="leaflet-control-layers-group" id="leaflet-control-layers-group-0">
+                            <span class="leaflet-control-layers-group-name">Coal plants: Status</span>
+                            <!-- doesn't really matter what's in here, because we recreate this dynamically based on values in STATUS_TYPES. See initMap() -->
+                            <div id="legend-labels">
+                                <!-- keeping this one as an example of how this html should be structured -->
+                                <label><input type="checkbox" value="announced" data-check-after-search="true"><span> <div style="background: #f3ff00" class="circle"></div><span>Announced</span></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- layer-control -->
+        </div>
+
+        <!-- table content tab -->
+        <div class="tab-pane fade" id="table-content">
+            <div id="table" class="table-container">
+                <h2><span>All records</span></h2>
+                <table class="table table-striped table-hover display nowrap" cellspacing="0" width="100%" data-page-navigation=".pagination">
+                    <thead>
+                        <!-- placeholders only: see initTable() -->
+                        <tr>
+                            <!-- this is the field ("expand") that will get the plus button on phone/tablet -->
+                            <th data-class="expand">
+                                Unit
+                            </th>
+                            <!-- use data-hide to indicate which fields get pushed under the row on which devices -->
+                            <th data-hide="phone">
+                                Plant
+                            </th>
+                            <th data-hide="phone,tablet">
+                                Other names
+                            </th>
+                            <th>
+                                Sponsor
+                            </th>
+                            <th data-hide="phone">
+                                Capacity (MW)
+                            </th>
+                            <th data-hide="phone">
+                                Status
+                            </th>
+                            <th data-hide="phone,tablet">
+                                Region
+                            </th>
+                            <th data-hide="phone">
+                                Country
+                            </th>
+                            <th data-hide="phone">
+                                Subnational unit
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- placeholders only: see initTable() -->
+                        <tr><td><a href="#">Search a country or region to see the table</a></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div><!-- table wrapper-->
+        </div><!--table tab-->
+
+        <!-- about content tab -->
+        <div class="tab-pane fade" id="about-content">
+            <h2>Frequently Asked Questions</h2>
+
+            <h3>Maps</h3>
+
+            <p><b>Q: How do I view a different country?</b><br>
+            A: If the country is adjacent to your current location, you can move the cursor over the country and click (note, the country click feature is not currently available on mobile devices). Alternatively, select Main Menu (upper right).</p>
+
+            <p style="margin-bottom: 0;"><b>Q: What do the colored dots mean?</b><br>
+            A: The colors indicate the status category:</p>
+                <ul>
+                    <li><b>Announced:</b> Proposed plants that have been described in corporate or government plans but have not yet taken concrete steps such as applying for permits or acquiring land.</li>
+                    <li><b>Pre-permit development:</b> Plants that are seeking environmental approvals and pursuing other developmental steps such as securing land and water rights. In India, this means that a "Terms of Reference" has been received from the Ministry of Environment and Forests.</li>
+                    <li><b>Permitted:</b> All necessary environmental approvals have been received but the project has not yet begun construction.</li>
+                    <li><b>Construction:</b> Site preparation and other activities are underway.</li>
+                    <li><b>Shelved:</b> Progress has been halted for at least two years.</li>
+                    <li><b>Cancelled:</b> A cancellation announcement has been made, or no progress has been observed for at least four years.</li>
+                    <li><b>Operating:</b> The plant has been formally commissioned.</li>
+                </ul>
+
+            <p><b>Q: Can I change the status categories that the map is showing?</b><br>
+            A: Yes, go to the legend (upper right corner of the map) and click in the box next to a color.</p>
+
+            <p><b>Q: What do the numbers in the circles mean?</b><br>
+            A: The numbers tell the number of generating units at each location. To find information on each unit, click on the number, then select one of the colored dots.</p>
+
+            <p><b>Q: I've Zoomed In, but I don't see a power plant. Why?</b><br>
+            A: If a coal plant is still in the pre-construction phases (Announced, Pre-permit development, or Permitted), there may be no sign of activity. In other cases, only approximate location information could be found by researchers. Finally, in some geographies satellite photos are only updated every few years, so recent activity is not shown.</p>
+
+            <p><b>Q: How do I find out if a location is exact or approximate?</b><br>
+            A: Locations tend to be known with greater accuracy as plants move from early stages toward construction. To find out the coordinates of a location and whether a location is exact or approximate, click on the location dot, select the wiki page, and look under "Project Details."</p>
+
+            <h3>Tables</h3>
+            <p><b>Q: How can I filter a table so that only plants in a particular category, such as Construction, are listed?</b><br>
+            A: Type Construction into the Search line. Note: On iPad, do not click "Go" after typing a search term. Instead, simply hide the keyboard.</p>
+
+            <h3>Carbon Dioxide</h3>
+            <p><b>Q: How were the carbon dioxide figures derived?</b><br>
+            A: The tracker uses a calculation based on size of plant, type of combustion technology, and variety of coal. For details, see <a href="http://www.sourcewatch.org/index.php/Estimating_carbon_dioxide_emissions_from_coal_plants" target="_blank">"Estimating carbon dioxide emissions from coal plants"</a> (SourceWatch).</p>
+
+            <h3>Coverage</h3>
+
+            <p><b>Q: Does the tracker show all the operating plants in each country?</b><br>
+            A: The objective of the tracker is to provide information on coal-fired power plants in the developmental pipeline since 2010. Plants that entered operation or were cancelled before January 1, 2010, are not included.
+            </p>
+
+            <p><b>Q: What about small plants?</b><br>
+            A: The tracker covers units totaling 100 MW or more at a given location. So a single unit of 75 MW would not be included. But two 50 MW units would be included.
+            </p>
+
+            <p><b>Q: How do you define capacity?</b><br>
+            A: Capacity is measured in gross megawatts, prior to subtracting capacity used for plant operations.
+            </p>
+
+            <p><b>Q: What about coal-to-liquids and other synfuels plants?</b><br>
+            A: The tracker only includes coal-fired electrical generating plants.
+            </p>
+
+            <p><b>Q: Can you explain the difference between "units" and "plants?"</b><br>
+            A: The tracker provides separate data on each of the multiple facilities that typically exist at a particular location. Each of these facilities is referred to as a "unit." The entire collection of units at a given location is referred to as a "plant."</p> 
+
+            <h3>Improving the Tracker</h3>
+            <p><b>Q: What if I find an error or a missing project?</b><br>
+            A: Please send information on errors or omissions to Ted Nace (ted AT tednace.com).</p>
+
+            <h3>Credits</h3>
+            <p><b>Q: Who built this tool?</b><br>
+            A: The tracker was designed and produced by CoalSwarm, a network of researchers seeking to develop collaborative informational resources on coal impacts and alternatives. To the extent possible, the information in the tracker has been verified by activists and researchers familiar with particular countries. The following people participated in plant-by-plant research: Elena Bixel (<a href="http://www.die-klima-allianz.de/" target="_blank">Klima Allianz</a>), Bob Burton (<a href="http://www.coalswarm.org" target="_blank">CoalSwarm</a>), Gregor Clark (<a href="http://www.coalswarm.org" target="_blank">CoalSwarm</a>), Joshua Frank (<a href="http://www.coalswarm.org" target="_blank">CoalSwarm</a>), Ted Nace (<a href="http://www.coalswarm.org" target="_blank">CoalSwarm</a>), Christine Shearer (<a href="http://www.coalswarm.org" target="_blank">CoalSwarm</a>), Adrian Wilson (<a href="http://www.coalswarm.org" target="_blank">CoalSwarm</a>), and Aiqun Yu (<a href="http://www.coalswarm.org" target="_blank">CoalSwarm</a>). Additional wiki editing and fact checking was provided by Christine Law, Iris Shearer, Austin Woerner, and Yvette Zhu. The tracker architect and project manager was Ted Nace (<a href="http://www.coalswarm.org" target="_blank">CoalSwarm</a>). Web/GIS programming was done by Tom Allnutt and Gregor Allensworth (<a href="https://www.greeninfo.org" target="_blank">GreenInfo Network</a>), with support from Tim Sinnott (<a href="https://www.greeninfo.org" target="_blank">GreenInfo Network</a>).</p>
+
+        </div><!-- about content tab -->
+
+    </div><!-- tab-content -->
+
+</div><!-- container -->
+</body>
+</html>

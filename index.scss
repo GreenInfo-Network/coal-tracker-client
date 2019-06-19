@@ -1,0 +1,150 @@
+/* index.css */
+
+/* General page elements */
+
+* { padding: 0; margin: 0; outline: 0; }
+html, body, #map { height: 100% }
+body { overflow: hidden; }
+#map { margin: 10px 0; width: auto; }
+.table-container { width: 100%; font-size:90%; }
+/*#table-content { height: 100%; }*/
+#pleasewait { position:absolute; top:50%; left:50%; margin-left:-30px; margin-top:-30px; padding: 5px 5px 0 5px; border-radius: 5px; background-color:white; z-index:1000000; }
+input:focus::-webkit-input-placeholder { color:transparent; }
+input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+
+/* some utility definitions */
+.right  { text-align:right; }
+.left   { text-align:left; }
+.center { text-align:center; }
+
+/* the container around the map/table tabs */
+div#container { padding: 10px 10px 0; margin: 0; background-color: #fff; border: 1px solid #ddd; border-radius: 4px 4px 0 0; }
+
+/* Bootstrap overrides */
+.modal-lg { width: 98%; margin: 5% auto; }
+.btn-justify-80 { min-width: 150px; max-width: 150px; }
+.panel { border-radius: 0; }
+#nav-table-search input { border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-left-radius:4px; border-bottom-right-radius: 4px; width: 250px; }
+#btn-main-menu { color:#fff; background:#e84c22; font-weight:bold; }
+#btn-main-menu:focus { outline: none; }
+/* override bootstrap input style */
+input.form-control:focus, select.form-control:focus { border: solid 1px #ccc; box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); transition: none; -moz-transition: none; -webkit-transition: none; }
+/*.hidden-xs-custom */
+
+/* behavior of the icons on the far right of the bootstap nav tab*/
+#nav-panel-burger { text-decoration:none; color:#555; font-weight: bold; }
+#nav-panel-burger, #nav-panel-search-icon { border:none; background-color: #fff; padding-left: 5px; }
+.nav .form-group { margin-bottom: 0px; }
+/*three bar nav menu 'icon' a la bootstrap (shows on mobile only) */
+#nav-panel-menu-button { background-color: #fff; border: none; margin:0; padding-top: 12px;}
+#nav-panel-menu-button:hover { background: #fff; border: none; cursor: pointer; }
+.navbar-toggle .icon-bar { display: block; width: 15px; height: 2px; background-color:#555; }
+
+/* summaries tab and document list */
+// ul#summaries-list {list-style-type: none; padding-left: 10px;}
+// ul#summaries-list li { line-height:2.5; margin-bottom: 15px; min-height: 32px; padding-left: 40px; background: url("./images/pdf-icon.png") no-repeat 0 0 transparent; }
+/*ul#summaries-list a {line-height: 2.4}; nice idea but weird: applying this borfs the intro dialog*/
+
+/* Media Queries */
+/* styles specific to larger screens: only apply above stated pixel width (greater or equal to); */
+@media (min-width:768px) {
+    /*extra large button; extends .btn */
+    .btn-xlarge {margin: 0 12px; padding: 18px 28px;font-size: 22px; line-height: normal; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
+    .modal-lg { width: 50%; margin: 10% auto; }
+}
+
+/* styles specific to smaller screens: applies below this width (less or equal to); */
+@media screen and (max-width: 767px) {
+    .btn-justify-80 { font-size: 90%; min-width: 83px; max-width: 83px;}
+}
+
+/* custom hide on small screens, but show on landscape */
+@media screen and (max-width: 567px) {
+  .hidden-xs-custom {display:none !important;}
+}
+
+/* styles for left side sidebar (inspired by bootleaf). Only shows in mobile */
+#sidebar-map, #sidebar-table { position:absolute; width: 300px; height: 100%; z-index: 10000; background: #fff; box-shadow: 4px 0 4px -2px #888888; }
+.sidebar-open { left: 10px; }
+.sidebar-closed { left: -305px; }
+/* sidebar transition over map */ 
+#sidebar-map, #sidebar-table { -webkit-transition: left 300ms ease; -moz-transition: left 300ms ease; -ms-transition: left 300ms ease; -o-transition: left 300ms ease; transition: all 300ms ease 0s; }
+/* map transition with slider */ 
+#map { -webkit-transition: all 300ms ease; -moz-transition: all 300ms ease; -ms-transition: all 300ms ease; -o-transition: all 300ms ease; transition: all 300ms ease;}
+#sidebar-hide-btn, #search-panel-button { cursor: pointer; }
+
+/* datatables overrides and table styles */
+.dataTables_filter { display: none !important; }
+td.highlight { font-weight: bold; color: #111; background-color: #fcede8 !important; font-size: 105%; }
+.cell-right { text-align: right; }
+/* this should be easily configurable in datatables, except that it's not */
+.totals.dataTable thead > tr > th { text-align: right !important; padding-right: 8px !important;}
+#totals-mw h2 span, #totals-units h2 span, #totals-annual-co2 h2 span, #totals-lifetime-co2 h2 span {font-size: 80% !important;}
+
+/* Map legend and map marker styles */
+/*legend circle markers used in map legend*/
+.circle { float: left; margin: 0 6px 0 0; width:13px; height:13px; border-radius:50%; border: 1px solid rgba(100,100,100,0.8); }
+/*.leaflet-control-layers-group span:not(:first-child) { float: right;}*/
+.leaflet-control-layers-group label { padding-left: 0;}
+.leaflet-control-layers-base label { padding-left: 4px;}
+.leaflet-control-layers-group-name { font-weight:bold; display:block; margin-bottom: 0.4em;}
+.leaflet-control-layers-group { margin-bottom: 0.4em;}
+.leaflet-control-layers-separator { margin: 5px -7px 5px -7px; }
+
+/* leaflet overrides for popup styles */
+div.leaflet-popup { bottom:5px !important; }
+a.leaflet-popup-close-button { display: none !important; }
+div.popup-click-msg { color: #666; font-size: 10px; text-align: center; margin-top:5px; }
+
+/*leaflet div icon styles - used on map in lieu of circle markers */
+.circle-div { border:1px solid rgba(100,100,100,0.5); border-radius:50%; }
+/* same colors as defined in STATUS_TYPES, yet translated to RGBA, with 0.8 alpha */
+.yellow { background-color:rgba(243,255,0, 0.8);}
+.orange { background-color:rgba(255,165,0, 0.8);}
+.pink { background-color:rgba(242,108,79, 0.8);}
+.red { background-color:rgba(255,0,0, 0.8);}
+.blue { background-color:rgba(89,116,162, 0.8);}
+.lightblue { background-color:rgba(88,161,161, 0.8); }
+.green { background-color:rgba(76,219,76, 0.8);}
+.brown { background-color:rgba(132,84,64, 0.8);}
+.lightbrown { background-color:rgba(214,164,144,0.8); }
+
+/*custom leaflet control for back button*/
+.btn-back { background: #0f4e8c; }
+.btn-back a { color: #fff; font-weight:bold; text-decoration:none !important; }
+
+/*styles for the layer control itself */
+.layer-control { padding: 7px; font-size: 12px; line-height: 15px; position: absolute; top: 72px; right: 20px; background: #fff; border-radius: 4px; color: #333; box-shadow: 0 1px 5px rgba(0,0,0,0.4); z-index: 1005; }
+.layer-control label { display: block; font-weight: normal; margin-left: 3px; }
+.layer-control input { margin: -3px 0 0; vertical-align: middle; }
+#layers-icon { border-radius: 4px; top: 74px; right: 22px; background-size: 50% 50%; box-shadow: 0 1px 5px rgba(0,0,0,0.4); position: absolute; background: #fff url('./images/layers.png') no-repeat center; width:40px; height:40px; z-index:1001;}
+/* styles related to the about panel */
+.tab-pane#about-content { height:100px; margin: 10px; overflow:auto; } /*height dynamically set see resizeAbout()*/
+.tab-pane#about-content li { margin-left: 2.5em; }
+
+/*Prunecluster (a leaflet clustering library) styles*/
+.prunecluster { font-size: 12px; border-radius: 20px; transition: all 0.3s linear; }
+.leaflet-marker-icon:not(.no-anim),
+.leaflet-marker-shadow:not(.no-anim),
+.leaflet-markercluster-icon:not(.no-anim) {
+    transition: all 0.3s linear;
+}
+/* Prunecluster animations */
+.leaflet-zoom-anim .leaflet-zoom-animated.leaflet-marker-icon:not(.no-anim),
+.leaflet-zoom-anim .leaflet-zoom-animated.leaflet-marker-shadow:not(.no-anim),
+.leaflet-zoom-anim .leaflet-zoom-animated.leaflet-markercluster-icon:not(.no-anim) {
+    transition: transform 0.25s cubic-bezier(0,0,0.25,1);
+}
+/* additional prunecluster styles */
+.prunecluster div { width: 30px; height: 30px; text-align: center; margin-left: 5px; margin-top: 5px; border-radius: 50%;}
+.prunecluster div span { line-height: 30px; }
+.prunecluster-small { background-color: #b5e28c; background-color: rgba(181, 226, 140, 0.6); }
+.prunecluster-small div { width: 28px; height: 28px; background-color: #6ecc39; background-color: rgba(110, 204, 57, 0.6); }
+.prunecluster-small div span { line-height: 28px; }
+.prunecluster-medium { background-color: #f1d357; background-color: rgba(241, 211, 87, 0.6);}
+.prunecluster-medium div { background-color: #f0c20c; background-color: rgba(240, 194, 12, 0.6);}
+.prunecluster-large { background-color: #fd9c73; background-color: rgba(253, 156, 115, 0.6);}
+.prunecluster-large div { width: 34px; height: 34px; background-color: #f18017; background-color: rgba(241, 128, 23, 0.6);}
+.prunecluster-large div span { line-height: 34px; }
+
