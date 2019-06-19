@@ -2,7 +2,7 @@
 Project with [Coal Swarm](coalswarm.org) to rebuild coal_tracker as a front-end application. For the original application, see https://github.com/GreenInfo-Network/coal_tracker, which is hosted on Kattare (still running from there as of June 2019)
 
 * Quickbooks: CoalSwarm:Coal Plant Tracker 2019
-* URL: 
+* URL: https://greeninfo-network.github.io/coal-tracker-client/
 
 ## Hosting
 
