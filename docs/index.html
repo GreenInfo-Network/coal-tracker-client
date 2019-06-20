@@ -6,7 +6,7 @@
     <title>Coal Tracker</title>
 
     <!-- the favicon -->
-    <link rel="shortcut icon" href="./images/favicon.ico'" type="image/x-icon" />
+    <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon" />
 
     <!-- jQuery, jQuery UI, and a Google-hosted jQueryUI theme -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -58,51 +58,8 @@
 
 </script>
 
-<link href="app.a6397e5529ebd27893c8.css" rel="stylesheet"></head>
+<link href="app.1462bdc8c9a8cdea3972.css" rel="stylesheet"></head>
 <body>
-<!-- modal with additional MAP choices -->
-<!-- add class="fade" to include fade animation-->
-<div class="modal" id="map-modal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Choose a location:</h4>
-            </div>
-            <div class="modal-body">
-                <form id="map-form" role="form">
-                    <!-- option to select a region -->
-                    <!-- stub here, options populated in initMapForm(); -->
-                    <div class="form-group">
-                        <label for="region-select-map">Select a region:</label>
-                        <select id="region-select-map" class="form-control select-region" data-select="region" data-type="map">
-                            <option selected disabled value="placeholder">Select a region...</option>
-                        </select>
-                    </div>
-
-                    <!-- option to select a country -->
-                    <!-- stub here, options populated in initMapForm(); -->
-                    <div class="form-group">
-                        <!-- populated when a region is selected -->
-                        <label for="country-select-map">Select a map:</label>
-                        <select id="country-select-map" class="form-control select-country" data-select="country" data-type="map" disabled>
-                            <option selected disabled value="placeholder">Select a map...</option>
-                            <!-- <option>Placeholder</option> -->
-                        </select>
-                    </div>
-
-                    <!-- button to launch the selection. See initDialogSearch() -->
-                    <button type="submit" class="btn btn-primary btn-search-place" data-dismiss="modal" data-type="map" disabled>GO</button>
-                </form>
-
-            </div>
-            <div class="modal-footer">
-                <!-- <p class="pull-left"><a href="#" class="back-link" data-dismiss="modal" data-back="startup-modal">Back</a></p> -->
-                <p>Published by <a href="http://coalswarm.org/" target="_blank">CoalSwarm</a> | <a href="#" class="about-link" data-dismiss="modal">About</a></p>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 <!-- modal to display individual tracker data when user clicks on a given tracker point -->
 <!-- add class="fade" to include fade animation-->
@@ -159,16 +116,6 @@
         <li class="hidden-xs-custom"><a href="https://endcoal.org/global-coal-plant-tracker/summary-statistics/" target="_blank" id="summary-tab" onclick="window.open($(this).attr('href'));">Sum<span class="hidden-sm">marie</span>s</a></li>
 
         <!-- nav bar right side -->
-        <!-- menu button/icon -->
-        <li class="pull-right">
-            <!-- menu icon: hidden for desktop   see initNavBar() .nav-menu-button for event handler -->
-            <a href="#menu" class="nav-menu-button navbar-toggle visible-xs" id="nav-panel-menu-button">
-                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
-            </a>
-            <!-- menu button: hidden for mobile   see initNavBar() .nav-menu-button for event handler -->
-            <button type="button" id="btn-main-menu" class="nav-menu-button btn btn-default visible-sm visible-md visible-lg"><span class="glyphicon glyphicon-chevron-left"></span> Main Menu</button>
-        </li>
-
         <!-- search input/icon -->
         <li class="pull-right">
             <!-- search icon: hidden for desktop -->
@@ -405,5 +352,5 @@
     </div><!-- tab-content -->
 
 </div><!-- container -->
-<script type="text/javascript" src="app.a6397e5529ebd27893c8.js"></script></body>
+<script type="text/javascript" src="app.1462bdc8c9a8cdea3972.js"></script></body>
 </html>
