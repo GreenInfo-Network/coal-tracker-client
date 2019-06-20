@@ -238,7 +238,6 @@ L.backButton = L.Control.extend({
 
 $(document).ready(function () {
     initStartupModal();     // init the modal dialog that kicks things off
-    initDialogSearch();     // init the search from the startup dialog options
     initNavBar();           // init the main navigation tabs
     initFreeSearch();       // init the "free" search inputs
     initTable();            // the Table is fully populated from the trackers dataset, but is filtered at runtime
@@ -254,6 +253,7 @@ $(document).ready(function () {
     setTimeout(function () {
         $('#pleasewait').hide();
         resizeMap();
+        performSearch('everything');
     }, 1000);
 });
 
@@ -433,8 +433,6 @@ function initMap() {
     // init the layer icon control to open the legend
     $('#layers-icon').on('click', function(){ layercontrol.show() })    
     
-    // override _initEvents method for MAP to include additional touch events
-    // MAP._initEvents = function (e){if(o.DomEvent){e=e||"on",o.DomEvent[e](this._container,"click",this._onMouseClick,this);var i,n,s=["dblclick","mousedown","mouseup","mouseenter","mouseleave","mousemove","contextmenu","touchstart", "touchmove","touchend"];for(i=0,n=s.length;n>i;i++)o.DomEvent[e](this._container,s[i],this._fireMouseEvent,this);this.options.trackResize&&o.DomEvent[e](t,"resize",this._onResize,this)}} 
     // listen for map clicks, on mobile, close the legend
     MAP.on('click', function(){
         if (!ISMOBILE) return;
@@ -603,24 +601,6 @@ function initNavBar() {
         var sidebar = CURRENT_TAB == 'map-tab' ? $('#sidebar-map') : $('#sidebar-table');
         toggleSidebar(sidebar.hasClass('sidebar-closed'));
     });
-
-    // top-right menu icon: hamburger/menu button to "go back" to the startup modal
-    $('.nav-menu-button').click(function() {
-
-        // this is actually a nav tab and on click, bootstrap will attempt to style as such on click unless we override
-        $(this).parent().removeClass('active');
-        fixTabStyle(CURRENT_TAB);
-
-        // some cleanup:
-        // reset modal options to default placeholder text
-        $('#map-modal select option[value="placeholder"]').attr('selected',true);
-        // disable the search 'GO' buttons
-        $('.btn-search-place').attr('disabled',true);
-        // close the sidepanel (if it's showing)
-        toggleSidebar(false);
-
-        $('#map-modal').modal();
-    });
 }
 
 // itialization functions for the table. Table data is populated only after a search is performed
@@ -709,22 +689,6 @@ function initSidebar() {
     })
 }
 
-// When the app loads, we have guided dialogs to guide users to selected 'maps' and 'table' views
-// this inits the search for a map and table by place when user clicks the "GO" button
-function initDialogSearch() {
-    // handle the place search from the introductory dialogs where user selects "map" from select options
-    // Click the go button after making a map or table selection (cannot get this to work on submit... :()
-    $('.btn-search-place').click(function() {
-        // the selected place may be a region, or a single country, or a province
-        var countryselect = $('.select-country option:selected');
-        var type          = countryselect.val();
-        var place         = countryselect.text();
-
-        // hand off to the dispatcher
-        dispatchSearch(type, place);
-    });
-}
-
 // detect region, country, or subnat and hand off to common handler, it will fetch and filter the data itself
 function dispatchSearch(type, place) {
     if (type == 'region') {
@@ -741,7 +705,6 @@ function dispatchSearch(type, place) {
         // it's a country!
         performSearch('country',place);
     }
-
 }
 
 // modal form with map options, second step in getting to the map(s)
@@ -1119,12 +1082,14 @@ function massageCountryFeaturesAsTheyLoad(rawdata,feature) {
         this.setStyle(INVISIBLE_STYLE);
     }).on('click', function (e) {
         // only move to new country if clicking outside current country
-        if ($.inArray(this.feature.properties['NAME'].toLowerCase(), CURRENT_COUNTRIES) < 0) {
+        // TODO: This is how it was on the old app
+        // here, though we need to be able to click on a country, because the default starting view is all countries
+        // if ($.inArray(this.feature.properties['NAME'].toLowerCase(), CURRENT_COUNTRIES) < 0) {
             // call the display country function
             performSearch('country', this.feature.properties['NAME']);
             // and remove the highlighted feature (that we just hovered to reveal)
             this.setStyle(INVISIBLE_STYLE);
-        }
+        // }
         // hack to unspider the currently open spider
         SPIDER.Unspiderfy();
     });
@@ -1174,8 +1139,95 @@ function performSearch(type,name,extra) {
             case 'subnat':
                 searchSubnational(name,extra,DATA_COUNTRIES,data_trackers);
                 break;
+            case 'everything':
+                searchEverything(DATA_COUNTRIES, data_trackers);
         }
     });
+
+}
+
+// show all trackers on the map at once
+function searchEverything(data_countries, data_trackers) {
+    // step 1: filter through the countries and find the total polygon by combining the geometry for all these countries in the region
+    // - massage it to always be a multipolygon so we're consistent, but that's OK since we're ALWAYS ending up with >1 polygon so no massaging is needed
+    // - some countries cross the date line and need a special bounding box
+    // - the coordinates are backward
+    // - some countries (okay, one) wrap the dateline and need their coords modified if lng > 180
+    // while we're at it, keep a list of what countries matched, for later use in step 6
+    var polygon = [], polygontype, countries = {};
+    for (var i=0, l=data_countries.features.length; i<l; i++) {
+        var country = data_countries.features[i].properties.NAME;
+        // is this country a match?
+        // here everything is a match
+        // log the matched country in countries{}
+        countries[country] = true;
+        // may be polygon or multipolygon; standardize into a multi-ring
+        var outmulti = []; // to hold a copy of our geometry (not a reference)
+        var thismulti = data_countries.features[i].geometry.coordinates;
+        var thistype  = data_countries.features[i].geometry.type;
+        if (thistype == 'Polygon') thismulti = [ thismulti ];
+
+        for (var pi=0, pl=thismulti.length; pi<pl; pi++) {
+            outmulti.push([]);
+            for (var ri=0, rl=thismulti[pi].length; ri<rl; ri++) {
+                outmulti[pi].push([]);
+                for (var vi=0, vl=thismulti[pi][ri].length; vi<vl; vi++) {
+                    switch (country) {
+                        case 'Russia':
+                            if ( thismulti[pi][ri][vi][0] < -0) thismulti[pi][ri][vi][0] += 360;
+                            break;
+                    }
+                    // slice to get a copy, otherwise we save a reference, and flip coordinates on the original data!
+                    outmulti[pi][ri][vi] = [ thismulti[pi][ri][vi][1] , thismulti[pi][ri][vi][0]].slice();
+                }
+            }
+
+            // done flipping coords for this polygon; add the polygon to multipolygon we're collecting
+            // polygon = polygon.concat( outmulti[pi] );
+            polygon = polygon.concat( outmulti[pi] );
+        }
+    }
+    polygon = L.multiPolygon(polygon);
+    // step 2: empty the highlights, and recalculate the mask, load it in as COUNTRIES
+    var rings = [];
+    $.each( polygon.getLatLngs() , function () { rings.push(this.slice(0)); });
+    rings.unshift(OUTERRING);
+    L.polygon(rings, MASKSTYLE).addTo( MASK.clearLayers() );
+
+    // step 3: clear the CLUSTERS marker custering system and repopulate it with tracker points
+    // as we go through, log what statuses are in fact seen; this is used in step 5 to show/hide checkboxes for toggling trackers by status
+    // as we go through, keep a list of the trackers for the table in step 4
+    var statuses   = {};
+    var trackers   = [];
+    $.each(data_trackers.features, function () {
+        // this is not a true Leaflet feature, just an entry in a GeoJSON-copmpatible data structure; that's why it's performant
+        var feature = this;
+
+        var status = feature.properties.status;
+        statuses[status] = true; // log that this status has been seen, see step 5 below
+
+        // add the feature to the trackers list for the table
+        trackers.push(feature);
+
+    });
+    var bounds = L.geoJson(data_trackers.features).getBounds();
+    MAP.fitBounds(bounds); 
+    MAPBOUNDS = bounds; // keep for later
+
+    // step 4a and 4b: update the table and the marker clustering, now that "trackers" is implicitly filtered to everything that we need
+    populateMapWithTrackers(trackers);
+    populateTableWithTrackers(trackers, 'All Trackers');
+
+    // step 5: hide the status toggle checkboxes, showing only the ones which in fact have a status represented
+    showLegendCheckboxes(statuses);
+
+    // step 6: update the list of highlighted countries, used by the highlight hover effect, for DESKTOP only
+    if (!ISMOBILE) {
+        CURRENT_COUNTRIES = [];
+        for (var c in countries) CURRENT_COUNTRIES.push( c.toLowerCase() );
+        COUNTRIES.bringToFront();
+    }
+
 
 }
 
