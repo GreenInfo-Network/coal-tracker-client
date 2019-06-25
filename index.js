@@ -155,9 +155,6 @@ window.markercluster_colors = $.map(STATUS_TYPES, function(val, i) { return val.
 // object to hold the datatable upon initialization. See initTable() and also resizeTable
 var OTABLE;
 
-// keep track of sidebar width. See toggleSidebar(); If you change width here, see also #sidebar css width
-var SIDEBAR_WIDTH = 300;
-
 // keep track of the current nav tab id; defaults to map-tab at startup
 // TO DO: can we get this from data attributes, instead of a global?
 var CURRENT_TAB = 'map-tab';
@@ -169,65 +166,6 @@ var CURRENT_COUNTRIES; // only on desktop
 
 // allowed url params
 var OK_PARAMS = ['region','country'];
-
-///////////////////////////////////////////////////////////////////////////////////
-///// Custom leaflet controls
-///////////////////////////////////////////////////////////////////////////////////
-// a leaflet control to take the user back to where they came
-// Only visible when zooming to an individual plant from the dialog popup. Hidden otherwise.
-L.backButton = L.Control.extend({
-    options: {
-        position: 'bottomright'
-    },
-
-    onAdd: function (map) {
-        var container   = L.DomUtil.create('div', 'btn btn-primary btn-back', container);
-        container.title = 'Click to go back to the previous view';
-        this._map       = map;
-
-        // generate the button
-        var button = L.DomUtil.create('a', 'active', container);
-        button.control         = this;
-        button.href            = 'javascript:void(0);';
-        button.innerHTML       = '<span class="glyphicon glyphicon-chevron-left"></span> Go back to country view';
-
-        L.DomEvent
-            .addListener(button, 'click', L.DomEvent.stopPropagation)
-            .addListener(button, 'click', L.DomEvent.preventDefault)
-            .addListener(button, 'click', function () {
-                this.control.goBack();
-            });
-
-        // all set, L.Control API is to return the container we created
-        return container;
-    },
-
-    // the function called by the control
-    goBack: function () {
-        // set the map to the previous bounds
-        MAP.fitBounds(MAPBOUNDS);
-
-        // remove current basemap
-        MAP.removeLayer(BASEMAPS[CURRENT_BASEMAP]);
-        // add the plain basemap - we could try to keep track of which basemap the user
-        // was on before zooming in - but what if they zoom in to another? then the current
-        // basemap becomes satellite - and tracking all this gets ridiculous
-        MAP.addLayer(BASEMAPS['basemap']); CURRENT_BASEMAP = 'basemap';
-
-        // keep the radio button in sync with the map
-        $('#layers-base input[data-baselayer="' + CURRENT_BASEMAP + '"]').prop("checked", true);
-        // remove the mask if its showing
-        if (CURRENT_BASEMAP == 'basemap') MAP.addLayer(MASK);
-
-        // remove the back button
-        BACK_BUTTON.removeFrom(MAP);
-
-        // finally bring the trackers forward (not sure exactly why, but all this basemap switching)
-        // TRACKERS.bringToFront();
-        COUNTRIES.bringToFront();
-
-    }
-});
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -241,28 +179,54 @@ $(document).ready(function () {
     initNavBar();           // init the main navigation tabs
     initFreeSearch();       // init the "free" search inputs
     initTable();            // the Table is fully populated from the trackers dataset, but is filtered at runtime
+    initLeafletExtras();    // an extra Leaflet extension or two
     initMap();              // regular leaflet map setup
     initPruneCluster();     // set up the PruneClusters for clustering coal plant markers
     initMapLayerControl();  // initialize the layer and basemap pickers
-    initMapForm();          // intialize modal form selects
-    initSidebar();          // init the sidebar and nav "free" search
     initZoom();             // init the zoom button on the popup dialogs
     initState();            // init app state given url options
 
     // ready!
     setTimeout(function () {
         $('#pleasewait').hide();
-        resizeMap();
+        $(window).trigger('resize');
         performSearch('everything');
     }, 1000);
 });
 
 // listen for changes to the window size and resize the map
 $(window).resize(function() {
-    resizeMap();    // function to resize the map
-    resizeTable();  // function to resize the table
-    resizeAbout();  // resize about content
+    resizeMap();        // function to resize the map
+    resizeTable();      // function to resize the table
+    resizeAbout();      // resize about content
+    updateSearchBar();  // update visibility of searchbar
 })
+
+function updateSearchBar() {
+    var placeholder = 'Type a project name, company, country...';
+    var search = $('input#mapsearch, input#tablesearch');
+    var width = $(window).width();
+    if (width < 768) {
+        if (search.hasClass('collapsed')) return;
+        search.addClass('collapsed');
+        setTimeout(function() { search.attr('placeholder','') }, 300);
+        search.siblings('span.glyphicon-search').on('click', function() {
+            search.toggleClass('collapsed');
+            if (search.hasClass('collapsed')) {
+                setTimeout(function() { 
+                    search.attr('placeholder',''); 
+                    search.val(''); 
+                }, 300);
+            } else {
+                search.attr('placeholder',placeholder);
+                search.off('click');
+            }
+        });
+    } else {
+        search.removeClass('collapsed');
+        search.attr('placeholder',placeholder);
+    }
+}
 
 // resize the map based on window height minus tab height (including margins)
 function resizeMap() {
@@ -285,7 +249,7 @@ function resizeAbout() {
     $('#about-content').height(newSize);
 }
 
-// attempt to resize all DataTables for different window heights. This is notoriously difficult to get right in datatables
+// attempt to resize all DataTables for different window heights. 
 // see also getTablecutoff() which defines variabele heights (as percentages) to apply based on different window heights
 function resizeTable() {
     // guesstimate a good scrollbody height; dynamic based on the window height
@@ -579,14 +543,6 @@ function initNavBar() {
         $('#nav-place-search').hide();
     });
 
-    // listen to any tab click and close search sidebar if showing (using 'show' which fires before 'shown')
-    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-        // hide the sidebar if it's open. here we actually hide it, then transition it closed, then show it, so it can be transitioned open again!
-        $('#sidebar-map').hide();
-        toggleSidebar(false);
-        $('#sidebar-map').show();
-    })
-
     // show the sidebar by clicking the search icon on nav-tab bar
     $('#nav-panel-search-icon').click(function() {
         // clicking buttons in nav-tabs changes their style
@@ -596,10 +552,6 @@ function initNavBar() {
 
         // remove any text from the input
         $('#panel-place-search input').val('');
-
-        // finally, hide or show the sidebar
-        var sidebar = CURRENT_TAB == 'map-tab' ? $('#sidebar-map') : $('#sidebar-table');
-        toggleSidebar(sidebar.hasClass('sidebar-closed'));
     });
 }
 
@@ -626,9 +578,6 @@ function initFreeSearch() {
     $('.free-search').submit(function(event) {
         // prevent default browser behaviour
         event.preventDefault();
-
-        // close the slide panel if open
-        toggleSidebar(false);
 
         // get the location from the input
         var type = $(this).data().type;
@@ -675,20 +624,6 @@ function initFreeSearch() {
     });
 }
 
-// The left-side search sidebar is hidden at first but shown by clicking on the "search icon" on the nav bar
-function initSidebar() {
-    // Click the chevron on the sidebar itself to hide the sidebar
-    $('.sidebar-hide-btn').click(function() {
-        // close the sidebar
-        toggleSidebar(false);
-    });
-
-    // On focus, clear input text for search by location, simple usability feature
-    $('#panel-place-search input').focus(function(){
-        this.value = '';
-    })
-}
-
 // detect region, country, or subnat and hand off to common handler, it will fetch and filter the data itself
 function dispatchSearch(type, place) {
     if (type == 'region') {
@@ -707,61 +642,62 @@ function dispatchSearch(type, place) {
     }
 }
 
-// modal form with map options, second step in getting to the map(s)
-function initMapForm() {
-    // get the target for country select (.select-country is a class because initially we had this select on two forms)
-    var countryselect = $('.select-country');
+function initLeafletExtras() {
+    // a leaflet control to take the user back from where they came
+    // Only visible when zooming to an individual plant from the dialog popup. Hidden otherwise.
+    L.backButton = L.Control.extend({
+        options: {
+            position: 'bottomright'
+        },
 
-    // populate the region select from the keys of REGION_COUNTRIES:
-    // get the keys of REGION_COUNTRIES - the region selections - and add each to the list as an option
-    $.each(Object.keys(REGION_COUNTRIES), function(i, key) {
-        $('.select-region').append('<option>' + key + '</option>');
-    })
+        onAdd: function (map) {
+            var container   = L.DomUtil.create('div', 'btn btn-primary btn-back', container);
+            container.title = 'Click to go back to the previous view';
+            this._map       = map;
 
-    // listen for a change on the region select; then populate country select with that region's countries from REGION_COUNTRIES
-    $('.select-region').change(function() {
-        // clear out existing html
-        countryselect.html('');
-        countryselect.prepend('<option selected disabled value="placeholder">Select a country...</option>');
+            // generate the button
+            var button = L.DomUtil.create('a', 'active', container);
+            button.control         = this;
+            button.href            = 'javascript:void(0);';
+            button.innerHTML       = '<span class="glyphicon glyphicon-chevron-left"></span> Go back to country view';
 
-        // get the selected region, split the list of countries
-        var selected = $('.select-region option:selected').val();
-        // splitting on comma to preserve 'Central America, Mexico and the Caribbean'
-        var countries = REGION_COUNTRIES[selected].split(';');
-        if (countries) {
-            $.each(countries, function(key, place){
-                // first, handle some special cases
-                if (place == '') return; // skip blanks (shouldn't be any more of these. but just in case..)
+            L.DomEvent
+                .addListener(button, 'click', L.DomEvent.stopPropagation)
+                .addListener(button, 'click', L.DomEvent.preventDefault)
+                .addListener(button, 'click', function () {
+                    this.control.goBack();
+                });
 
-                // set the option value according to type. three types here:
-                //  - regular options: country
-                //  - regional options: region name followed by ' - All countries'
-                //  - subnational options: always in the form of 'China - ' or 'India - '
-                var type = 'country';
-                if (place.indexOf('-') > -1) {
-                    var placename = place.split(' - ')[0];
-                    type = (placename == 'China' || placename == 'India') ? 'subnational' : 'region';
-                }
-                // append the current country to the option list
-                var option = $('<option>', {
-                    text: place,
-                    value: type
-                }).appendTo(countryselect);
-            })
+            // all set, L.Control API is to return the container we created
+            return container;
+        },
+
+        // the function called by the control
+        goBack: function () {
+            // set the map to the previous bounds
+            MAP.fitBounds(MAPBOUNDS);
+
+            // remove current basemap
+            MAP.removeLayer(BASEMAPS[CURRENT_BASEMAP]);
+            // add the plain basemap - we could try to keep track of which basemap the user
+            // was on before zooming in - but what if they zoom in to another? then the current
+            // basemap becomes satellite - and tracking all this gets ridiculous
+            MAP.addLayer(BASEMAPS['basemap']); CURRENT_BASEMAP = 'basemap';
+
+            // keep the radio button in sync with the map
+            $('#layers-base input[data-baselayer="' + CURRENT_BASEMAP + '"]').prop("checked", true);
+            // remove the mask if its showing
+            if (CURRENT_BASEMAP == 'basemap') MAP.addLayer(MASK);
+
+            // remove the back button
+            BACK_BUTTON.removeFrom(MAP);
+
+            // finally bring the trackers forward (not sure exactly why, but all this basemap switching)
+            // TRACKERS.bringToFront();
+            COUNTRIES.bringToFront();
+
         }
-
-        // and finally, if region select changes, enable the next select after this one (country select)
-        countryselect.prop('disabled', false);
     });
-
-    // listen for a select on on the country select, and enable the "GO" button
-    // initially we had two go buttons on two similar forms; hence the setting of 'type'
-    // see initDialogSearch()
-    countryselect.change(function() {
-        var type = $(this).data().type;
-        $('form#' + type + '-form .btn').prop('disabled', false);
-    });
-
 }
 
 // listen for clicks on the "Zoom In" button on the modal popups for a plant.
@@ -941,45 +877,6 @@ function fixTabStyle(currentTab) {
     $('#' + CURRENT_TAB).parent().addClass('active');
 }
 
-function toggleSidebar(boolean) {
-    var sidebar = CURRENT_TAB == 'map-tab' ? $('#sidebar-map') : $('#sidebar-table');
-
-    // if true, then the sidebar is closed; let's open it
-    if (boolean) {
-        sidebar.removeClass('sidebar-closed');
-        sidebar.addClass('sidebar-open');
-    // if false, then the sidebar is open; let's close it
-    } else {
-        sidebar.removeClass('sidebar-open');
-        sidebar.addClass('sidebar-closed');
-    }
-
-    // move the map along with the sidebar
-    var newLeft = $('#sidebar-map').hasClass('sidebar-open') ? SIDEBAR_WIDTH : 0;
-    $('#map').css('left',newLeft);
-
-    MAP.invalidateSize();
-
-    // a couple of housecleaning functions
-    matchSidebarHeightToMap();
-    tweakSidebarZindex();
-
-}
-
-function matchSidebarHeightToMap() {
-    // make the sidebar height match the map height
-    $('#sidebar-map').height($('#map').height());
-    $('#sidebar-table').height($('#map').height());
-    $('.sidebar-panels').height($('#map').height() - 70);
-}
-
-function tweakSidebarZindex() {
-    // hack to attempt to fix a sidebar input focus bug: occasionally sidebar input and buttons lose ability to focus
-    $.each([$('#sidebar-map'), $('#sidebar-table')], function() {
-        this.zIndex('9999');
-        this.zIndex('10000');
-    })
-}
 
 // geocode with Bing. private function meant to be called by parent function. Returns promise object
 function _geocoder(address) {
