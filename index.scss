@@ -56,9 +56,7 @@ input.form-control:focus, select.form-control:focus { border: solid 1px #ccc; bo
 // search input
 /* search input */
 span.glyphicon-search {
-  position: absolute;
-  right: 9px;
-  top: 10px;
+  position: static;
   z-index: 2;
   color: #777;
   cursor:pointer;
@@ -85,20 +83,38 @@ div.searchwrapper a.clear-search {
   cursor:pointer;
 }
 
+div#search-icon-wrapper {
+	display: flex;
+  justify-content: center;
+  align-items: center;
+  /* float: right; */
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 33px;
+}
+
 form#nav-table-search input, form#nav-place-search input { 
   border-top-left-radius: 3px; 
   border-top-right-radius: 3px; 
   border-bottom-left-radius:3px; 
   border-bottom-right-radius: 3px; 
-  width: 300px; 
+  width: calc(100vw - 20px);
+  max-width: 420px;
 
-	-webkit-transition: width 0.3s;
-	-moz-transition: width 0.3s;
-	transition: width 0.3s;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	transition: all 0.3s ease;
 }
 
 form#nav-table-search input.collapsed, form#nav-place-search input.collapsed { 
 	width: 33px;
+}
+
+form#nav-table-search input:not(.collapsed), form#nav-place-search input:not(.collapsed) { 
+	padding-top: 10px;
+	padding-bottom: 10px;
 }
 
 form.search-form input:focus {
@@ -204,3 +220,25 @@ div.popup-click-msg { color: #666; font-size: 10px; text-align: center; margin-t
 .prunecluster-large div { width: 34px; height: 34px; background-color: #f18017; background-color: rgba(241, 128, 23, 0.6);}
 .prunecluster-large div span { line-height: 34px; }
 
+
+/* Media Queries */
+/* styles specific to larger screens: only apply above stated pixel width (greater or equal to); */
+@media (min-width:768px) {
+  /*extra large button; extends .btn */
+  // .btn-xlarge {margin: 0 12px; padding: 18px 28px;font-size: 22px; line-height: normal; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
+  .modal-lg { width: 50%; margin: 10% auto; }
+}
+
+/* styles specific to smaller screens: applies below this width (less or equal to); */
+@media screen and (max-width: 835px) {
+}
+
+@media screen and (max-width: 810px) {
+}
+
+@media screen and (max-width: 767px) {
+  div.table-container { font-size:85%; }
+	form#nav-table-search input:not(.collapsed), form#nav-place-search input:not(.collapsed) { 
+		height: 42px;
+	}
+}

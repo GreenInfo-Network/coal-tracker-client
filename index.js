@@ -190,7 +190,7 @@ $(document).ready(function () {
     setTimeout(function () {
         $('#pleasewait').hide();
         $(window).trigger('resize');
-        performSearch('everything');
+        // performSearch('everything');
     }, 1000);
 });
 
@@ -207,10 +207,11 @@ function updateSearchBar() {
     var search = $('input#mapsearch, input#tablesearch');
     var width = $(window).width();
     if (width < 768) {
+        console.log(width);
         if (search.hasClass('collapsed')) return;
         search.addClass('collapsed');
         setTimeout(function() { search.attr('placeholder','') }, 300);
-        search.siblings('span.glyphicon-search').on('click', function() {
+        search.siblings().find('span.glyphicon-search').on('click', function() {
             search.toggleClass('collapsed');
             if (search.hasClass('collapsed')) {
                 setTimeout(function() { 
