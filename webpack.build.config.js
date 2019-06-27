@@ -17,7 +17,7 @@ module.exports = {
     app: ['./index.js'],
   },
   cache: false,
-  devtool: 'cheap-module-source-map',
+  devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, 'docs'),
     filename: '[name].[hash].js',

@@ -1,10 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const extractSass = new ExtractTextPlugin({
   filename: '[name].[hash].css',
   disable: process.env.NODE_ENV === 'development',
@@ -17,7 +16,7 @@ module.exports = {
     app: ['./index.js'],
   },
   cache: false,
-  devtool: 'cheap-module-source-map',
+  devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, 'docs'),
     filename: '[name].[hash].js',
@@ -72,18 +71,18 @@ module.exports = {
 
   plugins: [
 
-    // this seems to take forever!! but needed for tree-shaking
-    new UglifyJSPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false,
-        },
-        output: {
-          comments: false
-        }
-      },
-      sourceMap: true
-    }),
+    // // this seems to take forever!! but needed for tree-shaking
+    // new UglifyJSPlugin({
+    //   uglifyOptions: {
+    //     compress: {
+    //       warnings: false,
+    //     },
+    //     output: {
+    //       comments: false
+    //     }
+    //   },
+    //   sourceMap: true
+    // }),
 
     extractSass,
 
@@ -98,11 +97,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html'
     }),
-    new CopyWebpackPlugin([
-      { from: 'images/', to: 'images/' },
-      { from: 'libs/', to: 'libs/' },
-      { from: 'data/', to: 'data/' }, 
-    ])
   ],
 
 };
