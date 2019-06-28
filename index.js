@@ -105,9 +105,9 @@ $(document).ready(function () {
       initDataFormat(data)    // get data ready for use
       initButtons();          // init button listeners
       initTabs();             // init the main navigation tabs
+      initTable();            // the Table is fully populated from the trackers dataset, but is filtered at runtime
       initSearch();           // init the full text search
       initFreeSearch();       // init the "free" search inputs, which implement full-text search
-      initTable();            // the Table is fully populated from the trackers dataset, but is filtered at runtime
       initMap();              // regular leaflet map setup
       initMapLayers();        // init some map layers and map feature styles
       initMapControls();      // initialize the layer and basemap pickers, etc.
@@ -240,7 +240,6 @@ function setStateFromParams() {
   // all is well, do the search
   // currently the only search type we support by params is 'country'
   searchCountry(place);
-
 }
 
 function initButtons() {
@@ -760,6 +759,7 @@ function drawTable(trackers, title) {
       lengthMenu     : [50, 100, 500],
       iDisplayLength : 500, // 100 has a noticable lag to it when displaying and filtering; 10 is fastest
       dom            : 'litp',
+      deferRender    : true, // default is false
     });
 
   // every subsequent redraw with new data: we don't need to reinitialize, just clear and update rows
@@ -781,7 +781,7 @@ function updateResultsPanel(data, country=CONFIG.default_title) {
   // update primary content
   $('div#country-results div#results-title h3').text(country);
   var totalrow = $('div#country-results div#total-count').empty();
-  var totaltext = data.length > 0 ? (data.length > 1 ? `${data.length} coal plants` : `${data.length} fossil project`) : `Nothing found`;
+  var totaltext = data.length > 0 ? (data.length > 1 ? `Tracking ${data.length} coal plants` : `${data.length} fossil project`) : `Nothing found`;
   var total = $('<div>',{text: totaltext}).appendTo(totalrow);
 
   // not doing anything else here for now...
@@ -809,7 +809,7 @@ function resetTheMap() {
   $('form.search-form input').val('');
 
   // reset map & table display with the default search
-  render('', true, true, true, true);
+  render({ force: true });
 
   // clear any existing country and feature selection
   CONFIG.selected_country.layer.clearLayers();
@@ -940,12 +940,19 @@ function searchTableForText(e) {
 }
 
 // a controller for rendering 'everything'
-function render(name='', map=true, results=true, table=true, force=false) {
+function render(options) {
+  // define the default values
+  options.name     = options.name || '';
+  options.map      = options.map || true;
+  options.results  = options.results  || true;
+  options.table    = options.table  || true;
+  options.force    = options.force  || false;
+
   // optionally draw the map (and legend) table, results
   $('div.searchwrapper a.clear-search').hide();
-  if (map) drawMap(DATA.tracker_data, force);
-  if (results) updateResultsPanel(DATA.tracker_data);
-  if (table) drawTable(DATA.tracker_data, name);
+  if (options.map) drawMap(DATA.tracker_data, options.force);
+  if (options.results) updateResultsPanel(DATA.tracker_data);
+  if (options.table) drawTable(DATA.tracker_data, options.name);
 }
 
 // on other applications, this has filtered the data to this country;
@@ -986,7 +993,7 @@ function searchCountry(name, bounds) {
   // THEN update results panel for *this* country data only
   // also odd about this approach: this is the only "search" which doesn't update the legend for what you've search for (a country)
   // instead, it shows everything in the legend (since everything IS on the map, but not in the results panel)
-  render(name,true,false,false);
+  render({ name: name, map:true, results:false, table:false });
   updateResultsPanel(data, name);
   drawTable(DATA.fossil_data.features);
 }
