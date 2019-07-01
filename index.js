@@ -21,7 +21,7 @@ const DATA = {};
 // basemap definitions, no options here, just a single set of basemap tiles and labels above features. see initMap();
 CONFIG.basemaps = {
   'hybrid': L.tileLayer('https://{s}.tiles.mapbox.com/v3/greeninfo.map-zudfckcw/{z}/{x}/{y}.jpg', { zIndex:1 }),
-  // 'satellite': L.gridLayer.googleMutant({ type: 'satellite' }),
+  'satellite': L.gridLayer.googleMutant({ type: 'satellite' }),
   'basemap' : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', { attribution: '©OpenStreetMap, ©CartoDB' }),
   'labels': L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}@2x.png', { pane: 'labels' }),
 };
@@ -39,7 +39,7 @@ CONFIG.homebounds = [[51.069, 110.566], [-36.738,-110.566]];
 
 // minzoom and maxzoom for the map
 CONFIG.minzoom = 2;
-CONFIG.maxzoom = 20;
+CONFIG.maxzoom = 17;
 
 // Style definitions (see also scss exports, which are imported here as styles{})
 // a light grey mask covering the entire globe
@@ -100,7 +100,7 @@ CONFIG.status_markers = {
 };
 
 // Note: prunecluster.markercluster.js needs this, and I have not found a better way to provide it
-window.markercluster_colors = Object.keys(CONFIG.status_types).map(function(v) { return CONFIG.status_types[v].color });
+CONFIG.markercluster_colors = Object.keys(CONFIG.status_types).map(function(v) { return CONFIG.status_types[v].color });
 
 // default set of column names, in print format and as they are in the data
 // these are also defined in the trackers model; could be useful in the future for server-side requests
@@ -313,20 +313,20 @@ function initMap() {
 
   // map panes
   // - create a pane for basemap tile labels
-  // CONFIG.map.createPane('labels');
-  // CONFIG.map.getPane('labels').style.zIndex = 475;
-  // CONFIG.map.getPane('labels').style.pointerEvents = 'none';
-  // // - create map panes for county interactions, which will sit between the basemap and labels
-  // CONFIG.map.createPane('country-mask');
-  // CONFIG.map.getPane('country-mask').style.zIndex = 320;
-  // CONFIG.map.createPane('country-hover');
-  // CONFIG.map.getPane('country-hover').style.zIndex = 350;
-  // CONFIG.map.createPane('country-select');
-  // CONFIG.map.getPane('country-select').style.zIndex = 450;
-  // CONFIG.map.createPane('feature-highlight');
-  // CONFIG.map.getPane('feature-highlight').style.zIndex = 530;
-  // CONFIG.map.createPane('feature-pane');
-  // CONFIG.map.getPane('feature-pane').style.zIndex = 550;
+  CONFIG.map.createPane('labels');
+  CONFIG.map.getPane('labels').style.zIndex = 475;
+  CONFIG.map.getPane('labels').style.pointerEvents = 'none';
+  // - create map panes for county interactions, which will sit between the basemap and labels
+  CONFIG.map.createPane('country-mask');
+  CONFIG.map.getPane('country-mask').style.zIndex = 320;
+  CONFIG.map.createPane('country-hover');
+  CONFIG.map.getPane('country-hover').style.zIndex = 350;
+  CONFIG.map.createPane('country-select');
+  CONFIG.map.getPane('country-select').style.zIndex = 450;
+  CONFIG.map.createPane('feature-highlight');
+  CONFIG.map.getPane('feature-highlight').style.zIndex = 530;
+  CONFIG.map.createPane('feature-pane');
+  CONFIG.map.getPane('feature-pane').style.zIndex = 550;
 
   // add attribution
   var credits = L.control.attribution().addTo(CONFIG.map);
@@ -534,13 +534,76 @@ function initPruneCluster() {
   // this is from the categories example; sets ups cluster stats used to derive category colors in the clusters
   CONFIG.clusters.BuildLeafletClusterIcon = function(cluster) {
     var e = new L.Icon.MarkerCluster();
-
     e.stats = cluster.stats;
     e.population = cluster.population;
     return e;
   };
 
-  // don't force zoom to a cluster on click (the default): this is annoying
+  var pi2 = Math.PI * 2;
+
+  L.Icon.MarkerCluster = L.Icon.extend({
+    options: {
+      iconSize: new L.Point(22, 22),
+      className: 'prunecluster leaflet-markercluster-icon'
+    },
+
+    createIcon: function () {
+      // based on L.Icon.Canvas from shramov/leaflet-plugins (BSD licence)
+      var e = document.createElement('canvas');
+      this._setIconStyles(e, 'icon');
+      var s = this.options.iconSize;
+      e.width = s.x;
+      e.height = s.y;
+      this.draw(e.getContext('2d'), s.x, s.y);
+      return e;
+    },
+
+    createShadow: function () {
+      return null;
+    },
+
+    draw: function(canvas, width, height) {
+      var lol = 0;
+      var start = 0;
+      for (var i = 0, l = CONFIG.markercluster_colors.length; i < l; ++i) {
+
+        var size = this.stats[i] / this.population;
+
+        if (size > 0) {
+          canvas.beginPath();
+          canvas.moveTo(11, 11);
+          canvas.fillStyle = CONFIG.markercluster_colors[i];
+          var from = start + 0.14,
+            to = start + size * pi2;
+
+          if (to < from) {
+            from = start;
+          }
+          canvas.arc(11,11,11, from, to);
+
+          start = start + size*pi2;
+          canvas.lineTo(11,11);
+          canvas.fill();
+          canvas.closePath();
+        }
+      }
+
+      canvas.beginPath();
+      canvas.fillStyle = 'white';
+      canvas.arc(11, 11, 7, 0, Math.PI*2);
+      canvas.fill();
+      canvas.closePath();
+
+      canvas.fillStyle = '#555';
+      canvas.textAlign = 'center';
+      canvas.textBaseline = 'middle';
+      canvas.font = 'bold 9px sans-serif';
+
+      canvas.fillText(this.population, 11, 11, 15);
+    }
+  });
+
+  // override this method: don't force zoom to a cluster on click (the default)
   CONFIG.clusters.BuildLeafletCluster = function (cluster, position) {
     var _this = this;
     var m = new L.Marker(position, {
@@ -550,18 +613,17 @@ function initPruneCluster() {
     m.on('click', function () {
       var markersArea = _this.Cluster.FindMarkersInArea(cluster.bounds);
       var b = _this.Cluster.ComputeBounds(markersArea);
-
       if (b) {
-        // skip the force zoom that is here by default, and just show the overlapping icons
-        _this._map.fire('overlappingmarkers', { markers: markersArea, center: m.getLatLng(), marker: m });
+        // skip the force zoom that is here by default, instead, spiderfy the overlapping icons      
+        _this._map.fire('overlappingmarkers', { cluster: _this, markers: markersArea, center: m.getLatLng(), marker: m });
       }
     });
     return m;
   }
 
-  // handle clicks on individual plant markers (not the clusters)
+  // override this method to handle clicks on individual plant markers (not the clusters)
   CONFIG.clusters.PrepareLeafletMarker = function(leafletMarker, data){
-    var html = data.title + "<br>" + "<div class='popup-click-msg'>Click for details</div>";
+    var html = data.title + "<br>" + "<div class='popup-click-msg'>Click the circle for details</div>";
     leafletMarker.bindPopup(html);
     leafletMarker.setIcon(data.icon);
     leafletMarker.attributes = data.attributes;
@@ -608,7 +670,8 @@ function drawMap(data, force_redraw=false) {
 }
 
 function updateClusters(data) {
-  console.log('here now')
+  console.log('here now');
+
   // start by clearing out existing clusters
   CONFIG.clusters.RemoveMarkers();
 
@@ -616,14 +679,18 @@ function updateClusters(data) {
   data.forEach(function(feature) {
     // the "status" of the tracker point affects its icon color
     // and also its membership in CONFIG.status_markers for per-status filtering
-    // console.log(feature);
+
+    // skip bad data: TODO: clean data prior to loading, and parseFloat on lat/lng
+    if (feature == null) return;
+    if (feature.id === undefined || feature.id == '') return;
     if (feature.status === undefined || feature.status == '') return;
     if (feature.lat === undefined || feature.lat == '') return;
     if (feature.lng === undefined || feature.lng == '') return;
     var status = feature.status.toLowerCase();
     var statusId = CONFIG.status_types[status]['id'];
     var cssClass = `status${statusId + 1}`;
-    var marker = new PruneCluster.Marker(feature.lat, feature.lng, {
+    var marker = new PruneCluster.Marker(parseFloat(feature.lat), parseFloat(feature.lng), {
+      title: feature.unit,
       icon: L.divIcon({
           className: 'circle-div ' + cssClass, // Specify a class name we can refer to in CSS.
           iconSize: [15, 15] // Set the marker width and height
@@ -639,7 +706,7 @@ function updateClusters(data) {
     marker.data.coordinates = [ feature.lat, feature.lng ];
 
     // set the category for PruneCluster-ing
-    marker.category = statusId;
+    marker.category = parseInt(statusId);
 
     // furthermore, if the marker shouldn't be visible at first, filter the marker by setting the filtered flag to true (=don't draw me)
     if (!CONFIG.status_types[status].visible) marker.filtered = true;
@@ -799,7 +866,7 @@ function updateResultsPanel(data, country=CONFIG.default_title) {
   // update primary content
   $('div#country-results div#results-title h3').text(country);
   var totalrow = $('div#country-results div#total-count').empty();
-  var totaltext = data.length > 0 ? (data.length > 1 ? `Tracking ${data.length} coal plants` : `${data.length} fossil project`) : `Nothing found`;
+  var totaltext = data.length > 0 ? (data.length > 1 ? `Tracking ${data.length.toLocaleString()} coal plants` : `${data.length} fossil project`) : `Nothing found`;
   var total = $('<div>',{text: totaltext}).appendTo(totalrow);
 
   // not doing anything else here for now...
