@@ -4,29 +4,16 @@
 
 /* manage global CSS vars here */
 
-/* status colors: custom defined */
-$status1: #845440;
-/* MORE RED THAN BROWN $status1: #650303;*/
-$status2: #cc0000;
-$status3: #ffa500;
-/* PROPOSED $status4: #4CDB4C; */
-$status4: #7dd47d;
-/* PROPOSED $status5: #5974a2;*/
-/* PROPOSED $status6: #58a1a1;*/
-$status5: #74add1;
-$status6: #4575b4;
-$status7: #cccccc;
-
-/*old brewer based ramp
-
-$status1: #a50026;
-$status2: #d73027;
-$status3: #f46d43;
-$status4: #fdae61;
-$status5: #74add1;
-$status6: #4575b4;
-$status7: #313695;*/
-
+/* status colors: defined here, used and exported below */
+$status1: #f3ff00;
+$status2: #ffa500;
+$status3: #F26C4F;
+$status4: #ff0000;
+$status5: #5974a2;
+$status6: #58a1a1;
+$status7: #4CDB4C;
+$status8: #845440;
+$status9: #d6a490;
 
 /* highlight color that is applied on selection */
 $highlight-color: #f2e360;
@@ -53,6 +40,9 @@ $circleopacity: 0.85;
   status5: $status5;
   status6: $status6;
   status7: $status7;
+  status8: $status8;
+  status9: $status9;
+
   lineopacity: $lineopacity;
   linewidth: $linewidth;
   linewidth_mobile: $linewidth_mobile;
@@ -262,30 +252,7 @@ div#layers-icon {
 
 /* Map legend and map marker styles */
 /* legend markers used in map legend, lines and circles*/
-div.circle { 
- opacity: $circleopacity;
- float: left;
- margin: 0 6px 0 0;
- width:13px;
- height:13px;
- border-radius:50%;
- border: 1px solid rgba(100,100,100,0.8);
-}
 
-div.line { 
- opacity: $lineopacity;
- float: left;
- width: 13px;
- height: 4px;
- margin-top: 3px;
- margin-left: -1px;
- margin-right: 7px;
-}
-
-div.empty {
-  background: #cecece;
-  border: 1px solid rgba(100,100,100,0.8);
-}
 
 div.line.empty { 
   height:6px;
@@ -316,6 +283,8 @@ div.layer-control span.legend-title {
 .status5 {background: $status5;}
 .status6 {background: $status6;}
 .status7 {background: $status7;}
+.status8 {background: $status8;}
+.status9 {background: $status9;}
 .highlight-icon {background: $highlight-color;}
 
 /* map tooltip style */
@@ -443,6 +412,31 @@ input.form-control:focus, select.form-control:focus {
 div#table table.table {
   font-size:12px;
 }
+
+/*Prunecluster (a leaflet clustering library) styles*/
+.prunecluster { font-size: 12px; border-radius: 20px; transition: all 0.3s linear; }
+.leaflet-marker-icon:not(.no-anim),
+.leaflet-marker-shadow:not(.no-anim),
+.leaflet-markercluster-icon:not(.no-anim) {
+    transition: all 0.3s linear;
+}
+/* Prunecluster animations */
+.leaflet-zoom-anim .leaflet-zoom-animated.leaflet-marker-icon:not(.no-anim),
+.leaflet-zoom-anim .leaflet-zoom-animated.leaflet-marker-shadow:not(.no-anim),
+.leaflet-zoom-anim .leaflet-zoom-animated.leaflet-markercluster-icon:not(.no-anim) {
+    transition: transform 0.25s cubic-bezier(0,0,0.25,1);
+}
+/* additional prunecluster styles */
+.prunecluster div { width: 30px; height: 30px; text-align: center; margin-left: 5px; margin-top: 5px; border-radius: 50%;}
+.prunecluster div span { line-height: 30px; }
+.prunecluster-small { background-color: #b5e28c; background-color: rgba(181, 226, 140, 0.6); }
+.prunecluster-small div { width: 28px; height: 28px; background-color: #6ecc39; background-color: rgba(110, 204, 57, 0.6); }
+.prunecluster-small div span { line-height: 28px; }
+.prunecluster-medium { background-color: #f1d357; background-color: rgba(241, 211, 87, 0.6);}
+.prunecluster-medium div { background-color: #f0c20c; background-color: rgba(240, 194, 12, 0.6);}
+.prunecluster-large { background-color: #fd9c73; background-color: rgba(253, 156, 115, 0.6);}
+.prunecluster-large div { width: 34px; height: 34px; background-color: #f18017; background-color: rgba(241, 128, 23, 0.6);}
+.prunecluster-large div span { line-height: 34px; }
 
 /* Media Queries */
 /* styles specific to larger screens: only apply above stated pixel width (greater or equal to); */

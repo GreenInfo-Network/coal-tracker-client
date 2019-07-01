@@ -21,7 +21,7 @@ const DATA = {};
 // basemap definitions, no options here, just a single set of basemap tiles and labels above features. see initMap();
 CONFIG.basemaps = {
   'hybrid': L.tileLayer('https://{s}.tiles.mapbox.com/v3/greeninfo.map-zudfckcw/{z}/{x}/{y}.jpg', { zIndex:1 }),
-  'satellite': L.gridLayer.googleMutant({ type: 'satellite' }),
+  // 'satellite': L.gridLayer.googleMutant({ type: 'satellite' }),
   'basemap' : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', { attribution: '©OpenStreetMap, ©CartoDB' }),
   'labels': L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}@2x.png', { pane: 'labels' }),
 };
@@ -39,7 +39,7 @@ CONFIG.homebounds = [[51.069, 110.566], [-36.738,-110.566]];
 
 // minzoom and maxzoom for the map
 CONFIG.minzoom = 2;
-CONFIG.maxzoom = 15;
+CONFIG.maxzoom = 20;
 
 // Style definitions (see also scss exports, which are imported here as styles{})
 // a light grey mask covering the entire globe
@@ -49,9 +49,6 @@ CONFIG.country_hover_style    = { stroke: false, fillColor: '#fffef4', fillOpaci
 CONFIG.country_selected_style = { stroke: false, fillColor: '#fff', fillOpacity: 1 };
 // an "invisible" country style, as we don't want countries to show except on hover or click
 CONFIG.country_no_style = { opacity: 0, fillOpacity: 0 };
-// feature highlight styles, shows below features on hover or click
-CONFIG.feature_hover_style  = { color: '#fff5a3', fillOpacity: 1, stroke: 13, weight: 13, opacity: 1 };
-CONFIG.feature_select_style = { color: '#f2e360', fillOpacity: 1, stroke: 13, weight: 13, opacity: 1 };
 
 // primary attributes to display: used in the table, for searching, displaying individual results on map popups, etc.
 CONFIG.attributes = {
@@ -75,26 +72,56 @@ CONFIG.attributes = {
 //          text: human readible display
 //          color: imported from CSS
 CONFIG.status_types = {
-  'operating': {'text': 'Operating', 'order': 1 },
-  'construction': {'text': 'Construction', 'order': 2 },
-  'proposed': {'text': 'Proposed', 'order': 3 },
-  'cancelled': {'text': 'Cancelled', 'order': 4 },
-  'shelved': {'text': 'Shelved', 'order': 5 },
-  'retired': {'text': 'Retired', 'order': 6 },
-  'mothballed': {'text': 'Mothballed', 'order': 7 },
+  'announced': {'id': 0, 'text': 'Announced', 'color': styles.status1, 'visible': true},
+  'pre-permit': {'id': 1, 'text': 'Pre-permit', 'color': styles.status2, 'visible': true},
+  'permitted': {'id': 2, 'text': 'Permitted', 'color': styles.status3, 'visible': true},
+  'construction': {'id': 3, 'text': 'Construction', 'color': styles.status4, 'visible': true},
+  'shelved': {'id': 4, 'text': 'Shelved', 'color': styles.status5, 'visible': true},
+  'retired': {'id': 5, 'text': 'Retired', 'color': styles.status6, 'visible': true},
+  'cancelled': {'id': 6, 'text': 'Cancelled', 'color': styles.status7, 'visible': true},
+  'operating': {'id': 7, 'text': 'Operating', 'color': styles.status8, 'visible': true},
+  'mothballed': {'id': 8, 'text': 'Mothballed', 'color': styles.status9, 'visible': true},
 };
 
-// define primary types here. This structure will also be used to hold Leaflet Geojson layers, and other properties
-CONFIG.fossil_types = {
-  'Coal Terminal': {'name': 'Coal Terminals', 'symbol': 'circle'},
-  'LNG Terminal': {'name': 'LNG Terminals', 'symbol': 'circle'},
-  // at some point, they dropped the word 'pipeline' from their pipeline data "type" field
-  'Oil': {'name': 'Oil Pipelines', 'symbol': 'line'},
-  'Gas': {'name': 'Gas Pipelines', 'symbol': 'line'},
+// used to keep a list of markers showing for a particular country or place, by status
+// allows us to 'filter' markers, e.g. show/hide using FilterMarkers method added to leaflet.prunecluster.js
+// ** IMPORTANT: ensure that these keys match the keys in CONFIG.status_types exactly
+// NOTE: Keep in order by status type id (above), otherwise the clusters "pie charts" will not get the correct color
+CONFIG.status_markers = {
+  'announced': {'markers': []},
+  'pre-permit': {'markers': []},
+  'permitted': {'markers': []},
+  'construction': {'markers': []},
+  'shelved': {'markers': []},
+  'retired': {'markers': []},
+  'cancelled': {'markers': []},
+  'operating': {'markers': []},
+  'mothballed': {'markers': []},
+};
+
+// Note: prunecluster.markercluster.js needs this, and I have not found a better way to provide it
+window.markercluster_colors = Object.keys(CONFIG.status_types).map(function(v) { return CONFIG.status_types[v].color });
+
+// default set of column names, in print format and as they are in the data
+// these are also defined in the trackers model; could be useful in the future for server-side requests
+// at the moment, everything comes in through geojson; see README.txt (countries.json, trackers.json)
+// if adding a column to the table or popup view, make sure the field is a) added here, b) included in the trackers.json export (see README.txt), and c) stub out html for the new field in the table and the popup
+CONFIG.column_names = {
+    'Unit': 'unit',
+    'Plant': 'plant',
+    'Other names': 'other_names',
+    'Wiki Page': 'wiki_page',
+    'Sponsor': 'sponsor',
+    'Capacity (MW)': 'capacity_mw',
+    'Status': 'status',
+    'Region': 'region',
+    'Country': 'country',
+    'Subnational unit': 'subnational_unit',
 };
 
 // allowed url params. To support additional params, add them here
 CONFIG.allowed_params = ['country'];
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// INITIALIZATION: these functions are called when the page is ready,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,6 +138,7 @@ $(document).ready(function () {
       initMap();              // regular leaflet map setup
       initMapLayers();        // init some map layers and map feature styles
       initMapControls();      // initialize the layer and basemap pickers, etc.
+      initPruneCluster();     // init the prune clustering library
       initState();            // init app state given url options
 
       // ready!
@@ -195,7 +223,6 @@ function initDataFormat(data) {
     },
   });
   DATA.tracker_data = trackers_json.data;
-  console.log(DATA.tracker_data[0]);
 }
 
 // take our oddly formatted country lists and normalize it, standardize it
@@ -286,20 +313,20 @@ function initMap() {
 
   // map panes
   // - create a pane for basemap tile labels
-  CONFIG.map.createPane('labels');
-  CONFIG.map.getPane('labels').style.zIndex = 475;
-  CONFIG.map.getPane('labels').style.pointerEvents = 'none';
-  // - create map panes for county interactions, which will sit between the basemap and labels
-  CONFIG.map.createPane('country-mask');
-  CONFIG.map.getPane('country-mask').style.zIndex = 320;
-  CONFIG.map.createPane('country-hover');
-  CONFIG.map.getPane('country-hover').style.zIndex = 350;
-  CONFIG.map.createPane('country-select');
-  CONFIG.map.getPane('country-select').style.zIndex = 450;
-  CONFIG.map.createPane('feature-highlight');
-  CONFIG.map.getPane('feature-highlight').style.zIndex = 530;
-  CONFIG.map.createPane('feature-pane');
-  CONFIG.map.getPane('feature-pane').style.zIndex = 550;
+  // CONFIG.map.createPane('labels');
+  // CONFIG.map.getPane('labels').style.zIndex = 475;
+  // CONFIG.map.getPane('labels').style.pointerEvents = 'none';
+  // // - create map panes for county interactions, which will sit between the basemap and labels
+  // CONFIG.map.createPane('country-mask');
+  // CONFIG.map.getPane('country-mask').style.zIndex = 320;
+  // CONFIG.map.createPane('country-hover');
+  // CONFIG.map.getPane('country-hover').style.zIndex = 350;
+  // CONFIG.map.createPane('country-select');
+  // CONFIG.map.getPane('country-select').style.zIndex = 450;
+  // CONFIG.map.createPane('feature-highlight');
+  // CONFIG.map.getPane('feature-highlight').style.zIndex = 530;
+  // CONFIG.map.createPane('feature-pane');
+  // CONFIG.map.getPane('feature-pane').style.zIndex = 550;
 
   // add attribution
   var credits = L.control.attribution().addTo(CONFIG.map);
@@ -309,13 +336,9 @@ function initMap() {
   CONFIG.mask = L.featureGroup([L.polygon(CONFIG.outerring)], {pane: 'country-mask' }).addTo(CONFIG.map);
   CONFIG.mask.setStyle(CONFIG.maskstyle);
 
-  // Add a layer to hold feature highlights, for click and hover (not mobile) events on fossil features
-  CONFIG.feature_hover = L.featureGroup([], {}).addTo(CONFIG.map);
-  CONFIG.feature_select = L.featureGroup([], {}).addTo(CONFIG.map);
-
   // Add a layer to hold countries, for click and hover (not mobile) events on country features
   CONFIG.countries = L.featureGroup([], { pane: 'country-hover' }).addTo(CONFIG.map);
-  var countries = L.geoJSON(DATA.country_data,{ style: CONFIG.country_no_style, onEachFeature: massageCountryFeaturesAsTheyLoad }).addTo(CONFIG.countries);
+  var countries = L.geoJson(DATA.country_data,{ style: CONFIG.country_no_style, onEachFeature: massageCountryFeaturesAsTheyLoad }).addTo(CONFIG.countries);
 
   // add a layer to hold any selected country
   CONFIG.selected_country = {};
@@ -329,14 +352,8 @@ function initMap() {
   CONFIG.map.on('load', function() {
     resize();
     CONFIG.map.invalidateSize();
-    setTimeout(function() {$('div#loading').hide();},200);
   });
 
-  // when clicking the map (not a feature), clear selected features
-  CONFIG.map.on('click', function(e) {
-    // clear any selected features
-    CONFIG.feature_select.clearLayers();              
-  })
 }
 
 function initMapLayers() {
@@ -344,11 +361,6 @@ function initMapLayers() {
   CONFIG.map.addLayer(CONFIG.basemaps.basemap);
   CONFIG.map.addLayer(CONFIG.basemaps.labels);
 
-  // mobile feature styles: larger lines, bigger circles, for easier clicks
-  if ( isMobile() ) {
-    styles.linewidth = styles.linewidth_mobile;
-    styles.circlesize = styles.circlesize_mobile;
-  }
 }
 
 // init the legend and layer control
@@ -356,7 +368,6 @@ function initMapLayers() {
 // they work 'semi-independently', you can toggle features on the map by type OR by status
 function initMapControls() {
   // grab keys for fossil and status types
-  var types    = Object.keys(CONFIG.fossil_types);
   var statuses = Object.keys(CONFIG.status_types);
 
   // What happens when you change a STATUS type checkbox?
@@ -510,7 +521,59 @@ function initFreeSearch() {
 
   // the submit function itself
   $('form.free-search').on('submit', searchMapForText);
+}
 
+
+// initialize the PruneClusters, and override some factory methods
+function initPruneCluster() {
+  // create a new PruceCluster object, with a minimal cluster size of (30)
+  // updated arg to 30; seems to really help countries like China/India
+  CONFIG.clusters = new PruneClusterForLeaflet(30); 
+  CONFIG.map.addLayer(CONFIG.clusters);
+
+  // this is from the categories example; sets ups cluster stats used to derive category colors in the clusters
+  CONFIG.clusters.BuildLeafletClusterIcon = function(cluster) {
+    var e = new L.Icon.MarkerCluster();
+
+    e.stats = cluster.stats;
+    e.population = cluster.population;
+    return e;
+  };
+
+  // don't force zoom to a cluster on click (the default): this is annoying
+  CONFIG.clusters.BuildLeafletCluster = function (cluster, position) {
+    var _this = this;
+    var m = new L.Marker(position, {
+      icon: this.BuildLeafletClusterIcon(cluster)
+    });
+    // this defines what happen when you click a cluster, not the underlying icons
+    m.on('click', function () {
+      var markersArea = _this.Cluster.FindMarkersInArea(cluster.bounds);
+      var b = _this.Cluster.ComputeBounds(markersArea);
+
+      if (b) {
+        // skip the force zoom that is here by default, and just show the overlapping icons
+        _this._map.fire('overlappingmarkers', { markers: markersArea, center: m.getLatLng(), marker: m });
+      }
+    });
+    return m;
+  }
+
+  // handle clicks on individual plant markers (not the clusters)
+  CONFIG.clusters.PrepareLeafletMarker = function(leafletMarker, data){
+    var html = data.title + "<br>" + "<div class='popup-click-msg'>Click for details</div>";
+    leafletMarker.bindPopup(html);
+    leafletMarker.setIcon(data.icon);
+    leafletMarker.attributes = data.attributes;
+    leafletMarker.coordinates = data.coordinates;
+    leafletMarker.on('click',function () {
+      openTrackerInfoPanel(this);
+    });
+    leafletMarker.on('mouseover', function() {
+      this.openPopup();
+    });
+    leafletMarker.on('mouseout', function() { CONFIG.map.closePopup(); });
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -518,125 +581,80 @@ function initFreeSearch() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Set up all map layers for all types and statuses, and set up layer objects in CONFIG.status_types['layers'], so we can turn them on and off later.
-function drawMap(data, force=false) {
-  // a simple caching system: if everything is already on the map, simply return, because there is no need to render it again
-  // this lets us call drawMap() when simply clicking around countries, without hitting a full render repeatedly
-  // pass force=true to skip this check and redraw regardless
-  if (force == false && data.length == CONFIG.last_search_length && data.length == DATA.fossil_data.features.length && CONFIG.last_search_length == DATA.fossil_data.features.length) return;
-  CONFIG.last_search_length = data.length;
-  // grab keys for fossil and status types
-  var types    = Object.keys(CONFIG.fossil_types);
-  var statuses = Object.keys(CONFIG.status_types);
-  // always first clear the map
-  types.forEach(function(type) {
-    if (CONFIG.fossil_types[type].hasOwnProperty('layers')) {
-      statuses.forEach(function(status) {
-        if (CONFIG.fossil_types[type]['layers'][status]) CONFIG.fossil_types[type]['layers'][status].remove();
-      })
-    }
+function drawMap(data, force_redraw=false) {
+  // step 1: clear the marker custering system and repopulate it with the current set of tracker points
+  // as we go through, log what statuses are in fact seen; this is used in step 5 to show/hide checkboxes for toggling trackers by status
+  var statuses   = {};
+  var trackers   = [];
+  data.forEach(function (tracker, i) {
+    var status = tracker.status;
+    statuses[status] = true; // log that this status has been seen, see step 4 below
+
+    // add the feature to the trackers list for the table
+    trackers.push(tracker);
+
   });
+  // var bounds = L.geoJson(data_trackers.features).getBounds();
+  // MAP.fitBounds(bounds); 
+  // MAPBOUNDS = bounds; // keep for later
 
-  // create a single layer for each status type in each fossil type
-  // each will get a separate entry in the legend
-  var legend_items = {types: [], statuses: []};
-  types.forEach(function(type) {
-    // differentiate between pipelines and terminals, as these have different styling, below
-    var geom = type == 'Gas' || type == 'Oil' ? 'line' : 'point';
-    // create an object to hold the resulting layers, so we can toggle them in the layer-control
-    CONFIG.fossil_types[type]['layers'] = {};
+  // step 2 and 3: update the table and the marker clustering, now that "trackers" is implicitly filtered to everything that we need
+  updateClusters(trackers);
+  drawTable(trackers, 'All Trackers');
 
-    statuses.forEach(function(status) {
-      if (!CONFIG.status_types[status].hasOwnProperty('count')) CONFIG.status_types[status].count = 0;
-      var cssclass = `status${CONFIG.status_types[status]['order']}`;
-      var layer = L.geoJSON(data, {
-        pane: 'feature-pane',
-        pointToLayer: function (feature, latlng) {
-          // not sure if non-point features will sinply bypass this, but seems to be the case
-          // in any case, explicity test for point before proceeding
-          if (feature.geometry.type != "Point") return;
-          // ok, we're not a line, carry on
-          var icon = L.divIcon({
-            // Specify a class name we can refer to in CSS.
-            // fossil-feature allows us to distinguish between fossil features and countries on hover
-            className: `fossil-feature circle-div ${cssclass}`,
-            // Set the marker width and height
-            iconSize: [styles.circlesize, styles.circlesize],
-          });
-          return L.marker(latlng, {icon: icon});
-        },
-        onEachFeature: function (feature, layer) {
-          // Tooltips: only on Desktop, not mobile, not touch, not iPad
-          if (! (isTouch() && ( isMobile() || isIpad() ))) {
-            layer.bindTooltip(`<p>${feature.properties.project}</p>`, {className: 'fossil-tooltip', offset: [6,-16], sticky: true});
-          }
-          // bind a popup and a basic tooltip, regardless of feature type or geometry. When a popup opens, close any open tooltips
-          layer.bindPopup(`<p><b>Project:</b> ${feature.properties.project}<br><b>Wiki page:</b> <a target="_blank" href="${feature.properties.url}">${feature.properties.url}</a></p>`);
+  // step 4: hide the status toggle checkboxes, showing only the ones which in fact have a status represented
+  // drawLegend(statuses);
 
-          // get and set the color for this status
-          // but only for pipelines
-          if (layer.feature.geometry.type == "Point") return;
-          // fossil-feature class allows us to distinguish between fossil features and countries on hover
-          layer.setStyle({ color: styles[cssclass], weight: styles.linewidth, opacity: styles.lineopacity, 'className': 'fossil-feature' });
-        },
-        filter: function(feature) {
-          if (feature.properties.type == type && feature.properties.status == status) {
-            // log this type and status, for the legend
-            if (legend_items.types.indexOf(type) < 0) legend_items.types.push(type);
-            if (legend_items.statuses.indexOf(status) < 0) legend_items.statuses.push(status);
-            // return true, for the L.geoJson filter, so this feature is added to the map
-            return true;
-          }
-        }
-      }).addTo(CONFIG.map);
-      // looks like L.geoJson will make a layer even when it is empty of layers, so check for that
-      if (layer.getLayers().length == 0) return;
-
-      // hover: show the hovered feature with a hover style
-      // but only on Desktop
-      if (! (isTouch() && ( isMobile() || isIpad() ))) {
-        layer.on('mouseover',function(e) {
-          // point hover highlight: needed? Not sure, and hovering is causing a ton of 'flicker' for some reason
-          // for now bypass point features, and only highlight lines
-          if (geom == 'line') {
-            var hover = L.polyline(e.layer.getLatLngs(), { pane: 'feature-highlight' });
-            hover.setStyle(CONFIG.feature_hover_style);
-            hover.addTo(CONFIG.feature_hover);
-          }
-        });
-      }
-
-      // when hovering off of a country, over a fossil feature, then 'off the map'
-      // the country can sometimes stay highlighted. This removes that highlight
-      // see also massageCountryFeaturesAsTheyLoad()
-      if (! (isTouch() && ( isMobile() || isIpad() ))) {
-        layer.on('mouseout',function(e) {
-          if (e.originalEvent.target.classList.contains('mask')) CONFIG.countries.setStyle(CONFIG.country_no_style);
-          // clear feature highlight, but not if one has been selected by click
-          CONFIG.feature_hover.clearLayers();
-        });
-      }
-
-      // add feature highlight on click
-      layer.on('click', function(e) {
-        // clear any existing feature highlights
-        CONFIG.feature_select.clearLayers();
-        // point select highlight: needed? Not sure, and hovering is causing a ton of 'flicker' for some reason
-        // for now bypass point features, and only highlight lines
-        if (geom == 'line') {
-          var highlight = L.polyline(e.layer.getLatLngs(), { pane: 'feature-highlight' });
-          highlight.setStyle(CONFIG.feature_select_style);
-          highlight.addTo(CONFIG.feature_select);
-        } 
-      });
-
-      // add the layer to the list by status, so we can toggle it on/off in the legend
-      CONFIG.fossil_types[type]['layers'][status] = layer;
-    }); // each status
-  }); // each type
-
-  // final step: update the legend
-  drawLegend(legend_items);
 }
+
+function updateClusters(data) {
+  console.log('here now')
+  // start by clearing out existing clusters
+  CONFIG.clusters.RemoveMarkers();
+
+  // iterate over the data and set up the clusters
+  data.forEach(function(feature) {
+    // the "status" of the tracker point affects its icon color
+    // and also its membership in CONFIG.status_markers for per-status filtering
+    // console.log(feature);
+    if (feature.status === undefined || feature.status == '') return;
+    if (feature.lat === undefined || feature.lat == '') return;
+    if (feature.lng === undefined || feature.lng == '') return;
+    var status = feature.status.toLowerCase();
+    var statusId = CONFIG.status_types[status]['id'];
+    var cssClass = `status${statusId + 1}`;
+    var marker = new PruneCluster.Marker(feature.lat, feature.lng, {
+      icon: L.divIcon({
+          className: 'circle-div ' + cssClass, // Specify a class name we can refer to in CSS.
+          iconSize: [15, 15] // Set the marker width and height
+        })
+    });
+
+    // get the attributes for use in the custom popup dialog (see openTrackerInfoPanel())
+    marker.data.attributes = feature;
+
+    // get the lat-lng now so we can zoom to the plant's location later
+    // getting the lat-lng of the spider won't work, since it gets spidered out to some other place
+    // tip: the raw dataset is lng,lat and Leaflet is lat,lng
+    marker.data.coordinates = [ feature.lat, feature.lng ];
+
+    // set the category for PruneCluster-ing
+    marker.category = statusId;
+
+    // furthermore, if the marker shouldn't be visible at first, filter the marker by setting the filtered flag to true (=don't draw me)
+    if (!CONFIG.status_types[status].visible) marker.filtered = true;
+
+    // register the marker for PruneCluster clustering
+    CONFIG.clusters.RegisterMarker(marker);
+
+    // also add the marker to the list by status, so we can toggle it on/off in the legend
+    // see CONFIG.map.on('overlayadd') and CONFIG.map.on('overlayremove')
+    CONFIG.status_markers[status].markers.push(marker);
+  });
+  // all set!
+  CONFIG.clusters.ProcessView();
+}
+
 
 // show and hide the correct legend labels and checkboxes for this set of data
 // items comes from the data search itself
@@ -809,11 +827,10 @@ function resetTheMap() {
   $('form.search-form input').val('');
 
   // reset map & table display with the default search
-  render({ force: true });
+  render({ force_redraw: true });
 
   // clear any existing country and feature selection
   CONFIG.selected_country.layer.clearLayers();
-  CONFIG.feature_select.clearLayers();
   CONFIG.selected_country.name = '';
 
   // switch back to the map tab
@@ -902,7 +919,6 @@ function searchMapForText(e) {
   drawTable(results, keywords);                     // populate the table
   $('form#nav-table-search input').val(keywords);   // sync the table search input with the keywords
   CONFIG.selected_country.layer.clearLayers();      // clear any selected country
-  CONFIG.feature_select.clearLayers();              // clear any selected features
   CONFIG.selected_country.name = '';                // ... and reset the name
   $('div#country-results').show();                  // show the results panel, in case hidden
   $('a.clear-search').show();                       // show the clear search links
@@ -933,26 +949,25 @@ function searchTableForText(e) {
   });
   drawMap(data);                                    // update the map
   $('form.free-search input').val(keywords);        // sync the map search input with the keywords
-  CONFIG.feature_select.clearLayers();              // clear any selected map features
   CONFIG.selected_country.layer.clearLayers();      // clear any selected country
   updateResultsPanel(data, keywords);               // update the results panel
   $('a.clear-search').show();                       // show the clear search links
 }
 
-// a controller for rendering 'everything'
+// The primary controller for rendering things
 function render(options) {
-  // define the default values
-  options.name     = options.name || '';
-  options.map      = options.map || true;
-  options.results  = options.results  || true;
-  options.table    = options.table  || true;
-  options.force    = options.force  || false;
+  // Default values for options are defined here
+  options.name          = options.name         || '';
+  options.map           = options.map          || true;
+  options.results       = options.results      || true;
+  options.table         = options.table        || true;
+  options.force_redraw  = options.force_redraw || false;
 
   // optionally draw the map (and legend) table, results
   $('div.searchwrapper a.clear-search').hide();
-  if (options.map) drawMap(DATA.tracker_data, options.force);
+  if (options.map)     drawMap(DATA.tracker_data, options.force_redraw);
   if (options.results) updateResultsPanel(DATA.tracker_data);
-  if (options.table) drawTable(DATA.tracker_data, options.name);
+  if (options.table)   drawTable(DATA.tracker_data, options.name);
 }
 
 // on other applications, this has filtered the data to this country;

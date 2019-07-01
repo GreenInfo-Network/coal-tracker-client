@@ -9,21 +9,21 @@ L.Icon.MarkerCluster = L.Icon.extend({
     },
 
     createIcon: function () {
-        // based on L.Icon.Canvas from shramov/leaflet-plugins (BSD licence)
-        var e = document.createElement('canvas');
-        this._setIconStyles(e, 'icon');
-        var s = this.options.iconSize;
+    // based on L.Icon.Canvas from shramov/leaflet-plugins (BSD licence)
+    var e = document.createElement('canvas');
+    this._setIconStyles(e, 'icon');
+    var s = this.options.iconSize;
 
-        if (L.Browser.retina) {
-            e.width = s.x + s.x;
-            e.height = s.y + s.y;
-        } else {
-            e.width = s.x;
-            e.height = s.y;
-        }
+    if (L.Browser.retina) {
+        e.width = s.x + s.x;
+        e.height = s.y + s.y;
+    } else {
+        e.width = s.x;
+        e.height = s.y;
+    }
 
-        // this.draw(e.getContext('2d'), s.x, s.y);
-        this.draw(e.getContext('2d'), e.width, e.height);
+    // this.draw(e.getContext('2d'), s.x, s.y);
+    this.draw(e.getContext('2d'), e.width, e.height);
         return e;
     },
 
@@ -60,7 +60,7 @@ L.Icon.MarkerCluster = L.Icon.extend({
             if (size > 0) {
 
                 // stroke set to true/false if size
-                // will show between colors if more than one category
+                // will show between window.markercluster_colors if more than one category
                 stroke = size != 1; 
 
                 canvas.beginPath();
