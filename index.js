@@ -595,7 +595,6 @@ function initPruneCluster() {
             from = start;
           }
           canvas.arc(11,11,11, from, to);
-
           start = start + size*pi2;
           canvas.lineTo(11,11);
           canvas.fill();
