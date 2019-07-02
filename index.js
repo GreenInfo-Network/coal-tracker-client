@@ -356,8 +356,6 @@ function initButtons() {
       CONFIG.back.remove(CONFIG.map);
     }
   });
-
-
 }
 
 // initialize the map in the main navigation map tab
@@ -577,18 +575,21 @@ function initPruneCluster() {
     },
 
     draw: function(canvas, width, height) {
-      var lol = 0;
+      // the pie chart itself
       var start = 0;
       for (var i = 0, l = CONFIG.markercluster_colors.length; i < l; ++i) {
-
+        // the size of this slice of the pie
         var size = this.stats[i] / this.population;
-
+        console.log('size', size);
         if (size > 0) {
           canvas.beginPath();
           canvas.moveTo(11, 11);
           canvas.fillStyle = CONFIG.markercluster_colors[i];
-          var from = start + 0.14,
-            to = start + size * pi2;
+          // start from a smidgen away, to create a tiny gap, unless this is a single slice pie
+          // in which case we don't want a gap
+          var gap = size == 1 ? 0 : 0.15
+          var from = start + gap;
+          var to = start + size * pi2;
 
           if (to < from) {
             from = start;
@@ -602,12 +603,14 @@ function initPruneCluster() {
         }
       }
 
+      // the white circle on top of the pie chart, to make the middle of the "donut"
       canvas.beginPath();
       canvas.fillStyle = 'white';
       canvas.arc(11, 11, 7, 0, Math.PI*2);
       canvas.fill();
       canvas.closePath();
 
+      // the text label count
       canvas.fillStyle = '#555';
       canvas.textAlign = 'center';
       canvas.textBaseline = 'middle';
