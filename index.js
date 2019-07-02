@@ -125,42 +125,28 @@ CONFIG.allowed_params = ['country'];
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// INITIALIZATION: these functions are called when the page is ready,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-console.time('everything');
 $(document).ready(function () {
   // data initialization first, then the remaining init steps
   Promise.all([initData('./data/trackers.json'), initData('./data/countries.json'), initData('./data/country_lookup.csv')])
     .then(function(data) {
-      console.time('format');
       initDataFormat(data)    // get data ready for use
-      console.timeEnd('format');
-      console.time('these things');
       initButtons();          // init button listeners
       initTabs();             // init the main navigation tabs
       initTable();            // the Table is fully populated from the trackers dataset, but is filtered at runtime
-      console.timeEnd('these things');
-      console.time('search');
       initSearch();           // init the full text search
       initFreeSearch();       // init the "free" search inputs, which implement full-text search
-      console.timeEnd('search');
-      console.time('map');
       initMap();              // regular leaflet map setup
       initMapLayers();        // init some map layers and map feature styles
       initStatusCheckboxes(); // initialize the checkboxes to turn on/off trackers by status
-      console.timeEnd('map');
-      console.time('prune');
       initPruneCluster();     // init the prune clustering library
-      console.timeEnd('prune');
       
-      console.time('state');
       initState();            // init app state given url options
-      console.timeEnd('state');
 
       // ready!
       setTimeout(function () {
         resize();
         $('div#pleasewait').hide();
       }, 300);
-console.timeEnd('everything');
     }); // Promise.then()
 });
 
@@ -226,19 +212,8 @@ function initDataFormat(data) {
     DATA.country_lookup[row.data] = row.map;
   });
 
-  // Tracker data: convert CSV to JSON
-  // and keep a reference to this in DATA
-  // var trackers_json = Papa.parse(data[0], {
-  //   header: true,
-  //   // replace the headers with ones shorter, easier to access
-  //   beforeFirstChunk: function(chunk) {
-  //     var rows = chunk.split( /\r\n|\r|\n/ );
-  //     rows[0] = Object.keys(CONFIG.attributes);
-  //     return rows.join("\r\n");
-  //   },
-  // });
+  // keep a reference to the tracker data JSON
   DATA.tracker_data = data[0];
-  console.log(DATA.tracker_data)
 }
 
 // take our oddly formatted country lists and normalize it, standardize it
@@ -310,6 +285,79 @@ function initButtons() {
     $(this).siblings('input').val('').trigger('keyup');
     $(this).hide();
   });
+
+  // init the zoom button that shows on the modal details for an individual coal plant
+  $('#btn-zoom').click(function(){
+    var target = $(this).data().zoom.split(',');
+    var latlng = L.latLng([target[0], target[1]]);
+    var zoom = 16;
+
+    // remove current basemap
+    removeCurrentBasemap();
+    // add google satellite basemap
+    CONFIG.map.addLayer(CONFIG.basemaps['satellite']);
+    // keep the radio button in sync with the map
+    $('#layers-base input[data-baselayer="satellite"]').prop('checked', true);
+
+    // add the back button, which takes the user back to previous view (see function goBack() defined in the construction of Leaflet control)
+    // but only if there is not already a back button on the map
+    CONFIG.oldbounds = CONFIG.map.getBounds();
+    if ($('.btn-back').length == 0) CONFIG.back.addTo(CONFIG.map);
+
+    // move and zoom the map to the selected unit
+    CONFIG.map.setView(latlng, zoom);
+  });
+
+  // a leaflet control to take the user back to where they came
+  // Only visible when zooming to an individual plant from the dialog popup. See $('#btn-zoom').click()
+  L.backButton = L.Control.extend({
+    options: {
+      position: 'bottomleft'
+    },
+
+    onAdd: function (map) {
+      var container   = L.DomUtil.create('div', 'btn btn-primary btn-back', container);
+      container.title = 'Click to go back to the previous view';
+      this._map       = map;
+
+      // generate the button
+      var button = L.DomUtil.create('a', 'active', container);
+      button.control   = this;
+      button.href      = 'javascript:void(0);';
+      button.innerHTML = '<span class="glyphicon glyphicon-chevron-left"></span> Go back to country view';
+
+      L.DomEvent
+        .addListener(button, 'click', L.DomEvent.stopPropagation)
+        .addListener(button, 'click', L.DomEvent.preventDefault)
+        .addListener(button, 'click', function () {
+          this.control.goBack();
+        });
+
+      // all set, L.Control API is to return the container we created
+      return container;
+    },
+
+    // the function called by the control
+    goBack: function () {
+      // set the map to the previous bounds
+      CONFIG.map.fitBounds(CONFIG.oldbounds);
+
+      // remove current basemap
+      removeCurrentBasemap();
+      // add the plain basemap - we could try to keep track of which basemap the user
+      // was on before zooming in - but what if they zoom in to another? then the current
+      // basemap becomes satellite - and tracking all this gets ridiculous
+      CONFIG.map.addLayer(CONFIG.basemaps['basemap']); 
+
+      // keep the radio button in sync with the map
+      $('#layers-base input[data-baselayer="basemap"]').prop('checked', true);
+
+      // remove the back button
+      CONFIG.back.remove(CONFIG.map);
+    }
+  });
+
+
 }
 
 // initialize the map in the main navigation map tab
@@ -380,6 +428,9 @@ function initMap() {
     CONFIG.map.invalidateSize();
   });
 
+  // an instance of L.backButton()
+  CONFIG.back = new L.backButton() // not added now, see initButtons()
+
 }
 
 function initMapLayers() {
@@ -392,10 +443,7 @@ function initMapLayers() {
   $('#layers-base input').change(function() {
     var selected = $(this).data().baselayer;
     // remove current basemap and labels
-    Object.keys(CONFIG.basemaps).forEach(function(basemap) {
-      CONFIG.map.removeLayer(CONFIG.basemaps[basemap]);
-      CONFIG.map.removeLayer(CONFIG.basemaps.labels);
-    });
+    removeCurrentBasemap();
     // add selected basemap and labels, if necessary
     CONFIG.map.addLayer(CONFIG.basemaps[selected]);
     if (selected == 'basemap') CONFIG.map.addLayer(CONFIG.basemaps.labels);
@@ -589,7 +637,7 @@ function initPruneCluster() {
 
   // we override this method to handle clicks on individual plant markers (not the clusters)
   CONFIG.clusters.PrepareLeafletMarker = function(leafletMarker, data){
-    var html = data.title + "<br>" + "<div class='popup-click-msg'>Click the circle for details</div>";
+    var html = `<div style='text-align:center;'><strong>${data.title}</strong><br><div class='popup-click-msg'>Click the circle for details</div></div>`;
     leafletMarker.bindPopup(html);
     leafletMarker.setIcon(data.icon);
     leafletMarker.attributes = data.attributes;
@@ -624,19 +672,9 @@ function drawMap(data, force_redraw=false) {
   var statuses   = [];
   var trackers   = [];
   data.forEach(function (tracker) {
-
-    // skip bad data: TODO: clean data prior to loading, and parseFloat on lat/lng
-    if (tracker == null) return;
-    if (tracker.id === undefined || tracker.id == '') return;
-    if (tracker.status === undefined || tracker.status == '') return;
-    if (tracker.lat === undefined || tracker.lat == '') return;
-    if (tracker.lng === undefined || tracker.lng == '') return;
-
-
     var status = tracker.status;
     if (status) {
       // log that this status has been seen, see step 4 below
-      status = status.toLowerCase();
       if (statuses.indexOf(status) < 0) statuses.push(status);
       // add the feature to the trackers list for the table
       trackers.push(tracker);
@@ -660,14 +698,7 @@ function updateClusters(data) {
   data.forEach(function(feature) {
     // the "status" of the tracker point affects its icon color
     // and also its membership in CONFIG.status_markers for per-status filtering
-
-    // skip bad data: TODO: clean data prior to loading, and parseFloat on lat/lng
-    if (feature == null) return;
-    if (feature.id === undefined || feature.id == '') return;
-    if (feature.status === undefined || feature.status == '') return;
-    if (feature.lat === undefined || feature.lat == '') return;
-    if (feature.lng === undefined || feature.lng == '') return;
-    var status = feature.status.toLowerCase();
+    var status = feature.status;
     var statusId = CONFIG.status_types[status]['id'];
     var cssClass = `status${statusId + 1}`;
     var marker = new PruneCluster.Marker(parseFloat(feature.lat), parseFloat(feature.lng), {
@@ -839,6 +870,34 @@ function updateResultsPanel(data, country=CONFIG.default_title) {
   // });
 }
 
+// when user clicks on a coal plant point, customize a popup dialog and open it
+function openTrackerInfoPanel(feature) {
+  // get the features properties, i.e. the data to show on the modal
+  var properties = feature.attributes;
+  // get the popup object itself and customize
+  var popup = $('#tracker-modal');
+  // go through each property for this one feature, and write out the value to the correct span, according to data-name property
+  $.each(properties, function(dataname, value) {
+    // get preferred text for each status types
+    if (dataname == 'status') value = CONFIG.status_types[value].text;
+    // write the status name to the dialog
+    $('#tracker-modal .modal-content span').filter('[data-name="' + dataname + '"]').text(value);
+  })
+
+  // wiki page needs special handling to format as <a> link
+  var url = properties['url'];
+  var wiki = $('#tracker-modal .modal-content span').filter('[data-name="wiki_page"]').text('');
+  $('<a>', { text: url, href: url, target: "_blank"} ).appendTo(wiki);
+
+  // format the zoom-to button data.zoom attribute. See initZoom();
+  // this lets one zoom to the location of the clicked plant
+  var zoomButton = $('#btn-zoom');
+  zoomButton.attr('data-zoom', feature.attributes.lat + "," + feature.attributes.lng);
+
+  // all set: open the dialog
+  popup.modal();
+}
+
 // Reset "button": resets the app to default state
 function resetTheMap() {
   // clear anything in the search inputs
@@ -918,6 +977,14 @@ function clickCountry(e) {
     // call the search function
     searchCountry(name, e.target._bounds);
   }
+}
+
+// remove the current basemap from the view
+function removeCurrentBasemap() {
+  Object.keys(CONFIG.basemaps).forEach(function(basemap) {
+    CONFIG.map.removeLayer(CONFIG.basemaps[basemap]);
+    CONFIG.map.removeLayer(CONFIG.basemaps.labels);
+  });
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

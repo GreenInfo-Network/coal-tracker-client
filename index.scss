@@ -286,12 +286,11 @@ div#layers-icon {
   border-left-color: transparent; border-right-color: transparent;
 }
 
-/* mask cursor */
-path.leaflet-interactive.mask {
-  cursor: move;
-}
+/* custom leaflet control for back button */
+.btn-back { background: #0f4e8c; }
+.btn-back a { color: #fff; font-weight:bold; text-decoration:none !important; }
 
-/* search input */
+/* SEARCH */
 span.glyphicon-search {
   position: static;
   z-index: 2;
