@@ -125,27 +125,42 @@ CONFIG.allowed_params = ['country'];
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// INITIALIZATION: these functions are called when the page is ready,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+console.time('everything');
 $(document).ready(function () {
   // data initialization first, then the remaining init steps
-  Promise.all([initData('./data/trackers.csv'), initData('./data/countries.json'), initData('./data/country_lookup.csv')])
+  Promise.all([initData('./data/trackers.json'), initData('./data/countries.json'), initData('./data/country_lookup.csv')])
     .then(function(data) {
+      console.time('format');
       initDataFormat(data)    // get data ready for use
+      console.timeEnd('format');
+      console.time('these things');
       initButtons();          // init button listeners
       initTabs();             // init the main navigation tabs
       initTable();            // the Table is fully populated from the trackers dataset, but is filtered at runtime
+      console.timeEnd('these things');
+      console.time('search');
       initSearch();           // init the full text search
       initFreeSearch();       // init the "free" search inputs, which implement full-text search
+      console.timeEnd('search');
+      console.time('map');
       initMap();              // regular leaflet map setup
       initMapLayers();        // init some map layers and map feature styles
       initStatusCheckboxes(); // initialize the checkboxes to turn on/off trackers by status
+      console.timeEnd('map');
+      console.time('prune');
       initPruneCluster();     // init the prune clustering library
+      console.timeEnd('prune');
+      
+      console.time('state');
       initState();            // init app state given url options
+      console.timeEnd('state');
 
       // ready!
       setTimeout(function () {
         resize();
         $('div#pleasewait').hide();
       }, 300);
+console.timeEnd('everything');
     }); // Promise.then()
 });
 
@@ -213,16 +228,17 @@ function initDataFormat(data) {
 
   // Tracker data: convert CSV to JSON
   // and keep a reference to this in DATA
-  var trackers_json = Papa.parse(data[0], {
-    header: true,
-    // replace the headers with ones shorter, easier to access
-    beforeFirstChunk: function(chunk) {
-      var rows = chunk.split( /\r\n|\r|\n/ );
-      rows[0] = Object.keys(CONFIG.attributes);
-      return rows.join("\r\n");
-    },
-  });
-  DATA.tracker_data = trackers_json.data;
+  // var trackers_json = Papa.parse(data[0], {
+  //   header: true,
+  //   // replace the headers with ones shorter, easier to access
+  //   beforeFirstChunk: function(chunk) {
+  //     var rows = chunk.split( /\r\n|\r|\n/ );
+  //     rows[0] = Object.keys(CONFIG.attributes);
+  //     return rows.join("\r\n");
+  //   },
+  // });
+  DATA.tracker_data = data[0];
+  console.log(DATA.tracker_data)
 }
 
 // take our oddly formatted country lists and normalize it, standardize it
@@ -390,7 +406,6 @@ function initMapLayers() {
 function initStatusCheckboxes() { 
   $('div.layer-control').on('change', '#status-layers input', function() {
     var status = $(this).val();
-    console.log(status);
     var markers = CONFIG.status_markers[status].markers;
     CONFIG.clusters.FilterMarkers(markers, !$(this).prop('checked')); // false to filter on, true to filter off :)
     CONFIG.clusters.ProcessView();
