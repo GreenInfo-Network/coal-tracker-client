@@ -20,9 +20,9 @@ const DATA = {};
 
 // basemap definitions, no options here, just a single set of basemap tiles and labels above features. see initMap();
 CONFIG.basemaps = {
-  'hybrid': L.tileLayer('https://{s}.tiles.mapbox.com/v3/greeninfo.map-zudfckcw/{z}/{x}/{y}.jpg', { zIndex:1 }),
-  'satellite': L.gridLayer.googleMutant({ type: 'satellite' }),
-  'basemap' : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', { attribution: '©OpenStreetMap, ©CartoDB' }),
+  'hybrid': L.tileLayer('https://{s}.tiles.mapbox.com/v3/greeninfo.map-zudfckcw/{z}/{x}/{y}.jpg', { pane: 'hybrid' }),
+  'satellite': L.gridLayer.googleMutant({ type: 'satellite', pane: 'satellite' }),
+  'basemap' : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', { attribution: '©OpenStreetMap, ©CartoDB', pane: 'basemap' }),
   'labels': L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}@2x.png', { pane: 'labels' }),
 };
 
@@ -72,15 +72,15 @@ CONFIG.attributes = {
 //          text: human readible display
 //          color: imported from CSS
 CONFIG.status_types = {
-  'announced': {'id': 0, 'text': 'Announced', 'color': styles.status1, 'visible': true},
-  'pre-permit': {'id': 1, 'text': 'Pre-permit', 'color': styles.status2, 'visible': true},
-  'permitted': {'id': 2, 'text': 'Permitted', 'color': styles.status3, 'visible': true},
-  'construction': {'id': 3, 'text': 'Construction', 'color': styles.status4, 'visible': true},
-  'shelved': {'id': 4, 'text': 'Shelved', 'color': styles.status5, 'visible': true},
-  'retired': {'id': 5, 'text': 'Retired', 'color': styles.status6, 'visible': true},
-  'cancelled': {'id': 6, 'text': 'Cancelled', 'color': styles.status7, 'visible': true},
-  'operating': {'id': 7, 'text': 'Operating', 'color': styles.status8, 'visible': true},
-  'mothballed': {'id': 8, 'text': 'Mothballed', 'color': styles.status9, 'visible': true},
+  'announced': {'id': 0, 'text': 'Announced', 'color': styles.status1 },
+  'pre-permit': {'id': 1, 'text': 'Pre-permit', 'color': styles.status2 },
+  'permitted': {'id': 2, 'text': 'Permitted', 'color': styles.status3 },
+  'construction': {'id': 3, 'text': 'Construction', 'color': styles.status4 },
+  'shelved': {'id': 4, 'text': 'Shelved', 'color': styles.status5 },
+  'retired': {'id': 5, 'text': 'Retired', 'color': styles.status6 },
+  'cancelled': {'id': 6, 'text': 'Cancelled', 'color': styles.status7 },
+  'operating': {'id': 7, 'text': 'Operating', 'color': styles.status8 },
+  'mothballed': {'id': 8, 'text': 'Mothballed', 'color': styles.status9 },
 };
 
 // used to keep a list of markers showing for a particular country or place, by status
@@ -137,7 +137,7 @@ $(document).ready(function () {
       initFreeSearch();       // init the "free" search inputs, which implement full-text search
       initMap();              // regular leaflet map setup
       initMapLayers();        // init some map layers and map feature styles
-      initMapControls();      // initialize the layer and basemap pickers, etc.
+      // initMapControls();      // initialize the layer and basemap pickers, etc.
       initPruneCluster();     // init the prune clustering library
       initState();            // init app state given url options
 
@@ -249,7 +249,8 @@ function initState() {
   if (params.indexOf('?') > -1) {
     setStateFromParams();
   } else {
-    resetTheMap();
+    // No params: render the map & table with the full dataset
+    render();
   }
 }
 
@@ -303,8 +304,8 @@ function initMap() {
     attributionControl:false,
     zoomControl: false,
     minZoom: CONFIG.minzoom, maxZoom: CONFIG.maxzoom,
-    attribution: "Interactive mapping by GreenInfo Network. Data: CoalSwarm"
   });
+
 
   // add zoom control, top right
   L.control.zoom({
@@ -312,25 +313,32 @@ function initMap() {
   }).addTo(CONFIG.map);
 
   // map panes
-  // - create a pane for basemap tile labels
+  // - create panes for basemaps
+  CONFIG.map.createPane('basemap');
+  CONFIG.map.getPane('basemap').style.zIndex = 300;
+  CONFIG.map.getPane('basemap').style.pointerEvents = 'none';
+  CONFIG.map.createPane('hybrid');
+  CONFIG.map.getPane('hybrid').style.zIndex = 301;
+  CONFIG.map.getPane('hybrid').style.pointerEvents = 'none';
+  CONFIG.map.createPane('satellite');
+  CONFIG.map.getPane('satellite').style.zIndex = 302;
+  CONFIG.map.getPane('satellite').style.pointerEvents = 'none';
   CONFIG.map.createPane('labels');
   CONFIG.map.getPane('labels').style.zIndex = 475;
   CONFIG.map.getPane('labels').style.pointerEvents = 'none';
-  // - create map panes for county interactions, which will sit between the basemap and labels
+  // - create map panes for county interactions, which will sit between the basemaps and labels
   CONFIG.map.createPane('country-mask');
   CONFIG.map.getPane('country-mask').style.zIndex = 320;
   CONFIG.map.createPane('country-hover');
   CONFIG.map.getPane('country-hover').style.zIndex = 350;
   CONFIG.map.createPane('country-select');
   CONFIG.map.getPane('country-select').style.zIndex = 450;
-  CONFIG.map.createPane('feature-highlight');
-  CONFIG.map.getPane('feature-highlight').style.zIndex = 530;
   CONFIG.map.createPane('feature-pane');
   CONFIG.map.getPane('feature-pane').style.zIndex = 550;
 
   // add attribution
   var credits = L.control.attribution().addTo(CONFIG.map);
-  credits.addAttribution('Interactive mapping by <a href="http://greeninfo.org" target="_blank">GreenInfo Network</a>. Data: <a href="http://coalswarm.org/" target="_blank">CoalSwarm</a>');
+  credits.addAttribution('Interactive mapping by <a href="http://greeninfo.org" target="_blank">GreenInfo Network</a>. Data: <a href="http://coalswarm.org/" target="_blank">CoalSwarm</a>, © <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> <strong><a href="https://www.mapbox.com/map-feedback/" target="_blank">Improve this map</a></strong>');
 
   // Add a feature group to hold the mask, essentially a grey box covering the world minus the country in the view
   CONFIG.mask = L.featureGroup([L.polygon(CONFIG.outerring)], {pane: 'country-mask' }).addTo(CONFIG.map);
@@ -343,6 +351,9 @@ function initMap() {
   // add a layer to hold any selected country
   CONFIG.selected_country = {};
   CONFIG.selected_country.layer = L.geoJson([], {style: CONFIG.country_selected_style, pane: 'country-select'}).addTo(CONFIG.map);
+
+  // add a feature group to hold the clusters
+  CONFIG.cluster_layer = L.featureGroup([], {pane: 'feature-pane' }).addTo(CONFIG.map);
 
   // mobile: hide legend
   var layercontrol = $('.layer-control');
@@ -357,94 +368,108 @@ function initMap() {
 }
 
 function initMapLayers() {
-  // add the basemap and labels
+  // on startup, add the basemap and labels
   CONFIG.map.addLayer(CONFIG.basemaps.basemap);
-  CONFIG.map.addLayer(CONFIG.basemaps.labels);
+  // CONFIG.map.addLayer(CONFIG.basemaps.labels);
+
+  // // set listener on radio button change to change to the selected basemap
+  // // and also control whether or not the mask is showing
+  // $('#layers-base input').change(function() {
+  //   var selected = $(this).data().baselayer;
+  //   // remove current basemap and labels
+  //   Object.keys(CONFIG.basemaps).forEach(function(basemap) {
+  //     CONFIG.map.removeLayer(CONFIG.basemaps[basemap]);
+  //     CONFIG.map.removeLayer(CONFIG.basemaps.labels);
+  //   });
+  //   // add selected basemap and labels, if necessary
+  //   CONFIG.map.addLayer(CONFIG.basemaps[selected]);
+  //   if (selected == 'basemap') CONFIG.map.addLayer(CONFIG.basemaps.labels);
+  // });
 
 }
 
-// init the legend and layer control
-// there are two classes of controls, one for type and one for status
-// they work 'semi-independently', you can toggle features on the map by type OR by status
-function initMapControls() {
-  // grab keys for fossil and status types
-  var statuses = Object.keys(CONFIG.status_types);
+// // init the legend and layer control
+// // there are two classes of controls, one for type and one for status
+// // they work 'semi-independently', you can toggle features on the map by type OR by status
+// function initMapControls() {
+//   // grab keys for fossil and status types
+//   var statuses = Object.keys(CONFIG.status_types);
 
-  // What happens when you change a STATUS type checkbox?
-  // 1. add/remove all layers for that status from the map
-  $('div.layer-control div#status-types div.leaflet-control-layers-overlays').on('change', 'input', function(e) {
-    var status = e.currentTarget.dataset.layer;
-    var checkbox = $(this);
-    types.forEach(function(type) {
-      var layer = CONFIG.fossil_types[type]['layers'][status];
-      // there might not be a layer at all for this type and status, so check for it first
-      if (layer) {
-        // then toggle its visibility
-        if (checkbox.is(':checked')) {
-          CONFIG.map.addLayer(layer);
-        } else {
-          layer.remove();
-        };
-      }
-    });
-    // 2. sync the FOSSIL type checkboxes to whatever is now actually visible on the map
-    $('div.layer-control div#fossil-types div.leaflet-control-layers-overlays input').each(function(){
-      var checkbox = $(this);
-      var count = 0;
-      var checked = checkbox.is(':checked');
-      var type = $(this).data().layer;
-      statuses.forEach(function(status) {
-        var layer = CONFIG.fossil_types[type]['layers'][status];
-        // if this layer exists and is on the map, add to the count
-        if (layer) {
-          if (CONFIG.map.hasLayer(layer)) count += 1;
-        }
-      });
-      // check or uncheck this checkbox, depending on count
-      var check = count > 0 ? true : false;
-      checkbox.prop('checked',check);
-    });
-  });
+//   // What happens when you change a STATUS type checkbox?
+//   // 1. add/remove all layers for that status from the map
+//   $('div.layer-control div#status-types div.leaflet-control-layers-overlays').on('change', 'input', function(e) {
+//     var status = e.currentTarget.dataset.layer;
+//     var checkbox = $(this);
+//     types.forEach(function(type) {
+//       var layer = CONFIG.fossil_types[type]['layers'][status];
+//       // there might not be a layer at all for this type and status, so check for it first
+//       if (layer) {
+//         // then toggle its visibility
+//         if (checkbox.is(':checked')) {
+//           CONFIG.map.addLayer(layer);
+//         } else {
+//           layer.remove();
+//         };
+//       }
+//     });
+//     // 2. sync the FOSSIL type checkboxes to whatever is now actually visible on the map
+//     $('div.layer-control div#fossil-types div.leaflet-control-layers-overlays input').each(function(){
+//       var checkbox = $(this);
+//       var count = 0;
+//       var checked = checkbox.is(':checked');
+//       var type = $(this).data().layer;
+//       statuses.forEach(function(status) {
+//         var layer = CONFIG.fossil_types[type]['layers'][status];
+//         // if this layer exists and is on the map, add to the count
+//         if (layer) {
+//           if (CONFIG.map.hasLayer(layer)) count += 1;
+//         }
+//       });
+//       // check or uncheck this checkbox, depending on count
+//       var check = count > 0 ? true : false;
+//       checkbox.prop('checked',check);
+//     });
+//   });
 
-  // What happens when you change a FOSSIL TYPE checkbox?
-  // 1. add/remove all layers for that type from the map
-  $('div.layer-control div#fossil-types div.leaflet-control-layers-overlays').on('change', 'input', function(e) {
-    var type = e.currentTarget.dataset.layer;
-    var checkbox = $(this);
-    statuses.forEach(function(status) {
-      // if this status is "off", then return, we don't need to consider it
-      if (!$('div.layer-control div#status-types div.leaflet-control-layers-overlays input[data-layer="'+ status +'"]').is(':checked')) return;
-      var layer = CONFIG.fossil_types[type]['layers'][status];
-      // there might not be a layer at all for this type and status, so check for it first
-      if (layer) {
-        // then toggle its visibility
-        if (checkbox.is(':checked')) {
-          CONFIG.map.addLayer(layer);
-        } else {
-          layer.remove();
-        };
-      }
-    });
+//   // What happens when you change a FOSSIL TYPE checkbox?
+//   // 1. add/remove all layers for that type from the map
+//   $('div.layer-control div#fossil-types div.leaflet-control-layers-overlays').on('change', 'input', function(e) {
+//     var type = e.currentTarget.dataset.layer;
+//     var checkbox = $(this);
+//     statuses.forEach(function(status) {
+//       // if this status is "off", then return, we don't need to consider it
+//       if (!$('div.layer-control div#status-types div.leaflet-control-layers-overlays input[data-layer="'+ status +'"]').is(':checked')) return;
+//       var layer = CONFIG.fossil_types[type]['layers'][status];
+//       // there might not be a layer at all for this type and status, so check for it first
+//       if (layer) {
+//         // then toggle its visibility
+//         if (checkbox.is(':checked')) {
+//           CONFIG.map.addLayer(layer);
+//         } else {
+//           layer.remove();
+//         };
+//       }
+//     });
 
-    // 2. sync the STATUS type checkboxes to whatever is now actually visible on the map
-    $('div.layer-control div#status-types div.leaflet-control-layers-overlays input').each(function(){
-      var checkbox = $(this);
-      var count = 0;
-      var checked = checkbox.is(':checked');
-      var status = $(this).data().layer;
-      types.forEach(function(type) {
-        var layer = CONFIG.fossil_types[type]['layers'][status];
-        // if this layer exists and is on the map, add to the count
-        if (layer) {
-          if (CONFIG.map.hasLayer(layer)) count += 1;
-        }
-      });
-      // check or uncheck this checkbox, depending on count
-      var check = count > 0 ? true : false;
-      checkbox.prop('checked',check);
-    });
-  });
-}
+//     // 2. sync the STATUS type checkboxes to whatever is now actually visible on the map
+//     $('div.layer-control div#status-types div.leaflet-control-layers-overlays input').each(function(){
+//       var checkbox = $(this);
+//       var count = 0;
+//       var checked = checkbox.is(':checked');
+//       var status = $(this).data().layer;
+//       types.forEach(function(type) {
+//         var layer = CONFIG.fossil_types[type]['layers'][status];
+//         // if this layer exists and is on the map, add to the count
+//         if (layer) {
+//           if (CONFIG.map.hasLayer(layer)) count += 1;
+//         }
+//       });
+//       // check or uncheck this checkbox, depending on count
+//       var check = count > 0 ? true : false;
+//       checkbox.prop('checked',check);
+//     });
+//   });
+// }
 
 // initialize the nav tabs: what gets shown, what gets hidden, what needs resizing, when these are displayed
 // important: to add a functional tab, you must also include markup for it in css, see e.g. input#help-tab:checked ~ div#help-content {}
@@ -529,7 +554,7 @@ function initPruneCluster() {
   // create a new PruceCluster object, with a minimal cluster size of (30)
   // updated arg to 30; seems to really help countries like China/India
   CONFIG.clusters = new PruneClusterForLeaflet(30); 
-  CONFIG.map.addLayer(CONFIG.clusters);
+  CONFIG.cluster_layer.addLayer(CONFIG.clusters);
 
   // this is from the categories example; sets ups cluster stats used to derive category colors in the clusters
   CONFIG.clusters.BuildLeafletClusterIcon = function(cluster) {
@@ -644,21 +669,29 @@ function initPruneCluster() {
 
 // Set up all map layers for all types and statuses, and set up layer objects in CONFIG.status_types['layers'], so we can turn them on and off later.
 function drawMap(data, force_redraw=false) {
-  // step 1: clear the marker custering system and repopulate it with the current set of tracker points
+  // step 1: clear the marker clustering system and repopulate it with the current set of tracker points
   // as we go through, log what statuses are in fact seen; this is used in step 5 to show/hide checkboxes for toggling trackers by status
-  var statuses   = {};
+  var statuses   = [];
   var trackers   = [];
-  data.forEach(function (tracker, i) {
+  data.forEach(function (tracker) {
+
+    // skip bad data: TODO: clean data prior to loading, and parseFloat on lat/lng
+    if (tracker == null) return;
+    if (tracker.id === undefined || tracker.id == '') return;
+    if (tracker.status === undefined || tracker.status == '') return;
+    if (tracker.lat === undefined || tracker.lat == '') return;
+    if (tracker.lng === undefined || tracker.lng == '') return;
+
+
     var status = tracker.status;
-    statuses[status] = true; // log that this status has been seen, see step 4 below
-
-    // add the feature to the trackers list for the table
-    trackers.push(tracker);
-
+    if (status) {
+      // log that this status has been seen, see step 4 below
+      status = status.toLowerCase();
+      if (statuses.indexOf(status) < 0) statuses.push(status);
+      // add the feature to the trackers list for the table
+      trackers.push(tracker);
+    }
   });
-  // var bounds = L.geoJson(data_trackers.features).getBounds();
-  // MAP.fitBounds(bounds); 
-  // MAPBOUNDS = bounds; // keep for later
 
   // step 2 and 3: update the table and the marker clustering, now that "trackers" is implicitly filtered to everything that we need
   updateClusters(trackers);
@@ -670,8 +703,6 @@ function drawMap(data, force_redraw=false) {
 }
 
 function updateClusters(data) {
-  console.log('here now');
-
   // start by clearing out existing clusters
   CONFIG.clusters.RemoveMarkers();
 
@@ -680,12 +711,7 @@ function updateClusters(data) {
     // the "status" of the tracker point affects its icon color
     // and also its membership in CONFIG.status_markers for per-status filtering
 
-    // skip bad data: TODO: clean data prior to loading, and parseFloat on lat/lng
-    if (feature == null) return;
-    if (feature.id === undefined || feature.id == '') return;
-    if (feature.status === undefined || feature.status == '') return;
-    if (feature.lat === undefined || feature.lat == '') return;
-    if (feature.lng === undefined || feature.lng == '') return;
+
     var status = feature.status.toLowerCase();
     var statusId = CONFIG.status_types[status]['id'];
     var cssClass = `status${statusId + 1}`;
@@ -696,17 +722,12 @@ function updateClusters(data) {
           iconSize: [15, 15] // Set the marker width and height
         })
     });
-
+// console.log(marker)
     // get the attributes for use in the custom popup dialog (see openTrackerInfoPanel())
     marker.data.attributes = feature;
 
-    // get the lat-lng now so we can zoom to the plant's location later
-    // getting the lat-lng of the spider won't work, since it gets spidered out to some other place
-    // tip: the raw dataset is lng,lat and Leaflet is lat,lng
-    marker.data.coordinates = [ feature.lat, feature.lng ];
-
     // set the category for PruneCluster-ing
-    marker.category = parseInt(statusId);
+    marker.category = statusId;
 
     // furthermore, if the marker shouldn't be visible at first, filter the marker by setting the filtered flag to true (=don't draw me)
     if (!CONFIG.status_types[status].visible) marker.filtered = true;
@@ -718,73 +739,48 @@ function updateClusters(data) {
     // see CONFIG.map.on('overlayadd') and CONFIG.map.on('overlayremove')
     CONFIG.status_markers[status].markers.push(marker);
   });
-  // all set!
+  // all set! process the view, and fit the map to the new bounds
   CONFIG.clusters.ProcessView();
+  var cluster_bounds = CONFIG.clusters.Cluster.ComputeGlobalBounds();
+  var bounds = [[cluster_bounds.minLat, cluster_bounds.minLng],[cluster_bounds.maxLat, cluster_bounds.maxLng]];
+  setTimeout(function() { CONFIG.map.fitBounds(bounds) },200);
+
+  console.log(CONFIG.cluster_layer);
 }
 
-
 // show and hide the correct legend labels and checkboxes for this set of data
-// items comes from the data search itself
-// note: see initMapControls() for event handlers on these controls
-function drawLegend(items) {
-  // create the legend from scratch, based on what fossil and status types are showing on the map
-  $('div.leaflet-control-layers-overlays').html('');
-  $('div.layer-control').hide();
+// "statuses" comes from the data search itself
+function drawLegend(statuses) {
+  $('#status-layers').show();
+  // var checkboxes = $('div.leaflet-control-layers-group input[type="checkbox"]');
+  // checkboxes.closest('label').hide();
+  // checkboxes.removeAttr('checked').filter('[data-check-after-search="true"]').prop('checked','checked');
+  // for (var s in statuses) checkboxes.filter('[value="'+s+'"]').closest('label').show();
+    var target = $('#legend-labels').html(''); // clear existing html
+    statuses.forEach(function(status) {
 
-  if (!items) return; // exit condition when no results
+      var label = $('<label>');
+      var input = $('<input>', {
+        type: 'checkbox',
+        value: status
+      })
+      input.attr('data-check-after-search', true);
+      input.appendTo(label);
 
-  // items is an object keyed to two arrays, types and statuses
-  // iterate STATUS, and create the legend
-  items.statuses.sort(function(a,b) {return CONFIG.status_types[a]["order"] - CONFIG.status_types[b]["order"]});
-  items.statuses.forEach(function(status){
-    var target = $('div.layer-control div#status-types div.leaflet-control-layers-overlays');
-    // add a wrapper for the legend items
-    var inner = $('<div>', {'class': 'legend-labels'}).appendTo(target);
-    // then add a label and checkbox
-    var label = $('<label>').appendTo(inner);
-    var input = $('<input>', {
-      type: 'checkbox',
-      value: status,
-      checked: true,
-    }).attr('data-layer',`${status}`)
-    input.appendTo(label);
-    // now add colored circle or line to legend
-    var outerSpan = $('<span>').appendTo(label);
-    var div = $('<div>', {
-      'class': 'circle status' + CONFIG.status_types[status].order,
-    }).appendTo(outerSpan);
-    // adds text to legend
-    var innerSpan = $('<span>', {
-      text: ' ' + CONFIG.status_types[status].text
-    }).appendTo(outerSpan);
-  });
+      var outerSpan = $('<span>').appendTo(label);
+      // adds colored circle to legend
+      var div = $('<div>', {
+        style: "background:" + CONFIG.status_types[status].color,
+        "class": "circle"
+      }).appendTo(outerSpan);
+      // adds text to legend
+      var innerSpan = $('<span>', {
+        text: ' ' + CONFIG.status_types[status].text
+      }).appendTo(outerSpan)
 
-  // iterate TYPE, and create the legend
-  items.types.forEach(function(type) {
-    var target = $('div.layer-control div#fossil-types div.leaflet-control-layers-overlays');
-    // add a wrapper for the legend items
-    var inner = $('<div>', {'class': 'legend-labels'}).appendTo(target);
-    // then add a label and checkbox
-    var label = $('<label>').appendTo(inner);
-    var input = $('<input>', {
-      type: 'checkbox',
-      value: type,
-      checked: true,
-    }).attr('data-layer',`${type}`)
-    input.appendTo(label);
-    // now add colored circle or line to legend
-    var outerSpan = $('<span>').appendTo(label);
-    var div = $('<div>', {
-      'class': 'empty ' + CONFIG.fossil_types[type]['symbol'],
-    }).appendTo(outerSpan);
-    // adds text to legend
-    var innerSpan = $('<span>', {
-      text: ' ' + CONFIG.fossil_types[type].name
-    }).appendTo(outerSpan);
-  });
+      label.appendTo(target);
+    });
 
-  // show the div.
-  $('div.layer-control').show();
 }
 
 function drawTable(trackers, title) {
@@ -1024,6 +1020,7 @@ function searchTableForText(e) {
 // The primary controller for rendering things
 function render(options) {
   // Default values for options are defined here
+  options               = options              || {};
   options.name          = options.name         || '';
   options.map           = options.map          || true;
   options.results       = options.results      || true;
