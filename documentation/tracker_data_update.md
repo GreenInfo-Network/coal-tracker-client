@@ -20,7 +20,7 @@ Run the following to reduce the CSV to only those fields we need
 csvcut -c 'Tracker ID','Unit','Plant','Wiki page','Sponsor','Capacity (MW)','Status','Region','Country','Subnational unit (province/state)','Latitude','Longitude','Parent' coal.csv > trackers.csv
 ```
 
-## convert to JSON
+## convert to json
 
 To save on load time and do some basic error checking/cleanup, we convert the tracker spreadsheet to JSON offline. 
 
