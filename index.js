@@ -175,9 +175,8 @@ function resize() {
   // guesstimate a good scrollbody height; dynamic based on the window height
   var tablediv = $('.dataTables_scrollBody');
   if (!tablediv.length) return;
-
   // starting value
-  var value = $(window).width() < 768 ? 248 : 240;
+  var value = $(window).width() < 768 ? 273 : 265;
   // differential sizing depending on if there is a horizontal scrollbar or not
   if (tablediv.hasHorizontalScrollBar()) value += 10;
   var height = $('body').height() - value;
@@ -208,28 +207,13 @@ function initDataFormat(data) {
   // set up a country-lookup, to map country names as provided in the raw spreadsheet data, to country names we have in the country topojson
   var lookup = Papa.parse(data[2], {header: true});
   DATA.country_lookup = {};
+  // make a simple lookup from country polygons to our tracker data
   lookup.data.forEach(function(row, i) {
-    DATA.country_lookup[row.data] = row.map;
+    DATA.country_lookup[row['Name_map']] = row['Name_csv'];
   });
 
   // keep a reference to the tracker data JSON
   DATA.tracker_data = data[0];
-}
-
-// take our oddly formatted country lists and normalize it, standardize it
-// DANGER this all assumes no country names that themselves include a comma, which we don't have now, but may some day
-// NOTE "countries" lists no longer include dashes, but leaving this as-is, for potential future compatibility
-function formatCountryList(countries) {
-  // first split the incoming list by the two delimeters used in the raw data, '-' and ','
-  var list = countries.split(/,|-/);
-  list = uniq(list);
-  // then look up each member and match it to a common name in DATA.country_lookup
-  var normalized = [];
-  list.forEach(function(n) {
-    normalized.push(DATA.country_lookup[n.trim()])
-  });
-  // and return the normalized list as a comma-delimited string
-  return normalized.join(', ');
 }
 
 // init state from allowed params, or not
@@ -456,7 +440,6 @@ function initStatusCheckboxes() {
     CONFIG.clusters.FilterMarkers(markers, !$(this).prop('checked')); // false to filter on, true to filter off :)
     CONFIG.clusters.ProcessView();
   });
-
 }
 
 // initialize the nav tabs: what gets shown, what gets hidden, what needs resizing, when these are displayed
@@ -580,7 +563,6 @@ function initPruneCluster() {
       for (var i = 0, l = CONFIG.markercluster_colors.length; i < l; ++i) {
         // the size of this slice of the pie
         var size = this.stats[i] / this.population;
-        console.log('size', size);
         if (size > 0) {
           canvas.beginPath();
           canvas.moveTo(11, 11);
@@ -676,20 +658,18 @@ function drawMap(data, force_redraw=false) {
   data.forEach(function (tracker) {
     var status = tracker.status;
     if (status) {
-      // log that this status has been seen, see step 4 below
+      // log that this status has been seen, see step 3 below
       if (statuses.indexOf(status) < 0) statuses.push(status);
       // add the feature to the trackers list for the table
       trackers.push(tracker);
     }
   });
 
-  // step 2 and 3: update the table and the marker clustering, now that "trackers" is implicitly filtered to everything that we need
+  // step 2: update the marker clustering, now that "trackers" is implicitly filtered to everything that we need
   updateClusters(trackers);
-  drawTable(trackers, 'All Trackers');
 
-  // step 4: hide the status toggle checkboxes, showing only the ones which in fact have a status represented
+  // step 3: hide the status toggle checkboxes, showing only the ones which in fact have a status represented
   drawLegend(statuses);
-
 }
 
 function updateClusters(data) {
@@ -739,9 +719,7 @@ function updateClusters(data) {
   var bounds = [[cluster_bounds.minLat, cluster_bounds.minLng],[cluster_bounds.maxLat, cluster_bounds.maxLng]];
   // timeout appears necessary to let the clusters do their thing, before fitting bounds
   setTimeout(function() { CONFIG.map.fitBounds(bounds) },200);
-
 }
-
 
 // show and hide the correct legend labels and checkboxes for this set of data and statuses
 // "statuses" comes from the data search itself
@@ -772,10 +750,6 @@ function drawLegend(statuses) {
 }
 
 function drawTable(trackers, title) {
-  // update the table name, if provided
-  var text = title ? title : CONFIG.default_title;
-  $('div#table h3 span').text(text);
-
   // set up the table column names we want to use in the table
   var columns = $.map(CONFIG.attributes, function(value){ return value; });
 
@@ -796,9 +770,6 @@ function drawTable(trackers, title) {
   // set up the table data
   var data = [];
   trackers.forEach(function(tracker) {
-    if (! tracker.id) return; // no id = bad data, skip
-    // get the properties for each feature
-    // var props = tracker.properties;
     // make up a row entry for the table: a list of column values.
     // and copy over all columns from [names] as is to this row
     var row = [];
@@ -823,7 +794,7 @@ function drawTable(trackers, title) {
       columnDefs     : [{targets:[0], visible: false, searchable: false}],
       columns        : colnames,
       autoWidth      : true,
-      scrollY        : "1px", // initial value only, will be resized by calling resizeTable;
+      scrollY        : "1px", // initial value only, will be resized by calling resize();
       scrollX        : true,
       lengthMenu     : [50, 100, 500],
       iDisplayLength : 500, // 100 has a noticable lag to it when displaying and filtering; 10 is fastest
@@ -838,10 +809,9 @@ function drawTable(trackers, title) {
     CONFIG.table.search('').draw();
   }
 
-  // finally, set the table title
-  var text = typeof name == 'undefined' ? 'All records' : 'Records for ' + name;
-  $('#table h2 span').text(text);
-
+  // update the table name, if provided
+  var text = title ? title : CONFIG.default_title;
+  $('div#table h3 span').text(text);
 }
 
 // update the "results" panel that sits above the map
@@ -852,24 +822,6 @@ function updateResultsPanel(data, country=CONFIG.default_title) {
   var totalrow = $('div#country-results div#total-count').empty();
   var totaltext = data.length > 0 ? (data.length > 1 ? `Tracking ${data.length.toLocaleString()} coal plants` : `${data.length} fossil project`) : `Nothing found`;
   var total = $('<div>',{text: totaltext}).appendTo(totalrow);
-
-  // not doing anything else here for now...
-  // tally results per type of fossil project, and add a row for each if there is more than one
-  // var results = $('div#type-count').empty();
-  // // for each fossil type, get the count of that type from the data
-  // Object.keys(CONFIG.fossil_types).forEach(function(type) {
-  //   var count = 0;
-  //   data.forEach(function(d) {
-  //     if (d.properties.type == type) count += 1;
-  //   });
-  //   // only show non-zero counts
-  //   if (count > 0) {
-  //     // format label for type(s) and add to results
-  //     var label = CONFIG.fossil_types[type].name;
-  //     var html = `${label}<span>${count}</span>`;
-  //     $('<div>', {html: html}).appendTo(results);
-  //   }
-  // });
 }
 
 // when user clicks on a coal plant point, customize a popup dialog and open it
@@ -1043,12 +995,13 @@ function searchTableForText(e) {
 
 // The primary controller for rendering things
 function render(options) {
-  // Default values for options are defined here
-  options.name          = options.name         || '';
-  options.map           = options.map          || true;
-  options.results       = options.results      || true;
-  options.table         = options.table        || true;
-  options.force_redraw  = options.force_redraw || false;
+  if (options === undefined) options = {};
+  // If defined, take as given, otherwise, assign the default value as stated
+  options.name          = options.name         !== undefined ? options.name : CONFIG.default_title;
+  options.map           = options.map          !== undefined ? options.map : true;
+  options.results       = options.results      !== undefined ? options.results : true;
+  options.table         = options.table        !== undefined ? options.table : true;
+  options.force_redraw  = options.force_redraw !== undefined ? options.force_redraw : false;
 
   // optionally draw the map (and legend) table, results
   $('div.searchwrapper a.clear-search').hide();
@@ -1057,16 +1010,16 @@ function render(options) {
   if (options.table)   drawTable(DATA.tracker_data, options.name);
 }
 
-// on other applications, this has filtered the data to this country;
-// here, we only zoom to the bounds of the country, and continue to show items outside of its boundaries
+// zoom to the bounds of the country, and continue to show items outside of its boundaries
 function searchCountry(name, bounds) {
   // get the data for this country, *only* for updating the results panel
   // the map and table, continue to show all data
   var data = [];
-  DATA.fossil_data.features.forEach(function(feature) {
+  // translate from the country data names to our tracker data names, then look for matches
+  var name = DATA.country_lookup[name]; 
+  DATA.tracker_data.forEach(function(feature) {
     // look for matching names in feature.properties.countries
-    var names = feature.properties.countries.split(',');
-    if (names.indexOf(name) > -1) data.push(feature);
+    if (name == feature.country) data.push(feature);
   });
 
   // if bounds were provided, zoom the map to the selected country
@@ -1091,13 +1044,11 @@ function searchCountry(name, bounds) {
   // because we are not filtering the map, but only changing the bounds
   // results on the map can easily get out of sync due to a previous search filter
   // so first we need to explicity render() the map with all data, but not the table or results
-  // THEN the table, with all data, but not with this name
-  // THEN update results panel for *this* country data only
-  // also odd about this approach: this is the only "search" which doesn't update the legend for what you've search for (a country)
-  // instead, it shows everything in the legend (since everything IS on the map, but not in the results panel)
   render({ name: name, map:true, results:false, table:false });
+  // THEN update results panel for *this* country data only
   updateResultsPanel(data, name);
-  drawTable(DATA.fossil_data.features);
+  // THEN the table, with all data, but not with this name
+  // drawTable(DATA.tracker_data); // Why draw this again?  
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
