@@ -1,12 +1,11 @@
 # Update Tracker data from Spreadsheet
 
 ## Steps
-
-- open w/Google Sheets (or get sheets link)
-- download the data sheet as CSV (named `coal.csv` in the example)
+- obtain the spreadsheet from the client
+- download or save the data sheet as CSV 
 - rename fields with commas - these are problematic in csvcut for some reason, e.g. "Subnational unit (province, state)" >> "Subnational unit (province/state)"
-- Use `csvcut` to extract cols to keep with `csvcut` (part of `csvkit`)
-- convert to JSON
+- Use `csvcut` to extract cols to keep with `csvcut` (part of `csvkit`) (see below)
+- Run the python script (see below) to clean up the data and convert to `json`
 
 ## Fields to keep:
 
