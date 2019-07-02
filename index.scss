@@ -15,13 +15,7 @@ $status7: #4CDB4C;
 $status8: #845440;
 $status9: #d6a490;
 
-/* highlight color that is applied on selection */
-$highlight-color: #f2e360;
-
-/* additional symbol styles for lines and circles */
-$lineopacity: 0.8;
-$linewidth: 3;
-$linewidth_mobile: $linewidth + 2;
+// circle styles for the divIcons on the map
 $circlesize: 12;
 $circlesize_mobile: $circlesize + 2;
 $circleopacity: 0.85;
@@ -43,13 +37,9 @@ $circleopacity: 0.85;
   status8: $status8;
   status9: $status9;
 
-  lineopacity: $lineopacity;
-  linewidth: $linewidth;
-  linewidth_mobile: $linewidth_mobile;
   circlesize: $circlesize;
   circlesize_mobile: $circlesize_mobile;
   circleopacity: $circleopacity;
-  highlight_color: $highlight-color;
 }
 
 /* General page elements */
@@ -232,9 +222,16 @@ div.layer-control {
   z-index: 1005; 
   overflow-y: auto;
   min-width: 135px;
+
+  label { display: block; font-weight: normal; margin-left: 3px; }
+  input { margin: -3px 0 0; vertical-align: middle; }
+
+  div.circle { float: left; margin: 0 6px 0 0; width:13px; height:13px; border-radius:50%; border: 1px solid rgba(100,100,100,0.8); }
+
+  div.leaflet-control-layers-separator { margin: 5px -7px 5px -7px; }
+
 }
-div.layer-control label { display: block; font-weight: normal; margin-left: 3px; }
-div.layer-control input { margin: -3px 0 0; vertical-align: middle; }
+
 /*icon that shows when the layer-control is hidden*/
 div#layers-icon { 
   border-radius: 4px;
@@ -253,18 +250,12 @@ div#layers-icon {
 /* Map legend and map marker styles */
 /* legend markers used in map legend, lines and circles*/
 
-
-div.line.empty { 
-  height:6px;
-  width:15px;
-}
-
-div.layer-control span.legend-title {
-  font-weight: bold;
-  font-size:14px;
-  display: inline-block;
-  margin: 4px 0 5px;
-}
+// div.layer-control span.legend-title {
+//   font-weight: bold;
+//   font-size:14px;
+//   display: inline-block;
+//   margin: 4px 0 5px;
+// }
 .leaflet-control-layers-overlays {margin:4px 0 6px;}
 .leaflet-control-layers-group label, .leaflet-control-layers-group input {cursor: pointer;}
 .leaflet-control-layers-group label { padding-left: 0;}
@@ -285,7 +276,6 @@ div.layer-control span.legend-title {
 .status7 {background: $status7;}
 .status8 {background: $status8;}
 .status9 {background: $status9;}
-.highlight-icon {background: $highlight-color;}
 
 /* map tooltip style */
 .fossil-tooltip { background: #111; color: #fff; border:none; padding:0; margin: 0; font-weight:bold; padding: .25em 0.8em; height: auto; display:block !important; font-size:14px; height: 24px; line-height:14px; }

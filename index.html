@@ -135,20 +135,17 @@
         <label><input type="radio" name="basemaps" data-baselayer="satellite"><span> Satellite</span></label>
       </div>
 
-      <div id="layers-trackers" style="display:none;">
+      <div id="status-layer-wrapper" style="display:none;">
         <!-- a seperator between the basemap layers and the other layers, hidden until coal plants added to the map -->
         <div class="leaflet-control-layers-separator"></div>
 
         <!-- coal plant units (e.g. 'trackers') sybmolized by status type -->
-        <!-- tracker entries are hidden at first, shown depending on what is on the map -->
+        <!-- tracker entries are shown/hidden by status depending on what is on the map -->
         <div class="leaflet-control-layers-overlays">
           <div class="leaflet-control-layers-group" id="leaflet-control-layers-group-0">
             <span class="leaflet-control-layers-group-name">Coal plants: Status</span>
-            <!-- generated at run time based on values in STATUS_TYPES. See initMap() -->
-            <div id="legend-labels">
-              <!-- keeping this one as an example of how this html should be structured -->
-              <label><input type="checkbox" value="announced" data-check-after-search="true"><span> <div style="background: #f3ff00" class="circle"></div><span>Announced</span></span></label>
-            </div>
+            <!-- status checkboxes are generated at run time based on values in CONFIG.status_types. See drawMap() -->
+            <div id="status-layers"></div>
           </div>
         </div>
       </div>
