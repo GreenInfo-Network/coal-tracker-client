@@ -953,15 +953,15 @@ function searchMapForText(e) {
   // find data matching the keyword
   var results = CONFIG.searchengine.search(keywords);
 
-    // add to the results to map, table, legend
-    if (results.length) drawMap(results);                                 // update the map (and legend)
-    updateResultsPanel(results, keywords)             // update the results-panel
-    drawTable(results, keywords);                     // populate the table
-    $('form#nav-table-search input').val(keywords);   // sync the table search input with the keywords
-    CONFIG.selected_country.layer.clearLayers();      // clear any selected country
-    CONFIG.selected_country.name = '';                // ... and reset the name
-    $('div#country-results').show();                  // show the results panel, in case hidden
-    $('a.clear-search').show();                       // show the clear search links
+  // add to the results to map, table, legend
+  if (results.length) drawMap(results);             // update the map (and legend)
+  updateResultsPanel(results, keywords)             // update the results-panel
+  drawTable(results, keywords);                     // populate the table
+  $('form#nav-table-search input').val(keywords);   // sync the table search input with the keywords
+  CONFIG.selected_country.layer.clearLayers();      // clear any selected country
+  CONFIG.selected_country.name = '';                // ... and reset the name
+  $('div#country-results').show();                  // show the results panel, in case hidden
+  $('a.clear-search').show();                       // show the clear search links
 
   return false;
 }
