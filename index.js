@@ -490,15 +490,15 @@ function initSearch() {
   // instantiate the search on a "universal id" (or uid in the docs)
   CONFIG.searchengine = new JsSearch.Search('id');
   // add fields to be indexed
-  Object.keys(CONFIG.attributes).forEach(function(key){
-    CONFIG.searchengine.addIndex(['properties', key]);
-  });
-  // add data documents to be searched
-  var documents = [];
-  DATA.tracker_data.forEach(function(row) {
-    documents.push(row);
-  });
-  CONFIG.searchengine.addDocuments(documents);
+  CONFIG.searchengine.addIndex('sponsor');
+  CONFIG.searchengine.addIndex('unit');
+  CONFIG.searchengine.addIndex('plant');
+  CONFIG.searchengine.addIndex('country');
+
+  // add an array of data 'documents' to be searched
+  CONFIG.searchengine.addDocuments(DATA.tracker_data);
+
+  // debug window.search = CONFIG.searchengine;
 }
 
 // "Free" search searches the data for matching keywords entered in the input at top-right
@@ -820,7 +820,7 @@ function updateResultsPanel(data, country=CONFIG.default_title) {
   // update primary content
   $('div#country-results div#results-title h3').text(country);
   var totalrow = $('div#country-results div#total-count').empty();
-  var totaltext = data.length > 0 ? (data.length > 1 ? `Tracking ${data.length.toLocaleString()} coal plants` : `${data.length} fossil project`) : `Nothing found`;
+  var totaltext = data.length > 0 ? (data.length > 1 ? `Tracking ${data.length.toLocaleString()} coal plants` : `Tracking ${data.length} coal project`) : `Nothing found`;
   var total = $('<div>',{text: totaltext}).appendTo(totalrow);
 }
 
@@ -952,15 +952,17 @@ function searchMapForText(e) {
   var keywords = $('form.free-search input').val();
   // find data matching the keyword
   var results = CONFIG.searchengine.search(keywords);
-  // add to the results to map, table, legend
-  drawMap(results);                                 // update the map (and legend)
-  updateResultsPanel(results, keywords)             // update the results-panel
-  drawTable(results, keywords);                     // populate the table
-  $('form#nav-table-search input').val(keywords);   // sync the table search input with the keywords
-  CONFIG.selected_country.layer.clearLayers();      // clear any selected country
-  CONFIG.selected_country.name = '';                // ... and reset the name
-  $('div#country-results').show();                  // show the results panel, in case hidden
-  $('a.clear-search').show();                       // show the clear search links
+
+    // add to the results to map, table, legend
+    if (results.length) drawMap(results);                                 // update the map (and legend)
+    updateResultsPanel(results, keywords)             // update the results-panel
+    drawTable(results, keywords);                     // populate the table
+    $('form#nav-table-search input').val(keywords);   // sync the table search input with the keywords
+    CONFIG.selected_country.layer.clearLayers();      // clear any selected country
+    CONFIG.selected_country.name = '';                // ... and reset the name
+    $('div#country-results').show();                  // show the results panel, in case hidden
+    $('a.clear-search').show();                       // show the clear search links
+
   return false;
 }
 
