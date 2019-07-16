@@ -70,10 +70,8 @@ div#container {
 /* Buttons placed inline with nav tabs */
 div.nav-button-wrapper { 
   display: inline; 
-
   a { 
     text-decoration:none; cursor: pointer;
-    // padding:0.65em 0.7em;
     padding: 10px 15px;
     &:hover {
       background: #e6e6e6;
