@@ -190,7 +190,6 @@ function updateSearchBar() {
   var placeholder = 'Type a project name, company, country...';
   var search = $('input#mapsearch, input#tablesearch');
   var width = $(window).width();
-    console.log(width);
   if (width < 768) {
     if (search.hasClass('collapsed')) return;
     search.addClass('collapsed');
@@ -312,8 +311,13 @@ function initButtons() {
     removeCurrentBasemap();
     // add google satellite basemap
     CONFIG.map.addLayer(CONFIG.basemaps['satellite']);
-    // keep the radio button in sync with the map
+    // ...and keep the radio button in sync with the map
     $('#layers-base input[data-baselayer="satellite"]').prop('checked', true);
+
+    // remove any country "highlight" and select effect, as this will block the map
+    CONFIG.countries.setStyle(CONFIG.country_no_style);
+    CONFIG.selected_country.name = '';
+    CONFIG.selected_country.layer.clearLayers();
 
     // add the back button, which takes the user back to previous view (see function goBack() defined in the construction of Leaflet control)
     // but only if there is not already a back button on the map
@@ -442,8 +446,24 @@ function initMap() {
     CONFIG.map.invalidateSize();
   });
 
-  // an instance of L.backButton()
+  // create an instance of L.backButton()
   CONFIG.back = new L.backButton() // not added now, see initButtons()
+
+  // zoom listeners
+  CONFIG.map.on('zoomend', function() {
+    console.log(CONFIG.map.getZoom());
+    let zoom = CONFIG.map.getZoom();
+    // turn off clickable country layer at higher zoom levels
+    if (zoom > 5) {
+      CONFIG.countries.eachLayer(function(feature) {
+        feature.off('click', clickCountry);
+      });
+    } else {
+      CONFIG.countries.eachLayer(function(feature) {
+        feature.on('click', clickCountry);
+      });
+    }
+  });
 
 }
 
@@ -914,7 +934,7 @@ function massageCountryFeaturesAsTheyLoad(rawdata,feature) {
     // on mouseover, highlight me; on mouseout quit highlighting
     feature.on('mouseover', function (e) {
       // if we are at a high zoom, don't do anything
-      if (CONFIG.map.getZoom() > 9) return;
+      if (CONFIG.map.getZoom() > 7) return;
       // if this country is already 'selected', don't do anything
       var name = this.feature.properties['NAME'];
       if (CONFIG.selected_country.name == name) return;
@@ -926,22 +946,20 @@ function massageCountryFeaturesAsTheyLoad(rawdata,feature) {
       this.setStyle(CONFIG.country_hover_style);
     }).on('mouseout', function (e) {
       // on mouseout, remove the highlight, unless
-      // a) this country is already "selected" (clicked, see below)
+      // this country is already "selected" (clicked, see below)
       var name = this.feature.properties['NAME'];
       if (CONFIG.selected_country.name == name) return;
-      // b) we are entering one of our map features, i.e. a pipeline, or terminal
-      // note: this isn't enough to trap everything, see mouseover() above
-      if ( e.originalEvent.toElement && e.originalEvent.toElement.classList.contains('fossil-feature') ) return;
-      CONFIG.hovered = '';
       this.setStyle(CONFIG.country_no_style);
     });
   }
-  // always register a click event: on click, search and zoom to the selected country
+  // at lower zooms, register a click event: on click, search and zoom to the selected country
   feature.on('click', clickCountry);
 }
 
 // define what happens when we click a country
 function clickCountry(e) {
+  // exit early if we are at high zoom
+  if (CONFIG.map.getZoom() > 5) return;
   // clear the search input
   $('form.free-search input').val('');
   // get the name of the clicked country, and keep a reference to it

@@ -71,7 +71,8 @@ div#container {
 div.nav-button-wrapper { 
   display: inline; 
   a { 
-    text-decoration:none; cursor: pointer;
+    text-decoration:none; 
+    cursor: pointer;
     padding: 10px 15px;
     &:hover {
       background: #e6e6e6;
