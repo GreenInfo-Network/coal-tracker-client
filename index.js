@@ -973,26 +973,29 @@ function searchTableForText(e) {
   var keywords = $('form#nav-table-search input').val();
   // update the table name, if provided
   if (keywords) $('div#table h3 span').text(keywords);
-
   // use DataTables built in search function to search the table with the typed value, and refresh
   CONFIG.table.search(keywords).draw();
 
-  // recalc the map data from the resulting table data
-  var data = CONFIG.table.rows({ filter : 'applied'} ).data();
-  // pull out the ids to an array, and cast to number
-  var ids = data.map(function(row) {return +row[0]});
+  // Meanwhile, search the map for this same string. 
+  // Debounce this with a long delay, because it doesn't have to be instant (the map isn't visible after all)
+  _.debounce(function() {
+    // recalc the map data from the resulting table data
+    var data = CONFIG.table.rows({ filter : 'applied'} ).data();
+    // pull out the ids to an array
+    var ids = data.map(function(row) {return row[0]});
 
-  // update the map from matching ids
-  var data = [];
-  DATA.fossil_data.features.forEach(function(d) {
-    // cast this id to number as well, because indexOf faster on integers than string
-    if (ids.indexOf(+d.properties.id) > -1) data.push(d);
-  });
-  drawMap(data);                                    // update the map
-  $('form.free-search input').val(keywords);        // sync the map search input with the keywords
-  CONFIG.selected_country.layer.clearLayers();      // clear any selected country
-  updateResultsPanel(data, keywords);               // update the results panel
-  $('a.clear-search').show();                       // show the clear search links
+    // update the map from matching ids
+    var data = [];
+    DATA.tracker_data.forEach(function(d) {
+      if (ids.indexOf(d.id) > -1) data.push(d);
+    });
+    drawMap(data);                                    // update the map
+    $('form.free-search input').val(keywords);        // sync the map search input with the keywords
+    CONFIG.selected_country.layer.clearLayers();      // clear any selected country
+    updateResultsPanel(data, keywords);               // update the results panel
+    $('a.clear-search').show();                       // show the clear search links
+
+  },500,false)();
 }
 
 // The primary controller for rendering things
