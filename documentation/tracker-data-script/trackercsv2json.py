@@ -8,17 +8,17 @@ csvfile = open(sys.argv[1], 'r')
 jsonfile = open(sys.argv[2], 'w')
 
 # use this list to change fieldnames in the incoming csv to whatever label you want in the output JSON, 
-# and the application 
+# and in the application 
 # Important: this list is positional, so if the CSV has 10 fields, there should be 10 fieldnames here, in the same order
 # Also important: this list should match the keys in CONFIG.attributes in the app
-fieldnames = ('id','unit','plant','url','sponsor','capacity','status','region','country','subnational','lat','lng','parent')
+fieldnames = ('id','unit','chinese_name','plant','url','sponsor','parent','capacity','status','region','country','subnational','lat','lng','year')
 
 # create the outer array to hold the output
 output = []
 
-
 # iterate the file
 firstline = True
+# open the csv as a Dictionary, remapping the fieldnames as given above
 reader = csv.DictReader(csvfile, fieldnames)
 for row in reader:
     # output.append(json.dumps(row))

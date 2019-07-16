@@ -11,17 +11,11 @@
 - Use `csvcut` to extract cols to keep with `csvcut` (part of `csvkit`) (see below)
 - Run the python script (see below) to clean up the data and convert to `json`
 
-## Fields to keep:
-
-```
-'Tracker ID','Unit','Plant','Wiki page','Sponsor','Capacity (MW)','Status','Region','Country','Subnational unit (province/state)','Latitude','Longitude','Parent'
-```
-
 ## csvcut
 
 Run the following to reduce the CSV to only those fields we need
 ```
-csvcut -c 'Tracker ID','Unit','Plant','Wiki page','Sponsor','Capacity (MW)','Status','Region','Country','Subnational unit (province/state)','Latitude','Longitude','Parent' coal.csv > trackers.csv
+csvcut -e utf-8-sig -c 'Tracker ID','Unit','Chinese name','Plant','Wiki page','Sponsor','Parent','Capacity (MW)','Status','Region','Country','Subnational unit (province/state)','Latitude','Longitude','Year' coal.csv > trackers.csv
 ```
 
 ## convert to json

@@ -50,22 +50,23 @@ CONFIG.country_selected_style = { stroke: false, fillColor: '#fff', fillOpacity:
 // an "invisible" country style, as we don't want countries to show except on hover or click
 CONFIG.country_no_style = { opacity: 0, fillOpacity: 0 };
 
-// primary attributes to display: used in the table, for searching, displaying individual results on map popups, etc.
+// primary attributes to display: used for searching, displaying individual results on map popups, etc.
 CONFIG.attributes = {
   'id': {name: 'Tracker ID'},
   'unit': {name: 'Unit'},
+  'chinese_name': {name: 'Chinese name'},
   'plant': {name: 'Plant'},
   'url': {name: 'Wiki page'},
   'sponsor': {name: 'Sponsor'},
+  'parent': {name: 'Parent'},
   'capacity': {name: 'Capacity (MW)'},
   'status': {name: 'Status'},
   'region': {name: 'Region'},
   'country': {name: 'Country'},
   'subnational': {name: 'Subnational unit (province/state)'},
-  'lat': {name: 'Latitude'},
-  'lng': {name: 'Longitude'},
-  'parent': {name: 'Parent'},
+  'year': {name: 'Start year'},
 };
+
 
 // the Universe of status types: these are the categories used to symbolize coal plants on the map
 //          key: allowed status names, matching those used in DATA.fossil_data
