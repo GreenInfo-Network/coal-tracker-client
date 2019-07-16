@@ -272,10 +272,7 @@ function initButtons() {
 
   // init the zoom button that shows on the modal details for an individual coal plant
   $('#btn-zoom').click(function(){
-    // debugger;
     var target = this.dataset.zoom.split(',');
-    // console.log('JQ',$(this).data().zoom);
-    // console.log('native', this.dataset.zoom);
     var latlng = L.latLng([target[0], target[1]]);
     var zoom = 16;
 

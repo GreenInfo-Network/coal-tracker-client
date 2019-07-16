@@ -33,12 +33,6 @@
   <script src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
   <link rel="stylesheet" href="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css"/>
   
-  <!-- datatables responsive and bootstrap plugin -->
-<!--   <script src="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-  <script src="./libs/datatables.responsive.js" type="text/javascript"></script>
-  <link rel="stylesheet" type="text/css" href="./libs/datatables.responsive.css" />
-  <link rel="stylesheet" href="//cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css"/> -->
-
   <!-- Papa Parse for csv parsing -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.3.7/papaparse.min.js"></script>
 
@@ -99,11 +93,13 @@
   <label class="tab" for="table-tab">Table</label>
   <input class="tab" type="radio" id="about-tab" name="tabs">
   <label class="tab" for="about-tab">About</label>
-  <input class="tab" type="radio" id="help-tab" name="tabs">
-  <label class="tab" for="help-tab">Sum<span class="hidden-xs hidden-sm">marie</span>s</label>
 
   <!-- Restart button, positioned near nav, like a tab, but not a tab -->
-  <div id="reset-button-wrapper">
+  <div class="nav-button-wrapper">
+    <a href="https://endcoal.org/global-coal-plant-tracker/summary-statistics/" target="_blank" id="summaries-button" title="Click for data summaries">
+      <span>Sum<span class="hidden-xs hidden-sm">marie</span>s</span>
+    </a>
+
     <a id="reset-button" title="Reset the map">
       <span>Restart</span>
     </a>

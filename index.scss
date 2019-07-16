@@ -67,18 +67,19 @@ div#container {
   border-radius: 4px 4px 0 0; 
 }
 
-/* the home button icon */
-div#reset-button-wrapper { 
+/* Buttons placed inline with nav tabs */
+div.nav-button-wrapper { 
   display: inline; 
-  margin: 0 0.5em 0;  
-}
-a#reset-button { 
-  text-decoration:none; cursor: pointer;
-  padding:0.65em 0.7em;
-  &:hover {
-    background: #e6e6e6;
-    color: #337ab7;
-    border-radius:3px;
+
+  a { 
+    text-decoration:none; cursor: pointer;
+    // padding:0.65em 0.7em;
+    padding: 10px 15px;
+    &:hover {
+      background: #e6e6e6;
+      color: #337ab7;
+      border-radius:3px;
+    }
   }
 }
 
