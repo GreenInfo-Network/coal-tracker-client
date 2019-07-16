@@ -120,9 +120,6 @@ CONFIG.column_names = {
     'Subnational unit': 'subnational_unit',
 };
 
-// allowed url params. To support additional params, add them here
-CONFIG.allowed_params = ['country'];
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// INITIALIZATION: these functions are called when the page is ready,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,26 +247,26 @@ function initState() {
   var params = window.location.href;
   // if we have url params, get the params and use them to set state
   if (params.indexOf('?') > -1) {
-    setStateFromParams();
+    // get the params. The only one supported at the moment is "country"
+    var params = new URLSearchParams(window.location.search);
+    var place = params.get('country');
+    if (place) {
+      let place_lookup = DATA.country_lookup[place.toTitleCase()];
+      // find the country, zoom to it
+      CONFIG.countries.eachLayer(function(layer) {
+        if (layer.name == place_lookup ) {
+          var bounds = layer.getBounds();
+          searchCountry(place, bounds, 500);
+          highlightCountryLayer(layer.feature);
+        }
+      })
+    } else {
+      resetTheMap();
+    }
   } else {
-    resetTheMap();
+    // the default init, if we don't have matching params
+    resetTheMap();    
   }
-}
-
-// TO DO: match Coal Tracker here
-function setStateFromParams() {
-  // get the params
-  var rawparams = $.url(params);
-  var params = rawparams.data.param.query;
-  var type = Object.keys(params)[0];
-  var place = params[type];
-  // error checking 1: check for existence of a valid param type as defined in CONFIG.allowed_params
-  if (CONFIG.allowed_params.indexOf(type) == -1) return true;
-  // error checking 2: put name in proper case
-  var place = place.toTitleCase();
-  // all is well, do the search
-  // currently the only search type we support by params is 'country'
-  searchCountry(place);
 }
 
 function initButtons() {
@@ -428,7 +425,7 @@ function initMap() {
 
   // Add a layer to hold countries, for click and hover (not mobile) events on country features
   CONFIG.countries = L.featureGroup([], { pane: 'country-hover' }).addTo(CONFIG.map);
-  var countries = L.geoJson(DATA.country_data,{ style: CONFIG.country_no_style, onEachFeature: massageCountryFeaturesAsTheyLoad }).addTo(CONFIG.countries);
+  L.geoJson(DATA.country_data,{ style: CONFIG.country_no_style, onEachFeature: massageCountryFeaturesAsTheyLoad });
 
   // add a layer to hold any selected country
   CONFIG.selected_country = {};
@@ -441,7 +438,7 @@ function initMap() {
   var layercontrol = $('.layer-control');
   if (isMobile()) layercontrol.hide();
 
-  // once the map is done loading, resize and hide the loading spinner
+  // once the map is done loading, resize 
   CONFIG.map.on('load', function() {
     resize();
     CONFIG.map.invalidateSize();
@@ -453,16 +450,7 @@ function initMap() {
   // zoom listeners
   CONFIG.map.on('zoomend', function() {
     let zoom = CONFIG.map.getZoom();
-    // turn off clickable country layer at higher zoom levels
-    if (zoom > 5) {
-      CONFIG.countries.eachLayer(function(feature) {
-        feature.off('click', clickCountry);
-      });
-    } else {
-      CONFIG.countries.eachLayer(function(feature) {
-        feature.on('click', clickCountry);
-      });
-    }
+    console.log(zoom);
   });
 
 }
@@ -714,7 +702,6 @@ function drawMap(data, force_redraw=false) {
       trackers.push(tracker);
     }
   });
-
   // step 2: update the marker clustering, now that "trackers" is implicitly filtered to everything that we need
   updateClusters(trackers);
 
@@ -930,6 +917,9 @@ function resetTheMap() {
 
 // this callback is used when CONFIG.countries is loaded via GeoJSON; see initMap() for details
 function massageCountryFeaturesAsTheyLoad(rawdata,feature) {
+  // attach some attributes
+  feature.name = rawdata.properties['NAME'];
+  
   // only register hover events for non-touch, non-mobile devices
   // including isMobile() || isIpad() here to include iPad and exclude "other" touch devices here, e.g. my laptop, which is touch, but not mobile
   if (! (isTouch() && ( isMobile() || isIpad() ))) {
@@ -956,33 +946,30 @@ function massageCountryFeaturesAsTheyLoad(rawdata,feature) {
   }
   // at lower zooms, register a click event: on click, search and zoom to the selected country
   feature.on('click', clickCountry);
+
+  // finally add this individual country feature to CONFIG.countries
+  // CONFIG.countries.addLayer(feature);
+  feature.addTo(CONFIG.countries);
 }
 
 // define what happens when we click a country
 function clickCountry(e) {
   // exit early if we are at high zoom
-  if (CONFIG.map.getZoom() > 5) return;
+  if (CONFIG.map.getZoom() > 7) return;
   // clear the map search input
   $('form#nav-map-search input').val('');
   // get the name of the clicked country, and keep a reference to it
   var name = e.target.feature.properties['NAME'];
-  // if we've clicked an alredy-selected country again, clear the selection, reset the search
-  if (CONFIG.selected_country.name == name) {
-    CONFIG.selected_country.name = '';
-    CONFIG.selected_country.layer.clearLayers();
-    render();
-  } else {
-    CONFIG.selected_country.name = name;
-    // highlight it on the map, first clearning any existing selection
-    CONFIG.selected_country.layer.clearLayers();
-    CONFIG.selected_country.layer.addData(e.target.feature);
-    // register the same click event on this layer, as we have for every other country layer
-    CONFIG.selected_country.layer.eachLayer(function(layer){
-      layer.on('click', clickCountry);
-    });
-    // call the search function
-    searchCountry(name, e.target._bounds);
-  }
+  CONFIG.selected_country.name = name;
+  highlightCountryLayer(e.target.feature);
+  // call the search function
+  searchCountry(name, e.target._bounds);
+}
+
+function highlightCountryLayer(feature) {
+  // highlight it on the map, first clearning any existing selection
+  CONFIG.selected_country.layer.clearLayers();
+  CONFIG.selected_country.layer.addData(feature);
 }
 
 // remove the current basemap from the view
@@ -1068,7 +1055,7 @@ function render(options) {
 }
 
 // zoom to the bounds of the country, and continue to show items outside of its boundaries
-function searchCountry(name, bounds) {
+function searchCountry(name, bounds, delay=1) {
   // get the data for this country, *only* for updating the results panel
   // the map and table, continue to show all data
   var data = [];
@@ -1081,7 +1068,7 @@ function searchCountry(name, bounds) {
 
   // if bounds were provided, zoom the map to the selected country
   // some countries require special/custom bounds calcs, because they straddle the dateline or are otherwise non-standard
-  if (typeof bounds != 'null') {
+  if (typeof bounds != 'undefined') {
     switch (name) {
       case 'Russia':
         bounds = L.latLngBounds([38.35400, 24], [78.11962,178]);
@@ -1095,13 +1082,15 @@ function searchCountry(name, bounds) {
       default: break;
     }
     // got bounds, fit the map to it
-    CONFIG.map.fitBounds(bounds);
+    setTimeout(function() {
+      CONFIG.map.fitBounds(bounds);
+    }, delay)
+    
   } // has bounds
-
   // because we are not filtering the map, but only changing the bounds
   // results on the map can easily get out of sync due to a previous search filter
   // so first we need to explicity render() the map with all data, but not the table or results
-  render({ name: name, map:true, results:false, table:false });
+  render({ name: name, map: true, results: false, table: false });
   // THEN update results panel for *this* country data only
   updateResultsPanel(data, name);
   // THEN the table, with all data, but not with this name
