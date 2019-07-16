@@ -450,7 +450,6 @@ function initMap() {
   // zoom listeners
   CONFIG.map.on('zoomend', function() {
     let zoom = CONFIG.map.getZoom();
-    console.log(zoom);
   });
 
 }
@@ -688,7 +687,7 @@ function initPruneCluster() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Set up all map layers for all types and statuses, and set up layer objects in CONFIG.status_types['layers'], so we can turn them on and off later.
-function drawMap(data, force_redraw=false) {
+function drawMap(data, force_redraw=false, fitbounds=true) {
   // step 1: clear the marker clustering system and repopulate it with the current set of tracker points
   // as we go through, log what statuses are in fact seen; this is used in step 5 to show/hide checkboxes for toggling trackers by status
   var statuses   = [];
@@ -703,13 +702,13 @@ function drawMap(data, force_redraw=false) {
     }
   });
   // step 2: update the marker clustering, now that "trackers" is implicitly filtered to everything that we need
-  updateClusters(trackers);
+  updateClusters(trackers, fitbounds);
 
   // step 3: hide the status toggle checkboxes, showing only the ones which in fact have a status represented
   drawLegend(statuses);
 }
 
-function updateClusters(data) {
+function updateClusters(data, fitbounds=true) {
   // start by clearing out existing clusters
   CONFIG.clusters.RemoveMarkers();
 
@@ -759,7 +758,9 @@ function updateClusters(data) {
     bounds = CONFIG.homebounds;
   }
   // timeout appears necessary to let the clusters do their thing, before fitting bounds
-  setTimeout(function() { CONFIG.map.fitBounds(bounds) },200);
+  if (fitbounds) {
+    setTimeout(function() { CONFIG.map.fitBounds(bounds) },200);
+  }
 }
 
 // show and hide the correct legend labels and checkboxes for this set of data and statuses
@@ -1046,10 +1047,11 @@ function render(options) {
   options.results       = options.results      !== undefined ? options.results : true;
   options.table         = options.table        !== undefined ? options.table : true;
   options.force_redraw  = options.force_redraw !== undefined ? options.force_redraw : false;
+  options.fitbounds     = options.fitbounds    !== undefined ? options.fitbounds : true;
 
   // optionally draw the map (and legend) table, results
   $('div.searchwrapper a.clear-search').hide();
-  if (options.map)     drawMap(DATA.tracker_data, options.force_redraw);
+  if (options.map)     drawMap(DATA.tracker_data, options.force_redraw, options.fitbounds);
   if (options.results) updateResultsPanel(DATA.tracker_data);
   if (options.table)   drawTable(DATA.tracker_data, options.name);
 }
@@ -1085,12 +1087,12 @@ function searchCountry(name, bounds, delay=1) {
     setTimeout(function() {
       CONFIG.map.fitBounds(bounds);
     }, delay)
-    
   } // has bounds
+
   // because we are not filtering the map, but only changing the bounds
   // results on the map can easily get out of sync due to a previous search filter
   // so first we need to explicity render() the map with all data, but not the table or results
-  render({ name: name, map: true, results: false, table: false });
+  render({ name: name, map: true, results: false, table: false, fitbounds: false });
   // THEN update results panel for *this* country data only
   updateResultsPanel(data, name);
   // THEN the table, with all data, but not with this name
