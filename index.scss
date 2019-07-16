@@ -345,7 +345,7 @@ div#search-icon-wrapper {
   width: 33px;
 }
 
-form#nav-table-search input, form#nav-place-search input { 
+form#nav-table-search input, form#nav-map-search input { 
   border-top-left-radius: 3px; 
   border-top-right-radius: 3px; 
   border-bottom-left-radius:3px; 
@@ -358,11 +358,11 @@ form#nav-table-search input, form#nav-place-search input {
   transition: all 0.3s ease;
 }
 
-form#nav-table-search input.collapsed, form#nav-place-search input.collapsed { 
+form#nav-table-search input.collapsed, form#nav-map-search input.collapsed { 
   width: 33px;
 }
 
-form#nav-table-search input:not(.collapsed), form#nav-place-search input:not(.collapsed) { 
+form#nav-table-search input:not(.collapsed), form#nav-map-search input:not(.collapsed) { 
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -451,11 +451,11 @@ div#table table.table {
 
 /* styles specific to smaller screens: applies below this width (less or equal to); */
 @media screen and (max-width: 835px) {
-  form#nav-table-search input, form#nav-place-search input {width: 320px;}
+  form#nav-table-search input, form#nav-map-search input {width: 320px;}
 }
 
 @media screen and (max-width: 810px) {
-  form#nav-table-search label, form#nav-place-search label {display:none}
+  form#nav-table-search label, form#nav-map-search label {display:none}
 }
 
 @media screen and (max-width: 767px) {
@@ -464,7 +464,7 @@ div#table table.table {
   div#home-button-wrapper a:hover {background: #fff;}
 
   div.table-container { font-size:85%; }
-  form#nav-table-search input:not(.collapsed), form#nav-place-search input:not(.collapsed) { 
+  form#nav-table-search input:not(.collapsed), form#nav-map-search input:not(.collapsed) { 
     height: 42px;
   }
 

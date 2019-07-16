@@ -134,7 +134,7 @@ $(document).ready(function () {
       initTabs();             // init the main navigation tabs
       initTable();            // the Table is fully populated from the trackers dataset, but is filtered at runtime
       initSearch();           // init the full text search
-      initFreeSearch();       // init the "free" search inputs, which implement full-text search
+      initMapSearch();        // init the map search
       initMap();              // regular leaflet map setup
       initMapLayers();        // init some map layers and map feature styles
       initStatusCheckboxes(); // initialize the checkboxes to turn on/off trackers by status
@@ -451,7 +451,6 @@ function initMap() {
 
   // zoom listeners
   CONFIG.map.on('zoomend', function() {
-    console.log(CONFIG.map.getZoom());
     let zoom = CONFIG.map.getZoom();
     // turn off clickable country layer at higher zoom levels
     if (zoom > 5) {
@@ -504,7 +503,7 @@ function initTabs()    {
       case 'map':
         // show the correct search form, and resize the map
         $('#nav-table-search').hide();
-        $('#nav-place-search').show();
+        $('#nav-map-search').show();
         CONFIG.map.invalidateSize(false);
         break;
       case 'table':
@@ -513,7 +512,7 @@ function initTabs()    {
           resize();
         }
         // show the correct search form
-        $('#nav-place-search').hide();
+        $('#nav-map-search').hide();
         $('#nav-table-search').show();
         break;
       default:
@@ -555,20 +554,18 @@ function initSearch() {
 
 // "Free" search searches the data for matching keywords entered in the input at top-right
 // we use JSsearch https://github.com/bvaughn/js-search as the search "engine"
-function initFreeSearch() {
-  // This inits the "free search" form input, which looks for matching keywords in data
-  $('form.free-search input').on('keyup', function(event) {
-    // prevent default browser behaviour, especially on 'enter' which would refresh the page
-    event.preventDefault();
+function initMapSearch() {
+   // This inits the "map search" form input, which looks for matching keywords in data
+  $('form#nav-map-search input').keyup(_.debounce(function() {
     // if the input is cleared, redo the 'everything' search (e.g. show all results)
     // this is distinct from the case of "No results", in searchMapForText
     if (!this.value) return render();
-    // submit the form
+    // trigger the submit event
     $(this).submit();
-  });
+  },200));
 
   // the submit function itself
-  $('form.free-search').on('submit', searchMapForText);
+  $('form#nav-map-search input').on('submit', searchMapForText);
 }
 
 // initialize the PruneClusters, and override some factory methods
@@ -768,7 +765,11 @@ function updateClusters(data) {
   // all set! process the view, and fit the map to the new bounds
   CONFIG.clusters.ProcessView();
   var cluster_bounds = CONFIG.clusters.Cluster.ComputeGlobalBounds();
-  var bounds = [[cluster_bounds.minLat, cluster_bounds.minLng],[cluster_bounds.maxLat, cluster_bounds.maxLng]];
+  if (cluster_bounds) {
+    var bounds = [[cluster_bounds.minLat, cluster_bounds.minLng],[cluster_bounds.maxLat, cluster_bounds.maxLng]];
+  } else {
+    bounds = CONFIG.homebounds;
+  }
   // timeout appears necessary to let the clusters do their thing, before fitting bounds
   setTimeout(function() { CONFIG.map.fitBounds(bounds) },200);
 }
@@ -960,8 +961,8 @@ function massageCountryFeaturesAsTheyLoad(rawdata,feature) {
 function clickCountry(e) {
   // exit early if we are at high zoom
   if (CONFIG.map.getZoom() > 5) return;
-  // clear the search input
-  $('form.free-search input').val('');
+  // clear the map search input
+  $('form#nav-map-search input').val('');
   // get the name of the clicked country, and keep a reference to it
   var name = e.target.feature.properties['NAME'];
   // if we've clicked an alredy-selected country again, clear the selection, reset the search
@@ -999,12 +1000,12 @@ function removeCurrentBasemap() {
 function searchMapForText(e) {
   e.preventDefault();
   // get the keywords to search
-  var keywords = $('form.free-search input').val();
+  var keywords = $('form#nav-map-search input').val();
   // find data matching the keyword
   var results = CONFIG.searchengine.search(keywords);
 
   // add to the results to map, table, legend
-  if (results.length) drawMap(results);             // update the map (and legend)
+  drawMap(results);                                 // update the map (and legend)
   updateResultsPanel(results, keywords)             // update the results-panel
   drawTable(results, keywords);                     // populate the table
   $('form#nav-table-search input').val(keywords);   // sync the table search input with the keywords
@@ -1040,7 +1041,7 @@ function searchTableForText(e) {
       if (ids.indexOf(d.id) > -1) data.push(d);
     });
     drawMap(data);                                    // update the map
-    $('form.free-search input').val(keywords);        // sync the map search input with the keywords
+    $('form#nav-map-search input').val(keywords);        // sync the map search input with the keywords
     CONFIG.selected_country.layer.clearLayers();      // clear any selected country
     updateResultsPanel(data, keywords);               // update the results panel
     $('a.clear-search').show();                       // show the clear search links
