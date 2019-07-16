@@ -861,7 +861,7 @@ function updateResultsPanel(data, country=CONFIG.default_title) {
   // update primary content
   $('div#country-results div#results-title h3').text(country);
   var totalrow = $('div#country-results div#total-count').empty();
-  var totaltext = data.length > 0 ? (data.length > 1 ? `Tracking ${data.length.toLocaleString()} coal plants` : `Tracking ${data.length} coal project`) : `Nothing found`;
+  var totaltext = data.length > 0 ? (data.length > 1 ? `Tracking ${data.length.toLocaleString()} coal-fired units` : `Tracking ${data.length} coal project`) : `Nothing found`;
   var total = $('<div>',{text: totaltext}).appendTo(totalrow);
 }
 
