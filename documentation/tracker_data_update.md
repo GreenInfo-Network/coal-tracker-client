@@ -1,9 +1,12 @@
 # Update Tracker data from Spreadsheet
 
+## Requirements
+* [csv kit](https://csvkit.readthedocs.io/en/latest/)
+
 ## Steps
-- obtain the spreadsheet from the client
+- obtain the latest spreadsheet from the client, likely a link to a Google Spreadsheet, or an XLS file
 - download or save the data sheet as CSV 
-- rename fields with commas - these are problematic in csvcut for some reason, e.g. "Subnational unit (province, state)" >> "Subnational unit (province/state)"
+- rename fields with commas - these are problematic in `csvkit/csvcut` for some reason, e.g. "Subnational unit (province, state)" >> "Subnational unit (province/state)"
 - Use `csvcut` to extract cols to keep with `csvcut` (part of `csvkit`) (see below)
 - Run the python script (see below) to clean up the data and convert to `json`
 
