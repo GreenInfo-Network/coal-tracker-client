@@ -25,7 +25,7 @@ yarn install
 
 Project data are provided in `trackers.csv`, whereas country geo-data comes from `world.json`. Names in the data don't always match and need some cleanup, to be used. 
 
-This script checks country names in the data against a lookup that matches country names to their equivalents in `world.json`. Any countries that don't match are printed to the console.
+This script checks country names in the data against a lookup that matches country names to their equivalents in `world.json`. Any countries for which a match cannot be found are printed to the console.
 
 #### To run
 * Edit `index.js` and make sure it points to the correct input and output files

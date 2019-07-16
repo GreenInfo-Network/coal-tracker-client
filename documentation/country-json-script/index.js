@@ -78,6 +78,7 @@ csv()
     }
   });
 
+// in the future, we could explicitly write out JSON, line by line, and in the process swap in the names we want to use (to match the data)
 function generateJson(names) {
   // make sure the file_list contains only unique entries
   names = uniq(names);
