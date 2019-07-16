@@ -2,6 +2,7 @@
 
 ## Requirements
 * [csv kit](https://csvkit.readthedocs.io/en/latest/)
+* Python 3
 
 ## Steps
 - obtain the latest spreadsheet from the client, likely a link to a Google Spreadsheet, or an XLS file
