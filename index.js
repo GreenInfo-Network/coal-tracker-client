@@ -144,7 +144,7 @@ $(document).ready(function () {
 
       // ready!
       setTimeout(function () {
-        resize();
+        $(window).trigger('resize');
         $('div#pleasewait').hide();
       }, 300);
     }); // Promise.then()
@@ -154,6 +154,7 @@ $(document).ready(function () {
 $(window).resize(function() {
   // resize the map, table and content divs to fit the current window
   resize(); 
+  updateSearchBar();
 })
 
 // resize everything: map, content divs, table
@@ -183,8 +184,35 @@ function resize() {
   // set the scrollbody height via css property
   tablediv.css('height', height);
   CONFIG.table.columns.adjust().draw();
-
 }
+
+function updateSearchBar() {
+  var placeholder = 'Type a project name, company, country...';
+  var search = $('input#mapsearch, input#tablesearch');
+  var width = $(window).width();
+    console.log(width);
+  if (width < 768) {
+    if (search.hasClass('collapsed')) return;
+    search.addClass('collapsed');
+    setTimeout(function() { search.attr('placeholder','') }, 300);
+    search.siblings().find('span.glyphicon-search').on('click', function() {
+      search.toggleClass('collapsed');
+      if (search.hasClass('collapsed')) {
+        setTimeout(function() { 
+          search.attr('placeholder',''); 
+          search.val(''); 
+        }, 300);
+      } else {
+        search.attr('placeholder',placeholder);
+        search.off('click');
+      }
+    });
+  } else {
+    search.removeClass('collapsed');
+    search.attr('placeholder',placeholder);
+  }
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions called on doc ready
@@ -252,7 +280,11 @@ function initButtons() {
 
   // search icons on the search forms, click to submit
   $('form.search-form span.glyphicon-search').on('click', function() {
-    $(this).closest('form').submit();
+    // shouldn't really be needed, since this submits on keyup()
+    // and definitely not on mobile, as it interferes with the form exapanding
+    if ( !isMobile() ) {
+      $(this).closest('form').submit();
+    }
   });
 
   // close button, generically closes it's direct parent

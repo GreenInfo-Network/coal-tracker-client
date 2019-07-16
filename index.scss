@@ -48,7 +48,7 @@ $circleopacity: 0.85;
 html, body, #map { height: 100% }
 #map { margin:8px 0 0; width: auto; }
 div.content-container {padding:10px 15px;}
-div.table-container { width: 100%; font-size:90%; margin-bottom: 0; }
+div.table-container { width: 100%; font-size:90%; margin-bottom: 0; padding-bottom: 0; }
 input:focus::-webkit-input-placeholder { color:transparent; }
 input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
 input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
@@ -300,8 +300,21 @@ span.glyphicon-search {
   }
 }
 
+div#search-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* float: right; */
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 33px;
+}
+
 div.searchwrapper {
   position: absolute;
+  z-index:9999;
   right: 10px;
   label {
     margin-right:5px;
@@ -431,7 +444,7 @@ div#table table.table {
 /* styles specific to larger screens: only apply above stated pixel width (greater or equal to); */
 @media (min-width:768px) {
   /*extra large button; extends .btn */
-  .btn-xlarge {margin: 0 12px; padding: 18px 28px;font-size: 22px; line-height: normal; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
+  // .btn-xlarge {margin: 0 12px; padding: 18px 28px;font-size: 22px; line-height: normal; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; }
   .modal-lg { width: 50%; margin: 10% auto; }
 }
 
@@ -446,9 +459,14 @@ div#table table.table {
 
 @media screen and (max-width: 767px) {
   .btn-justify-80 { font-size: 90%; min-width: 83px; max-width: 83px;}
-  div.table-container { font-size:85%; }
   div.layer-control { max-height:350px; }
   div#home-button-wrapper a:hover {background: #fff;}
+
+  div.table-container { font-size:85%; }
+  form#nav-table-search input:not(.collapsed), form#nav-place-search input:not(.collapsed) { 
+    height: 42px;
+  }
+
 }
 
 @media screen and (max-width: 400px) {

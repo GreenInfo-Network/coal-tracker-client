@@ -68,7 +68,7 @@
         <div class="form-inline">
           <label class="hidden-xs" for="mapsearch">Filter the map</label>
           <input id="mapsearch" type="text" class="form-control" data-type="nav" placeholder="Type a project name, company, country...">
-          <a class="clear-search" title="click to clear the search"></span>clear search</a>
+          <a class="clear-search" title="click to clear the search"></span>clear<span class="hidden-xs hidden-sm"> search</span></a>
           <div id="search-icon-wrapper">
             <span class="glyphicon glyphicon-search"></span>
           </div>
@@ -77,7 +77,7 @@
       <!-- only shows when table is showing -->
       <form role="form" id="nav-table-search" class="search-form" style="display:none;">
         <div class="form-inline">
-          <a class="clear-search" title="click to clear the search">clear search</a>
+          <a class="clear-search" title="click to clear the search">clear<span class="hidden-xs hidden-sm"> search</span></a>
           <label class="hidden-xs" for="tablesearch">Filter the table</label>
           <input id="tablesearch" type="text" class="form-control" placeholder="Type a project name, company, country...">
           <span class="glyphicon glyphicon-search"></span>
@@ -101,7 +101,7 @@
     </a>
 
     <a id="reset-button" title="Reset the map">
-      <span>Restart</span>
+      <span><span class="hidden-xs hidden-sm">Restart</span><span class="hidden-sm glyphicon glyphicon-refresh"></span></span>
     </a>
   </div>
 
