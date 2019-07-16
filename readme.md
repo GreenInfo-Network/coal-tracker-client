@@ -28,3 +28,6 @@ To start a development server:
 ```
 yarn start
 ```
+
+## Data updates
+See additional readme's in `documentation/` for details on updating tracker point data and country polygon data
