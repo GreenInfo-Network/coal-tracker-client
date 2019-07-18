@@ -103,23 +103,24 @@ CONFIG.status_markers = {
 // Note: prunecluster.markercluster.js needs this, and I have not found a better way to provide it
 CONFIG.markercluster_colors = Object.keys(CONFIG.status_types).map(function(v) { return CONFIG.status_types[v].color });
 
-// default set of column names, in print format and as they are in the data
-// these are also defined in the trackers model; could be useful in the future for server-side requests
-// at the moment, everything comes in through geojson; see README.txt (countries.json, trackers.json)
-// if adding a column to the table or popup view, make sure the field is a) added here, b) included in the trackers.json export (see README.txt), and c) stub out html for the new field in the table and the popup
-CONFIG.column_names = {
-    'Unit': 'unit',
-    'Plant': 'plant',
-    'Other names': 'other_names',
-    'Wiki Page': 'wiki_page',
-    'Sponsor': 'sponsor',
-    'Capacity (MW)': 'capacity_mw',
-    'Status': 'status',
-    'Region': 'region',
-    'Country': 'country',
-    'Subnational unit': 'subnational_unit',
-};
+// search fields for various categories. These are selected by values keyed select#search-category
+// the strange formatting is required by the search library, this is how search fields are specified
+CONFIG.search_categories = {
+  'all': {unit: {}, plant: {}, parent: {}, region: {}, country: {}, subnational: {}, year: {}},
+  'unit': {unit: {}, plant: {}},
+  'parent': {parent: {}},
+  'location': {region: {}, country: {}, subnational: {}},
+  'year': {year: {}}
+}
 
+// the placeholder to show, also depends on the select#search-category selection
+CONFIG.search_placeholder = {
+  'all': 'project name, company, country',
+  'unit': 'unit name, plant name',
+  'parent': 'company name',
+  'location': 'place name',
+  'year': 'year (e.g. 2010)',
+}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// INITIALIZATION: these functions are called when the page is ready,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,7 +186,8 @@ function resize() {
 }
 
 function updateSearchBar() {
-  var placeholder = 'Type a project name, company, country...';
+  var category = $('select#search-category').val();
+  var placeholder = CONFIG.search_placeholder[category];
   var search = $('input#mapsearch, input#tablesearch');
   var width = $(window).width();
   if (width < 768) {
@@ -257,6 +259,7 @@ function initState() {
         if (layer.name == place_lookup ) {
           var bounds = layer.getBounds();
           searchCountry(place, bounds, 500);
+          drawTable()
           highlightCountryLayer(layer.feature);
         }
       })
@@ -526,19 +529,32 @@ function initTable() {
 }
 
 function initSearch() {
-  // instantiate the search on a "universal id" (or uid in the docs)
-  CONFIG.searchengine = new JsSearch.Search('id');
-  // add fields to be indexed
-  CONFIG.searchengine.addIndex('sponsor');
-  CONFIG.searchengine.addIndex('unit');
-  CONFIG.searchengine.addIndex('plant');
-  CONFIG.searchengine.addIndex('country');
+  // config search engine with the fields and data to be searched
+  // which end up searched depends on selections made in select#search-categories and implemented at run time
+  CONFIG.searchengine = elasticlunr(function () {
+    this.addField('sponsor');
+    this.addField('parent');
+    this.addField('parent');
+    this.addField('unit');
+    this.addField('plant');
+    this.addField('country');
+    this.addField('region');
+    this.addField('subnational');
+    this.addField('year');
+    this.setRef('id');
+  });
+  DATA.tracker_data.forEach(function(document) {
+    CONFIG.searchengine.addDoc(document);
+  })
 
-  // add an array of data 'documents' to be searched
-  CONFIG.searchengine.addDocuments(DATA.tracker_data);
-
-  // debug window.search = CONFIG.searchengine;
+  // update the placeholder text when search category is selected
+  $('select#search-category').on('change', function() {
+    let value = $(this).val();
+    let placeholder = CONFIG.search_placeholder[value];
+    $('input#mapsearch, input#tablesearch').attr('placeholder', placeholder);
+  });
 }
+
 
 // "Free" search searches the data for matching keywords entered in the input at top-right
 // we use JSsearch https://github.com/bvaughn/js-search as the search "engine"
@@ -990,8 +1006,18 @@ function searchMapForText(e) {
   e.preventDefault();
   // get the keywords to search
   var keywords = $('form#nav-map-search input').val();
-  // find data matching the keyword
-  var results = CONFIG.searchengine.search(keywords);
+  
+  // Kick off a search to find data matching the keyword, and pull out the results
+  let options = {bool: 'AND'};
+  // extract the fields to search, from the selected 'search category' options
+  let category = $('select#search-category').val();
+  options['fields'] = {'unit':{},'plant':{},'sponsor':{}};
+  options.fields = CONFIG.search_categories[category];
+  var search_results = CONFIG.searchengine.search(keywords, options);
+  var results = [];
+  search_results.forEach(function(result) {
+    results.push(result.doc)
+  });
 
   // add to the results to map, table, legend
   drawMap(results);                                 // update the map (and legend)
@@ -1096,7 +1122,8 @@ function searchCountry(name, bounds, delay=1) {
   // THEN update results panel for *this* country data only
   updateResultsPanel(data, name);
   // THEN the table, with all data, but not with this name
-  // drawTable(DATA.tracker_data); // Why draw this again?  
+  // may seem superfluous, but important to keep the map/table in sync, and showing all data  
+  drawTable(DATA.tracker_data); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

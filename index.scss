@@ -318,7 +318,6 @@ div.searchwrapper {
   z-index:9999;
   right: 10px;
   label {
-    margin-right:5px;
     font-weight: 500;
   }
 }
@@ -345,6 +344,13 @@ div#search-icon-wrapper {
   width: 33px;
 }
 
+form#nav-table-search select, form#nav-map-search select {
+  border-radius: 0;
+  height: 34px;
+  border-color: #ccc;
+  margin-right: 3px;
+}
+
 form#nav-table-search input, form#nav-map-search input { 
   border-top-left-radius: 3px; 
   border-top-right-radius: 3px; 
@@ -356,6 +362,9 @@ form#nav-table-search input, form#nav-map-search input {
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
   transition: all 0.3s ease;
+
+  position: relative;
+  top: -1px;
 }
 
 form#nav-table-search input.collapsed, form#nav-map-search input.collapsed { 
