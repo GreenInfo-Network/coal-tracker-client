@@ -1,9 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IMPORTS
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-import MobileDetect from 'mobile-detect';
 const Promise = require('es6-promise-polyfill').Promise;
-import * as JsSearch from 'js-search';
 
 ///////////////////////////////////////////////////////////////////////////////////
 // STYLES, in production, these will be written to <script> tags
@@ -554,7 +552,10 @@ function initSearch() {
   },300));
 
   $('form#search').submit(function(e) {
+    // prevent default, and return early if we submitted an empty form
     e.preventDefault();
+    if (! $('form#search input').val()) return;
+
     // only two search types at the moment: table or map
     let search_type = $('input.tab:checked').data('tab');
     if (search_type == 'map') {
@@ -1162,9 +1163,8 @@ function isTouch() { return !!("ontouchstart" in window) || window.navigator.msM
 // function to detect if we are likely being view on iPad
 function isIpad() { return (navigator.userAgent.match(/iPad/i)) && (navigator.userAgent.match(/iPad/i)!= null); }
 
-// variable to show if we are are on a mobile or iPad client
-var mobileDetect = new MobileDetect(window.navigator.userAgent);
-function isMobile() { return mobileDetect.mobile(); }
+// variable to show if we are are on a device with a small window
+function isMobile() { return $(window).width() < 768 }
 
 // reduce arrays to unique items
 const uniq = (a) => { return Array.from(new Set(a));}
