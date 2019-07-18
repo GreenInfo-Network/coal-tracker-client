@@ -22,7 +22,7 @@ const DATA = {};
 CONFIG.basemaps = {
   'hybrid': L.tileLayer('https://{s}.tiles.mapbox.com/v3/greeninfo.map-zudfckcw/{z}/{x}/{y}.jpg', { pane: 'hybrid' }),
   'satellite': L.gridLayer.googleMutant({ type: 'satellite', pane: 'satellite' }),
-  'basemap' : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', { attribution: '©OpenStreetMap, ©CartoDB', pane: 'basemap' }),
+  'basemap' : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', { attribution: '©OpenStreetMap, ©CARTO', pane: 'basemap' }),
   'labels': L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}@2x.png', { pane: 'labels' }),
 };
 
@@ -32,10 +32,8 @@ CONFIG.default_basemap = 'basemap';
 // default title for results
 CONFIG.default_title = 'Worldwide';
 
-// outerring, used for constructing the mask, see drawCountry();
+// outerring, used for constructing the mask, see searchCountry();
 CONFIG.outerring = [[-90,-360],[-90,360],[90,360],[90,-360],[-90,-360]];
-// the starting view: bounds, see initMap()
-CONFIG.homebounds = [[51.069, 110.566], [-36.738,-110.566]];
 
 // minzoom and maxzoom for the map
 CONFIG.minzoom = 2;
@@ -258,8 +256,8 @@ function initState() {
       CONFIG.countries.eachLayer(function(layer) {
         if (layer.name == place_lookup ) {
           var bounds = layer.getBounds();
-          searchCountry(place, bounds, 500);
-          drawTable()
+          searchCountry(place, bounds, 2000);
+          drawTable(DATA.tracker_data);
           highlightCountryLayer(layer.feature);
         }
       })
@@ -386,7 +384,7 @@ function initMap() {
     attributionControl:false,
     zoomControl: false,
     minZoom: CONFIG.minzoom, maxZoom: CONFIG.maxzoom,
-    attribution: "Interactive mapping by GreenInfo Network. Data: CoalSwarm"
+    attributionControl: false,
   });
 
   // add zoom control, top right
@@ -551,6 +549,7 @@ function initSearch() {
   $('select#search-category').on('change', function() {
     let value = $(this).val();
     let placeholder = CONFIG.search_placeholder[value];
+    // clear any search string on the search and update the placeholder
     $('input#mapsearch, input#tablesearch').attr('placeholder', placeholder);
   });
 }
@@ -724,7 +723,7 @@ function drawMap(data, force_redraw=false, fitbounds=true) {
   drawLegend(statuses);
 }
 
-function updateClusters(data, fitbounds=true) {
+function updateClusters(data, fitbounds) {
   // start by clearing out existing clusters
   CONFIG.clusters.RemoveMarkers();
 
@@ -771,14 +770,25 @@ function updateClusters(data, fitbounds=true) {
   if (cluster_bounds) {
     var bounds = [[cluster_bounds.minLat, cluster_bounds.minLng],[cluster_bounds.maxLat, cluster_bounds.maxLng]];
   } else {
+    // if we have no clusters (empty result)
     bounds = CONFIG.homebounds;
   }
-  // timeout appears necessary to let the clusters do their thing, before fitting bounds
+  // fit the map to the bounds, if instructed
   if (fitbounds) {
-    setTimeout(function() { CONFIG.map.fitBounds(bounds) },200);
+    // timeout appears necessary to let the clusters do their thing, before fitting bounds
+    setTimeout(function() {
+      // a trick to always fit the bounds in the map
+      CONFIG.map.fitBounds(bounds);
+      let center = CONFIG.map.getCenter();
+      let zoom = CONFIG.map.getBoundsZoom(bounds, true); // finds the zoom where bounds are fully contained
+      CONFIG.map.setView([center.lat, center.lng], zoom); 
+      CONFIG.map.once("moveend zoomend", function() {
+        // wait til this animation is complete, then set homebounds, if it hasn't been set yet (or do nothing if it has)
+        CONFIG.homebounds = CONFIG.homebounds || CONFIG.map.getBounds();
+      });
+    }, 200)
   }
 }
-
 // show and hide the correct legend labels and checkboxes for this set of data and statuses
 // "statuses" comes from the data search itself
 function drawLegend(statuses) {
@@ -916,7 +926,15 @@ function resetTheMap() {
   $('form.search-form input').val('');
 
   // reset map & table display with the default search
-  render({ force_redraw: true });
+  // If we have a homebounds defined, that means we've been here before, and have rendered the full data to the map. 
+  if (CONFIG.homebounds) {
+    // use homebounds we already defined
+    render({ force_redraw: true, fitbounds: false });
+    CONFIG.map.fitBounds(CONFIG.homebounds);
+  } else {
+    // first time through, let this function do the map fitting and set CONFIG.homebounds
+    render({ force_redraw: true });
+  }
 
   // clear any existing country and feature selection
   CONFIG.selected_country.layer.clearLayers();
@@ -927,9 +945,6 @@ function resetTheMap() {
 
   // resize everything
   resize(); 
-
-  // reset the default view
-  CONFIG.map.fitBounds(CONFIG.homebounds);
 }
 
 // this callback is used when CONFIG.countries is loaded via GeoJSON; see initMap() for details
@@ -1094,27 +1109,6 @@ function searchCountry(name, bounds, delay=1) {
     if (name == feature.country) data.push(feature);
   });
 
-  // if bounds were provided, zoom the map to the selected country
-  // some countries require special/custom bounds calcs, because they straddle the dateline or are otherwise non-standard
-  if (typeof bounds != 'undefined') {
-    switch (name) {
-      case 'Russia':
-        bounds = L.latLngBounds([38.35400, 24], [78.11962,178]);
-        break;
-      case 'United States':
-        bounds = L.latLngBounds([18.3, -172.6], [71.7,-67.4]);
-        break;
-      case 'Canada':
-        bounds = L.latLngBounds([41.6, -141.0], [81.7,-52.6]);
-        break;
-      default: break;
-    }
-    // got bounds, fit the map to it
-    setTimeout(function() {
-      CONFIG.map.fitBounds(bounds);
-    }, delay)
-  } // has bounds
-
   // because we are not filtering the map, but only changing the bounds
   // results on the map can easily get out of sync due to a previous search filter
   // so first we need to explicity render() the map with all data, but not the table or results
@@ -1124,6 +1118,25 @@ function searchCountry(name, bounds, delay=1) {
   // THEN the table, with all data, but not with this name
   // may seem superfluous, but important to keep the map/table in sync, and showing all data  
   drawTable(DATA.tracker_data); 
+
+  // Last step: zoom the map to the selected country
+  // some countries require special/custom bounds calcs, because they straddle the dateline or are otherwise non-standard
+  switch (name) {
+    case 'Russia':
+      bounds = L.latLngBounds([38.35400, 24], [78.11962,178]);
+      break;
+    case 'United States':
+      bounds = L.latLngBounds([18.3, -172.6], [71.7,-67.4]);
+      break;
+    case 'Canada':
+      bounds = L.latLngBounds([41.6, -141.0], [81.7,-52.6]);
+      break;
+    default: 
+      break;
+  } 
+  setTimeout(function() {
+    CONFIG.map.fitBounds(bounds);
+  }, delay)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
