@@ -69,7 +69,7 @@
   <div class="searchwrapper">
     <!-- this div needed as container for input w/button -->
     <div>
-      <form role="form" id="nav-map-search" class="search-form" data-type="nav">
+      <form role="form" id="search" class="search-form" data-type="nav">
         <div class="form-inline">
           <label class="hidden-xs" for="search-category">Search</label>
           <select id="search-category">
@@ -87,26 +87,15 @@
           </div>
         </div><!-- /input-group -->
       </form>
-      <!-- only shows when table is showing -->
-      <form role="form" id="nav-table-search" class="search-form" style="display:none;">
-        <div class="form-inline">
-          <a class="clear-search" title="click to clear the search">clear<span class="hidden-xs hidden-sm"> search</span></a>
-          <label class="hidden-xs" for="tablesearch">for</label>
-          <input id="tablesearch" type="text" class="form-control" placeholder="Type a project name, company, country...">
-          <div id="search-icon-wrapper">
-            <span class="glyphicon glyphicon-search"></span>
-          </div>
-        </div><!-- /input-group -->
-      </form>
     </div>
   </div>
 
   <!-- navigation tabs. See below for tab content -->
-  <input class="tab" type="radio" id="map-tab" name="tabs" checked>
+  <input class="tab" type="radio" id="map-tab" name="tabs" data-tab="map" checked>
   <label class="tab" for="map-tab">Map</label>
-  <input class="tab" type="radio" id="table-tab" name="tabs">
+  <input class="tab" type="radio" id="table-tab" name="tabs" data-tab="map">
   <label class="tab" for="table-tab">Table</label>
-  <input class="tab" type="radio" id="about-tab" name="tabs">
+  <input class="tab" type="radio" id="about-tab" name="tabs" data-tab="about">
   <label class="tab" for="about-tab">About</label>
 
   <!-- Restart button, positioned near nav, like a tab, but not a tab -->

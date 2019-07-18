@@ -111,6 +111,15 @@ CONFIG.search_categories = {
   'year': {year: {}}
 }
 
+// the table columns that the search categories refer to. See searchTableForText()
+CONFIG.search_category_columns = {
+  'all': [0,4,7,8,9,10],
+  'unit': [0],
+  'parent': [4],
+  'location': [7,8,9],
+  'year': [10],
+}
+
 // the placeholder to show, also depends on the select#search-category selection
 CONFIG.search_placeholder = {
   'all': 'project name, company, country',
@@ -129,9 +138,7 @@ $(document).ready(function () {
       initDataFormat(data)    // get data ready for use
       initButtons();          // init button listeners
       initTabs();             // init the main navigation tabs
-      initTable();            // the Table is fully populated from the trackers dataset, but is filtered at runtime
       initSearch();           // init the full text search
-      initMapSearch();        // init the map search
       initMap();              // regular leaflet map setup
       initMapLayers();        // init some map layers and map feature styles
       initStatusCheckboxes(); // initialize the checkboxes to turn on/off trackers by status
@@ -490,42 +497,26 @@ function initTabs()    {
     var type = e.currentTarget.id.split("-")[0];
     switch (type) {
       case 'map':
-        // show the correct search form, and resize the map
-        $('#nav-table-search').hide();
-        $('#nav-map-search').show();
         CONFIG.map.invalidateSize(false);
+        $('form.search-form').show();
         break;
       case 'table':
         // resize the table, if it exists
+        $('form.search-form').show();
         if (CONFIG.table) {
           resize();
         }
-        // show the correct search form
-        $('#nav-map-search').hide();
-        $('#nav-table-search').show();
         break;
       default:
-        // hide search forms
+        // hide search form
         $('form.search-form').hide();
         break;
     }
   });
 }
 
-// itialization functions for the table. Table data is populated only after a search is performed
-function initTable() {
-  // init the table search form. This mimics the built-in datatables 'filter', but includes the already selected area
-  // this way, we only ever search within a given selection (either all records, or a subset)
-  // if we are looking at the default table, do not filter, start from all records. Otherwise, use the selection term
-  $('form#nav-table-search input').keyup(_.debounce(function() {
-    if (!this.value) return render();
-    $(this).submit();
-  },200));
-
-  // the submit function itself
-  $('form#nav-table-search').on('submit', searchTableForText);
-}
-
+// Init search for matching keywords entered in the input at top-right
+// we use ElasticLunr (https://github.com/weixsong/elasticlunr.js) as the search "engine"
 function initSearch() {
   // config search engine with the fields and data to be searched
   // which end up searched depends on selections made in select#search-categories and implemented at run time
@@ -552,23 +543,27 @@ function initSearch() {
     // clear any search string on the search and update the placeholder
     $('input#mapsearch, input#tablesearch').attr('placeholder', placeholder);
   });
-}
 
-
-// "Free" search searches the data for matching keywords entered in the input at top-right
-// we use JSsearch https://github.com/bvaughn/js-search as the search "engine"
-function initMapSearch() {
-   // This inits the "map search" form input, which looks for matching keywords in data
-  $('form#nav-map-search input').keyup(_.debounce(function() {
+  // init the "map search" form input itself
+  $('form#search input').keyup(_.debounce(function() {
     // if the input is cleared, redo the 'everything' search (e.g. show all results)
     // this is distinct from the case of "No results", in searchMapForText
     if (!this.value) return render();
-    // trigger the submit event
+    // otherwise, just trigger the search
     $(this).submit();
-  },200));
+  },300));
 
-  // the submit function itself
-  $('form#nav-map-search input').on('submit', searchMapForText);
+  $('form#search').submit(function(e) {
+    e.preventDefault();
+    // only two search types at the moment: table or map
+    let search_type = $('input.tab:checked').data('tab');
+    if (search_type == 'map') {
+      searchMapForText();
+    } else {
+      searchTableForText();
+    }
+  })
+
 }
 
 // initialize the PruneClusters, and override some factory methods
@@ -694,7 +689,6 @@ function initPruneCluster() {
       markers[i].filtered = filter;
     }
   };
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -770,22 +764,26 @@ function updateClusters(data, fitbounds) {
   if (cluster_bounds) {
     var bounds = [[cluster_bounds.minLat, cluster_bounds.minLng],[cluster_bounds.maxLat, cluster_bounds.maxLng]];
   } else {
-    // if we have no clusters (empty result)
+    // we have no clusters (empty result)!
     bounds = CONFIG.homebounds;
   }
   // fit the map to the bounds, if instructed
   if (fitbounds) {
     // timeout appears necessary to let the clusters do their thing, before fitting bounds
     setTimeout(function() {
-      // a trick to always fit the bounds in the map
+      // typically we'll just do this (e.g. on search)
       CONFIG.map.fitBounds(bounds);
-      let center = CONFIG.map.getCenter();
-      let zoom = CONFIG.map.getBoundsZoom(bounds, true); // finds the zoom where bounds are fully contained
-      CONFIG.map.setView([center.lat, center.lng], zoom); 
-      CONFIG.map.once("moveend zoomend", function() {
-        // wait til this animation is complete, then set homebounds, if it hasn't been set yet (or do nothing if it has)
-        CONFIG.homebounds = CONFIG.homebounds || CONFIG.map.getBounds();
-      });
+      
+      // first load: a trick to always fit the bounds in the map, see #20
+      if (! CONFIG.homebounds) {
+        let center = CONFIG.map.getCenter();
+        let zoom = CONFIG.map.getBoundsZoom(bounds, true); // finds the zoom where bounds are fully contained
+        CONFIG.map.setView([center.lat, center.lng], zoom); 
+        CONFIG.map.once("moveend zoomend", function() {
+          // wait til this animation is complete, then set homebounds, if it hasn't been set yet (or do nothing if it has)
+          CONFIG.homebounds = CONFIG.homebounds || CONFIG.map.getBounds();
+        });
+      }
     }, 200)
   }
 }
@@ -989,7 +987,7 @@ function clickCountry(e) {
   // exit early if we are at high zoom
   if (CONFIG.map.getZoom() > 7) return;
   // clear the map search input
-  $('form#nav-map-search input').val('');
+  $('form#search input').val('');
   // get the name of the clicked country, and keep a reference to it
   var name = e.target.feature.properties['NAME'];
   CONFIG.selected_country.name = name;
@@ -1017,10 +1015,9 @@ function removeCurrentBasemap() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // searches all data for keyword(s)
-function searchMapForText(e) {
-  e.preventDefault();
+function searchMapForText() {
   // get the keywords to search
-  var keywords = $('form#nav-map-search input').val();
+  var keywords = $('form#search input').val();
   
   // Kick off a search to find data matching the keyword, and pull out the results
   let options = {bool: 'AND'};
@@ -1047,15 +1044,17 @@ function searchMapForText(e) {
   return false;
 }
 
-function searchTableForText(e) {
-  // get the search text, and update the table name with it
-  e.preventDefault();            
+function searchTableForText() {
   // get the keywords to search
-  var keywords = $('form#nav-table-search input').val();
+  var keywords = $('form#search input').val();
   // update the table name, if provided
   if (keywords) $('div#table h3 span').text(keywords);
+  
   // use DataTables built in search function to search the table with the typed value, and refresh
-  CONFIG.table.search(keywords).draw();
+  // first map the selected search category to DT columns
+  var category = $('select#search-category').val();
+  var cols = CONFIG.search_category_columns[category];
+  CONFIG.table.columns(cols).search(keywords).draw();
 
   // Meanwhile, search the map for this same string. 
   // Debounce this with a long delay, because it doesn't have to be instant (the map isn't visible after all)
@@ -1070,11 +1069,11 @@ function searchTableForText(e) {
     DATA.tracker_data.forEach(function(d) {
       if (ids.indexOf(d.id) > -1) data.push(d);
     });
-    drawMap(data);                                    // update the map
-    $('form#nav-map-search input').val(keywords);        // sync the map search input with the keywords
-    CONFIG.selected_country.layer.clearLayers();      // clear any selected country
-    updateResultsPanel(data, keywords);               // update the results panel
-    $('a.clear-search').show();                       // show the clear search links
+    drawMap(data);                                  // update the map
+    $('form#search input').val(keywords);           // sync the map search input with the keywords
+    CONFIG.selected_country.layer.clearLayers();    // clear any selected country
+    updateResultsPanel(data, keywords);             // update the results panel
+    $('a.clear-search').show();                     // show the clear search links
 
   },500,false)();
 }
