@@ -521,7 +521,6 @@ function initSearch() {
   CONFIG.searchengine = elasticlunr(function () {
     this.addField('sponsor');
     this.addField('parent');
-    this.addField('parent');
     this.addField('unit');
     this.addField('plant');
     this.addField('country');
