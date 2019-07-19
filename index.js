@@ -1020,7 +1020,10 @@ function searchMapForText() {
   var keywords = $('form#search input').val();
   
   // Kick off a search to find data matching the keyword, and pull out the results
-  let options = {bool: 'AND'};
+  // initial config: 
+  // - combine search terms with 'AND' ('OR' is the default)
+  // - expand tokens, to better match substrings (default is false, to emphasize whole words)
+  let options = {bool: 'AND', expand: true};
   // extract the fields to search, from the selected 'search category' options
   let category = $('select#search-category').val();
   options['fields'] = {'unit':{},'plant':{},'sponsor':{}};
