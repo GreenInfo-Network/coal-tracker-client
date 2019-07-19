@@ -141,7 +141,7 @@ $(document).ready(function () {
       initMapLayers();        // init some map layers and map feature styles
       initStatusCheckboxes(); // initialize the checkboxes to turn on/off trackers by status
       initPruneCluster();     // init the prune clustering library
-      
+
       initState();            // init app state given url options
 
       // ready!
@@ -155,20 +155,20 @@ $(document).ready(function () {
 // listen for changes to the window size and resize the map
 $(window).resize(function() {
   // resize the map, table and content divs to fit the current window
-  resize(); 
+  resize();
   updateSearchBar();
 })
 
 // resize everything: map, content divs, table
 function resize() {
-  // calculate the content height for this window: 
+  // calculate the content height for this window:
   // 42px for the nav bar, 10px top #map, 10px top of #container = 42 + 20 + 10
   var winheight = $(window).height();
   var height = winheight - 54;
   if (height > 1000) height = 1000; // on giant screens, we need a max height
 
   // resize the map
-  $('div#map').height(height - 8); 
+  $('div#map').height(height - 8);
   CONFIG.map.invalidateSize();
 
   // resize the content divs to this same height
@@ -200,9 +200,9 @@ function updateSearchBar() {
     search.siblings().find('span.glyphicon-search').on('click', function() {
       search.toggleClass('collapsed');
       if (search.hasClass('collapsed')) {
-        setTimeout(function() { 
-          search.attr('placeholder',''); 
-          search.val(''); 
+        setTimeout(function() {
+          search.attr('placeholder','');
+          search.val('');
         }, 300);
       } else {
         search.attr('placeholder',placeholder);
@@ -271,7 +271,7 @@ function initState() {
     }
   } else {
     // the default init, if we don't have matching params
-    resetTheMap();    
+    resetTheMap();
   }
 }
 
@@ -371,7 +371,7 @@ function initButtons() {
       // add the plain basemap - we could try to keep track of which basemap the user
       // was on before zooming in - but what if they zoom in to another? then the current
       // basemap becomes satellite - and tracking all this gets ridiculous
-      CONFIG.map.addLayer(CONFIG.basemaps['basemap']); 
+      CONFIG.map.addLayer(CONFIG.basemaps['basemap']);
 
       // keep the radio button in sync with the map
       $('#layers-base input[data-baselayer="basemap"]').prop('checked', true);
@@ -423,7 +423,7 @@ function initMap() {
 
   // add attribution
   var credits = L.control.attribution().addTo(CONFIG.map);
-  credits.addAttribution('Interactive mapping by <a href="http://greeninfo.org" target="_blank">GreenInfo Network</a>. Data: <a href="http://coalswarm.org/" target="_blank">CoalSwarm</a>');
+  credits.addAttribution('Interactive mapping by <a href="http://greeninfo.org" target="_blank">GreenInfo Network</a>. Data: <a href="http://coalswarm.org/" target="_blank">Global Energy Monitor</a>');
 
   // Add a feature group to hold the mask, essentially a grey box covering the world minus the country in the view
   CONFIG.mask = L.featureGroup([L.polygon(CONFIG.outerring)], {pane: 'country-mask' }).addTo(CONFIG.map);
@@ -444,7 +444,7 @@ function initMap() {
   var layercontrol = $('.layer-control');
   if (isMobile()) layercontrol.hide();
 
-  // once the map is done loading, resize 
+  // once the map is done loading, resize
   CONFIG.map.on('load', function() {
     resize();
     CONFIG.map.invalidateSize();
@@ -478,7 +478,7 @@ function initMapLayers() {
 }
 
 // set listener on checkboxes to turn on/off trackers by status, and update the clusters
-function initStatusCheckboxes() { 
+function initStatusCheckboxes() {
   $('div.layer-control').on('change', '#status-layers input', function() {
     var status = $(this).val();
     var markers = CONFIG.status_markers[status].markers;
@@ -570,7 +570,7 @@ function initSearch() {
 function initPruneCluster() {
   // create a new PruceCluster object, with a minimal cluster size of (30)
   // updated arg to 30; seems to really help countries like China/India
-  CONFIG.clusters = new PruneClusterForLeaflet(30); 
+  CONFIG.clusters = new PruneClusterForLeaflet(30);
   CONFIG.map.addLayer(CONFIG.clusters);
 
   // this is from the categories example; sets ups cluster stats used to derive category colors in the clusters
@@ -659,7 +659,7 @@ function initPruneCluster() {
       var markersArea = _this.Cluster.FindMarkersInArea(cluster.bounds);
       var b = _this.Cluster.ComputeBounds(markersArea);
       if (b) {
-        // skip the force zoom that is here by default, instead, spiderfy the overlapping icons      
+        // skip the force zoom that is here by default, instead, spiderfy the overlapping icons
         _this._map.fire('overlappingmarkers', { cluster: _this, markers: markersArea, center: m.getLatLng(), marker: m });
       }
     });
@@ -773,12 +773,12 @@ function updateClusters(data, fitbounds) {
     setTimeout(function() {
       // typically we'll just do this (e.g. on search)
       CONFIG.map.fitBounds(bounds);
-      
+
       // first load: a trick to always fit the bounds in the map, see #20
       if (! CONFIG.homebounds) {
         let center = CONFIG.map.getCenter();
         let zoom = CONFIG.map.getBoundsZoom(bounds, true); // finds the zoom where bounds are fully contained
-        CONFIG.map.setView([center.lat, center.lng], zoom); 
+        CONFIG.map.setView([center.lat, center.lng], zoom);
         CONFIG.map.once("moveend zoomend", function() {
           // wait til this animation is complete, then set homebounds, if it hasn't been set yet (or do nothing if it has)
           CONFIG.homebounds = CONFIG.homebounds || CONFIG.map.getBounds();
@@ -924,7 +924,7 @@ function resetTheMap() {
   $('form.search-form input').val('');
 
   // reset map & table display with the default search
-  // If we have a homebounds defined, that means we've been here before, and have rendered the full data to the map. 
+  // If we have a homebounds defined, that means we've been here before, and have rendered the full data to the map.
   if (CONFIG.homebounds) {
     // use homebounds we already defined
     render({ force_redraw: true, fitbounds: false });
@@ -942,14 +942,14 @@ function resetTheMap() {
   $('input#map-tab').click();
 
   // resize everything
-  resize(); 
+  resize();
 }
 
 // this callback is used when CONFIG.countries is loaded via GeoJSON; see initMap() for details
 function massageCountryFeaturesAsTheyLoad(rawdata,feature) {
   // attach some attributes
   feature.name = rawdata.properties['NAME'];
-  
+
   // only register hover events for non-touch, non-mobile devices
   // including isMobile() || isIpad() here to include iPad and exclude "other" touch devices here, e.g. my laptop, which is touch, but not mobile
   if (! (isTouch() && ( isMobile() || isIpad() ))) {
@@ -1018,9 +1018,9 @@ function removeCurrentBasemap() {
 function searchMapForText() {
   // get the keywords to search
   var keywords = $('form#search input').val();
-  
+
   // Kick off a search to find data matching the keyword, and pull out the results
-  // initial config: 
+  // initial config:
   // - combine search terms with 'AND' ('OR' is the default)
   // - expand tokens, to better match substrings (default is false, to emphasize whole words)
   let options = {bool: 'AND', expand: true};
@@ -1052,14 +1052,14 @@ function searchTableForText() {
   var keywords = $('form#search input').val();
   // update the table name, if provided
   if (keywords) $('div#table h3 span').text(keywords);
-  
+
   // use DataTables built in search function to search the table with the typed value, and refresh
   // first map the selected search category to DT columns
   var category = $('select#search-category').val();
   var cols = CONFIG.search_category_columns[category];
   CONFIG.table.columns(cols).search(keywords).draw();
 
-  // Meanwhile, search the map for this same string. 
+  // Meanwhile, search the map for this same string.
   // Debounce this with a long delay, because it doesn't have to be instant (the map isn't visible after all)
   _.debounce(function() {
     // recalc the map data from the resulting table data
@@ -1105,7 +1105,7 @@ function searchCountry(name, bounds, delay=1) {
   // the map and table, continue to show all data
   var data = [];
   // translate from the country data names to our tracker data names, then look for matches
-  var name = DATA.country_lookup[name]; 
+  var name = DATA.country_lookup[name];
   DATA.tracker_data.forEach(function(feature) {
     // look for matching names in feature.properties.countries
     if (name == feature.country) data.push(feature);
@@ -1118,8 +1118,8 @@ function searchCountry(name, bounds, delay=1) {
   // THEN update results panel for *this* country data only
   updateResultsPanel(data, name);
   // THEN the table, with all data, but not with this name
-  // may seem superfluous, but important to keep the map/table in sync, and showing all data  
-  drawTable(DATA.tracker_data); 
+  // may seem superfluous, but important to keep the map/table in sync, and showing all data
+  drawTable(DATA.tracker_data);
 
   // Last step: zoom the map to the selected country
   // some countries require special/custom bounds calcs, because they straddle the dateline or are otherwise non-standard
@@ -1133,9 +1133,9 @@ function searchCountry(name, bounds, delay=1) {
     case 'Canada':
       bounds = L.latLngBounds([41.6, -141.0], [81.7,-52.6]);
       break;
-    default: 
+    default:
       break;
-  } 
+  }
   setTimeout(function() {
     CONFIG.map.fitBounds(bounds);
   }, delay)
