@@ -423,7 +423,7 @@ function initMap() {
 
   // add attribution
   var credits = L.control.attribution().addTo(CONFIG.map);
-  credits.addAttribution('Interactive mapping by <a href="http://greeninfo.org" target="_blank">GreenInfo Network</a>. Data: <a href="http://coalswarm.org/" target="_blank">Global Energy Monitor</a>');
+  credits.addAttribution('Interactive mapping by <a href="http://greeninfo.org" target="_blank">GreenInfo Network</a>. Data: <a href="https://globalenergymonitor.org/" target="_blank">Global Energy Monitor</a>');
 
   // Add a feature group to hold the mask, essentially a grey box covering the world minus the country in the view
   CONFIG.mask = L.featureGroup([L.polygon(CONFIG.outerring)], {pane: 'country-mask' }).addTo(CONFIG.map);
