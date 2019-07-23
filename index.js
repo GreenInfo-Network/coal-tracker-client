@@ -116,6 +116,7 @@ CONFIG.search_category_columns = {
   'parent': [4],
   'location': [7,8,9],
   'year': [10],
+  'status': [6],
 }
 
 // the placeholder to show, also depends on the select#search-category selection
@@ -135,9 +136,10 @@ $(document).ready(function () {
     .then(function(data) {
       initDataFormat(data)    // get data ready for use
       initButtons();          // init button listeners
-      initTabs();             // init the main navigation tabs. Note initTable() is called from here
+      initTabs();             // init the main navigation tabs. 
       initSearch();           // init the full text search
       initMap();              // regular leaflet map setup
+      initTable();            // init the DataTable table
       initMapLayers();        // init some map layers and map feature styles
       initStatusCheckboxes(); // initialize the checkboxes to turn on/off trackers by status
       initPruneCluster();     // init the prune clustering library
@@ -481,9 +483,28 @@ function initMapLayers() {
 function initStatusCheckboxes() {
   $('div.layer-control').on('change', '#status-layers input', function() {
     var status = $(this).val();
+    // 1) update the markers on the map
     var markers = CONFIG.status_markers[status].markers;
     CONFIG.clusters.FilterMarkers(markers, !$(this).prop('checked')); // false to filter on, true to filter off :)
     CONFIG.clusters.ProcessView();
+
+    // console.log(CONFIG.clusters);
+
+    // 2) update the rows shown on the table
+    let statuses = [];
+    $('div.layer-control div#status-layers input:checked').each(function(l) { 
+      statuses.push(this.value);
+    });
+    // let 
+    var data = DATA.tracker_data.filter(function(d) {
+      return statuses.indexOf(d.status) > -1
+    })
+    drawTable(data, 'Status filtered');
+
+    // 3) update the "results" panel
+    updateResultsPanel(data, 'Status filtered');
+
+
   });
 }
 
@@ -499,6 +520,7 @@ function initTable() {
   columns.splice(index, 1);
   names.splice(index, 1);
   CONFIG.table_names = names;
+  console.log(CONFIG.table_names);
 
   // put table column names into format we need for DataTables
   var colnames = [];
@@ -537,17 +559,7 @@ function initTabs()    {
         break;
       case 'table':
         $('form.search-form').show();
-        // resize the table, if it exists
-        if (CONFIG.table) {
-          resize();
-        } else {
-          // first time here: initialize and resize the table
-          $('div#pleasewait').show();
-          initTable();
-          drawTable(DATA.tracker_data);
-          resize();
-          $('div#pleasewait').hide();
-        }
+        resize();
         break;
       default:
         // hide search form
@@ -588,7 +600,7 @@ function initSearch() {
   // init the "map search" form input itself
   $('form#search input').keyup(_.debounce(function() {
     // if the input is cleared, redo the 'everything' search (e.g. show all results)
-    // this is distinct from the case of "No results", in searchMapForText
+    // this is distinct from the case of "No results", in searchForText
     if (!this.value) return render();
     // otherwise, just trigger the search
     $(this).submit();
@@ -599,13 +611,8 @@ function initSearch() {
     e.preventDefault();
     if (! $('form#search input').val()) return;
 
-    // only two search types at the moment: table or map
-    let search_type = $('input.tab:checked').data('tab');
-    if (search_type == 'map') {
-      searchMapForText();
-    } else {
-      searchTableForText();
-    }
+    // search the map, and that process will update the table
+    searchForText();
   })
 
 }
@@ -939,8 +946,7 @@ function resetTheMap() {
     CONFIG.map.fitBounds(CONFIG.homebounds);
   } else {
     // first time through, let this function do the map fitting and set CONFIG.homebounds
-    // the table will only be initialized when the table tab is clicked for the first time
-    render({ force_redraw: true, table: false });
+    render({ force_redraw: true });
   }
 
   // clear any existing country and feature selection
@@ -1024,7 +1030,7 @@ function removeCurrentBasemap() {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // searches all data for keyword(s)
-function searchMapForText() {
+function searchForText() {
   // get the keywords to search
   var keywords = $('form#search input').val();
 
@@ -1053,40 +1059,6 @@ function searchMapForText() {
   $('a.clear-search').show();                       // show the clear search links
 
   return false;
-}
-
-function searchTableForText() {
-  // get the keywords to search
-  var keywords = $('form#search input').val();
-  // update the table name, if provided
-  if (keywords) $('div#table h3 span').text(keywords);
-
-  // use DataTables built in search function to search the table with the typed value, and refresh
-  // first map the selected search category to DT columns
-  var category = $('select#search-category').val();
-  var cols = CONFIG.search_category_columns[category];
-  CONFIG.table.columns(cols).search(keywords).draw();
-
-  // Meanwhile, search the map for this same string.
-  // Debounce this with a long delay, because it doesn't have to be instant (the map isn't visible after all)
-  _.debounce(function() {
-    // recalc the map data from the resulting table data
-    var data = CONFIG.table.rows({ filter : 'applied'} ).data();
-    // pull out the ids to an array
-    var ids = data.map(function(row) {return row[0]});
-
-    // update the map from matching ids
-    var data = [];
-    DATA.tracker_data.forEach(function(d) {
-      if (ids.indexOf(d.id) > -1) data.push(d);
-    });
-    drawMap(data);                                  // update the map
-    $('form#search input').val(keywords);           // sync the map search input with the keywords
-    CONFIG.selected_country.layer.clearLayers();    // clear any selected country
-    updateResultsPanel(data, keywords);             // update the results panel
-    $('a.clear-search').show();                     // show the clear search links
-
-  },500,false)();
 }
 
 // The primary controller for rendering things
