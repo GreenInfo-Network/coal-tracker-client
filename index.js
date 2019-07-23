@@ -135,7 +135,7 @@ $(document).ready(function () {
     .then(function(data) {
       initDataFormat(data)    // get data ready for use
       initButtons();          // init button listeners
-      initTabs();             // init the main navigation tabs
+      initTabs();             // init the main navigation tabs. Note initTable() is called from here
       initSearch();           // init the full text search
       initMap();              // regular leaflet map setup
       initMapLayers();        // init some map layers and map feature styles
@@ -487,6 +487,43 @@ function initStatusCheckboxes() {
   });
 }
 
+// init the data table, but don't populate it, yet
+function initTable() {
+  // set up the table column names we want to use in the table
+  var columns = $.map(CONFIG.attributes, function(value){ return value; });
+  
+  // set up formatted column names for the table
+  var names = Object.keys(CONFIG.attributes);
+  // don't include column for url; we're going to format this as a link together with the unit name
+  var index = $.inArray('url',names);
+  columns.splice(index, 1);
+  names.splice(index, 1);
+  CONFIG.table_names = names;
+
+  // put table column names into format we need for DataTables
+  var colnames = [];
+  $.each(columns, function(k, value) {
+    // set up an empty object and push a sTitle keys to it for each column title
+    var obj = {};
+    obj['title'] = value.name;
+    colnames.push(obj);
+  });
+  // initialize and keep a reference to the DataTable
+  CONFIG.table = $('#table-content table').DataTable({
+    data           : [],
+    // include the id in the data, but not searchable, nor displayed
+    columnDefs     : [{targets:[0], visible: false, searchable: false}],
+    columns        : colnames,
+    autoWidth      : true,
+    scrollY        : "1px", // initial value only, will be resized by calling resize();
+    scrollX        : true,
+    lengthMenu     : [50, 100, 500],
+    iDisplayLength : 100, // 100 has a noticable lag to it when displaying and filtering; 10 is fastest
+    dom            : 'litp',
+    deferRender    : true, // default is false
+  });
+} // init table
+
 // initialize the nav tabs: what gets shown, what gets hidden, what needs resizing, when these are displayed
 // important: to add a functional tab, you must also include markup for it in css, see e.g. input#help-tab:checked ~ div#help-content {}
 function initTabs()    {
@@ -499,10 +536,17 @@ function initTabs()    {
         $('form.search-form').show();
         break;
       case 'table':
-        // resize the table, if it exists
         $('form.search-form').show();
+        // resize the table, if it exists
         if (CONFIG.table) {
           resize();
+        } else {
+          // first time here: initialize and resize the table
+          $('div#pleasewait').show();
+          initTable();
+          drawTable(DATA.tracker_data);
+          resize();
+          $('div#pleasewait').hide();
         }
         break;
       default:
@@ -815,31 +859,15 @@ function drawLegend(statuses) {
   });
 }
 
+// update the DataTable
 function drawTable(trackers, title) {
-  // set up the table column names we want to use in the table
-  var columns = $.map(CONFIG.attributes, function(value){ return value; });
-
-  // set up formatted column names for the table
-  var names = Object.keys(CONFIG.attributes);
-  // don't include column for url; we're going to format this as a link together with the unit name
-  var index = $.inArray('url',names);
-  columns.splice(index, 1);
-  names.splice(index, 1);
-  // put table column names into format we need for DataTables
-  var colnames = [];
-  $.each(columns, function(k, value) {
-    // set up an empty object and push a sTitle keys to it for each column title
-    var obj = {};
-    obj['title'] = value.name;
-    colnames.push(obj);
-  });
   // set up the table data
   var data = [];
   trackers.forEach(function(tracker) {
     // make up a row entry for the table: a list of column values.
-    // and copy over all columns from [names] as is to this row
+    // and copy over all columns from [CONFIG.table_names] as is to this row
     var row = [];
-    $.each(names, function(i,name) {
+    $.each(CONFIG.table_names, function(i,name) {
       // we've already got 'Unit' formatted as a link, above, so skip this here
       if (name=='unit') return;
       row.push(tracker[name]);
@@ -849,31 +877,11 @@ function drawTable(trackers, title) {
     // when that's all done, push the row as another [] to data
     data.push(row);
   });
-  // get the table target from the dom
-  var tableElement = $('#table-content table');
-  // purge and reinitialize the DataTable instance
-  // first time initialization
-  if (!CONFIG.table) {
-    CONFIG.table = tableElement.DataTable({
-      data           : data,
-      // include the id in the data, but not searchable, nor displayed
-      columnDefs     : [{targets:[0], visible: false, searchable: false}],
-      columns        : colnames,
-      autoWidth      : true,
-      scrollY        : "1px", // initial value only, will be resized by calling resize();
-      scrollX        : true,
-      lengthMenu     : [50, 100, 500],
-      iDisplayLength : 500, // 100 has a noticable lag to it when displaying and filtering; 10 is fastest
-      dom            : 'litp',
-      deferRender    : true, // default is false
-    });
 
-  // every subsequent redraw with new data: we don't need to reinitialize, just clear and update rows
-  } else {
-    CONFIG.table.clear();
-    CONFIG.table.rows.add(data);
-    CONFIG.table.search('').draw();
-  }
+  // purge and reinitialize the DataTable instance
+  CONFIG.table.clear();
+  CONFIG.table.rows.add(data);
+  CONFIG.table.search('').draw();
 
   // update the table name, if provided
   var text = title ? title : CONFIG.default_title;
@@ -931,7 +939,8 @@ function resetTheMap() {
     CONFIG.map.fitBounds(CONFIG.homebounds);
   } else {
     // first time through, let this function do the map fitting and set CONFIG.homebounds
-    render({ force_redraw: true });
+    // the table will only be initialized when the table tab is clicked for the first time
+    render({ force_redraw: true, table: false });
   }
 
   // clear any existing country and feature selection
@@ -1026,8 +1035,7 @@ function searchMapForText() {
   let options = {bool: 'AND', expand: true};
   // extract the fields to search, from the selected 'search category' options
   let category = $('select#search-category').val();
-  options['fields'] = {'unit':{},'plant':{},'sponsor':{}};
-  options.fields = CONFIG.search_categories[category];
+  options['fields'] = CONFIG.search_categories[category];
   var search_results = CONFIG.searchengine.search(keywords, options);
   var results = [];
   search_results.forEach(function(result) {
