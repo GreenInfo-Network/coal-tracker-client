@@ -295,9 +295,6 @@ function initButtons() {
   // close button, generically closes it's direct parent
   $('div.close').on('click', function() { $(this).parent().hide(); });
 
-  // init the layer icon control to open the legend
-  $('#layers-icon').on('click', function() { $('div.layer-control').show(); });
-
   // init the menu icon to open the "results" panel
   $('div#results-icon').on('click', function() { $('div#country-results').show(); });
 
@@ -451,10 +448,6 @@ function initMap() {
 
   // add a feature group to hold the clusters
   CONFIG.cluster_layer = L.featureGroup([], {pane: 'feature-pane' }).addTo(CONFIG.map);
-
-  // mobile: hide legend
-  var layercontrol = $('.layer-control');
-  if (isMobile()) layercontrol.hide();
 
   // once the map is done loading, resize
   CONFIG.map.on('load', function() {
