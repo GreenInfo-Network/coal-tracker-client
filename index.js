@@ -382,6 +382,16 @@ function initButtons() {
       CONFIG.back.remove(CONFIG.map);
     }
   });
+
+  // select all/none by status
+  $('div#layer-control-clear span#select-all').on('click', function(e) {
+    $('div#status-layers input:not(:checked)').each(function(c) { $(this).click() });
+    return false;
+  });
+  $('div#layer-control-clear span#clear-all').on('click', function(e) {
+    $('div#status-layers input:checked').each(function(c) { $(this).click() });
+    return false;
+  });
 }
 
 // initialize the map in the main navigation map tab
@@ -476,6 +486,14 @@ function initMapLayers() {
     // add selected basemap and labels, if necessary
     CONFIG.map.addLayer(CONFIG.basemaps[selected]);
     if (selected == 'basemap') CONFIG.map.addLayer(CONFIG.basemaps.labels);
+
+    // make room for the attribution
+    if (selected == 'satellite') {
+      $('div.layer-control[data-panel="layers"]').css('bottom', '42px');
+    } else {
+      $('div.layer-control[data-panel="layers"]').css('bottom', '22px');
+    }
+
   });
 }
 
@@ -738,7 +756,7 @@ function initPruneCluster() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// General functions
+// Named functions
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Set up all map layers for all types and statuses, and set up layer objects in CONFIG.status_types['layers'], so we can turn them on and off later.

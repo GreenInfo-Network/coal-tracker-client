@@ -125,7 +125,6 @@
     </div>
 
     <!-- the layers icon and layer picker -->
-    <div id="layers-icon"></div>
     <div data-panel="layers" class="layer-control">
       <!-- basemaps: radio buttons, see initMapLayerControl() -->
       <div id="layers-base">
@@ -143,6 +142,10 @@
         <div class="leaflet-control-layers-overlays">
           <div class="leaflet-control-layers-group" id="leaflet-control-layers-group-0">
             <span class="leaflet-control-layers-group-name">Coal plants: Status</span>
+            <div id="layer-control-clear">
+              <span id="select-all">select all</span> |
+              <span id="clear-all">clear all</span>
+            </div>
             <!-- status checkboxes are generated at run time based on values in CONFIG.status_types. See drawMap() -->
             <div id="status-layers"></div>
           </div>

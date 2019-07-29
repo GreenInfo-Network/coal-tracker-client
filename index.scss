@@ -230,21 +230,19 @@ div.layer-control {
 
   div.leaflet-control-layers-separator { margin: 5px -7px 5px -7px; }
 
-}
+  div#layer-control-clear {
+    text-align: center;
+    margin-bottom:4.8px;
+    font-size: 11px;
+    span {
+      cursor: pointer;
+      color: #337ab7;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 
-/*icon that shows when the layer-control is hidden*/
-div#layers-icon { 
-  border-radius: 4px;
-  bottom: 22px;
-  right: 14px;
-  background-size: 50% 50%;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
-  position: absolute;
-  background: #fff url('./images/layers.png') no-repeat center;
-  width:40px; 
-  height:40px; 
-  z-index:1001;
-  cursor:pointer;
 }
 
 /* Map legend and map marker styles */
@@ -260,7 +258,7 @@ div#layers-icon {
 .leaflet-control-layers-group label, .leaflet-control-layers-group input {cursor: pointer;}
 .leaflet-control-layers-group label { padding-left: 0;}
 .leaflet-control-layers-base label { padding-left: 4px;}
-.leaflet-control-layers-group-name { font-weight:bold; display:block; margin-bottom: 0.4em;}
+.leaflet-control-layers-group-name { font-weight:bold; display:block; margin-bottom: 2px;}
 .leaflet-control-layers-group { margin-bottom: 0.4em;}
 .leaflet-control-layers-separator { margin: 5px -7px 5px -7px; }
 
