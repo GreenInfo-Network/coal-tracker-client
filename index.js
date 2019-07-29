@@ -488,8 +488,6 @@ function initStatusCheckboxes() {
     CONFIG.clusters.FilterMarkers(markers, !$(this).prop('checked')); // false to filter on, true to filter off :)
     CONFIG.clusters.ProcessView();
 
-    // console.log(CONFIG.clusters);
-
     // 2) update the rows shown on the table
     let statuses = [];
     $('div.layer-control div#status-layers input:checked').each(function(l) { 
@@ -503,8 +501,6 @@ function initStatusCheckboxes() {
 
     // 3) update the "results" panel
     updateResultsPanel(data, 'Status filtered');
-
-
   });
 }
 
@@ -520,7 +516,6 @@ function initTable() {
   columns.splice(index, 1);
   names.splice(index, 1);
   CONFIG.table_names = names;
-  console.log(CONFIG.table_names);
 
   // put table column names into format we need for DataTables
   var colnames = [];
