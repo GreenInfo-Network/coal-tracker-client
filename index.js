@@ -595,7 +595,7 @@ function initSearch() {
   // })
 
   CONFIG.searchengine = new FlexSearch({
-      tokenize: 'strict',
+      tokenize: 'forward',
       depth: 3,
       doc: {
           id: 'id',
