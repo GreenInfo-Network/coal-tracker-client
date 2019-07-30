@@ -20,7 +20,7 @@ output = []
 firstline = True
 # open the csv as a Dictionary, remapping the fieldnames as given above
 reader = csv.DictReader(csvfile, fieldnames)
-for row in reader:
+for index, row in enumerate(reader):
     # output.append(json.dumps(row))
     # print(row)
     if firstline:    # skip first line
@@ -40,8 +40,11 @@ for row in reader:
     # seems like we're generally good. Now iterate this rows values, and clean and cast as needed
     outrow = {}
     for item in row:
+        # id: create a numeric id, as this is faster for the search index
+        if item == 'id':
+            value = index + 1
         # latitude and longitude: convert to float, and also skip empty values
-        if item == 'lat' or item == 'lng':
+        elif item == 'lat' or item == 'lng':
             value = float("{0:.5f}".format(float(row[item])))
         # status: make lower case
         elif item == 'status':

@@ -100,13 +100,12 @@ CONFIG.status_markers = {
 CONFIG.markercluster_colors = Object.keys(CONFIG.status_types).map(function(v) { return CONFIG.status_types[v].color });
 
 // search fields for various categories. These are selected by values keyed select#search-category
-// the strange formatting is required by the search library, this is how search fields are specified
 CONFIG.search_categories = {
-  'all': {unit: {}, plant: {}, parent: {}, region: {}, country: {}, subnational: {}, year: {}},
-  'unit': {unit: {}, plant: {}},
-  'parent': {parent: {}},
-  'location': {region: {}, country: {}, subnational: {}},
-  'year': {year: {}}
+  'all': ['unit', 'plant', 'parent', 'region', 'country', 'subnational', 'year'],
+  'unit': ['unit', 'plant'],
+  'parent': 'parent',
+  'location': ['region', 'country', 'subnational'],
+  'year': 'year',
 }
 
 // the table columns that the search categories refer to. See searchTableForText()
@@ -580,20 +579,40 @@ function initTabs()    {
 function initSearch() {
   // config search engine with the fields and data to be searched
   // which end up searched depends on selections made in select#search-categories and implemented at run time
-  CONFIG.searchengine = elasticlunr(function () {
-    this.addField('sponsor');
-    this.addField('parent');
-    this.addField('unit');
-    this.addField('plant');
-    this.addField('country');
-    this.addField('region');
-    this.addField('subnational');
-    this.addField('year');
-    this.setRef('id');
+  // CONFIG.searchengine = elasticlunr(function () {
+  //   this.addField('sponsor');
+  //   this.addField('parent');
+  //   this.addField('unit');
+  //   this.addField('plant');
+  //   this.addField('country');
+  //   this.addField('region');
+  //   this.addField('subnational');
+  //   this.addField('year');
+  //   this.setRef('id');
+  // });
+  // DATA.tracker_data.forEach(function(document) {
+  //   CONFIG.searchengine.addDoc(document);
+  // })
+
+  CONFIG.searchengine = new FlexSearch({
+      tokenize: 'strict',
+      depth: 3,
+      doc: {
+          id: 'id',
+          field: [
+            'sponsor',
+            'parent',
+            'unit',
+            'plant',
+            'country',
+            'region',
+            'subnational',
+            'year'
+          ]
+      }
   });
-  DATA.tracker_data.forEach(function(document) {
-    CONFIG.searchengine.addDoc(document);
-  })
+  CONFIG.searchengine.add(DATA.tracker_data);
+  window.searchengine = CONFIG.searchengine;
 
   // update the placeholder text when search category is selected
   $('select#search-category').on('change', function() {
@@ -615,7 +634,7 @@ function initSearch() {
   $('form#search').submit(function(e) {
     // prevent default, and return early if we submitted an empty form
     e.preventDefault();
-    if (! $('form#search input').val()) return;
+    if (! $('form#search input#mapsearch').val()) return;
 
     // search the map, and that process will update the table
     searchForText();
@@ -1038,31 +1057,66 @@ function removeCurrentBasemap() {
 // searches all data for keyword(s)
 function searchForText() {
   // get the keywords to search
-  var keywords = $('form#search input').val();
+  var query = $('form#search input#mapsearch').val();
 
   // Kick off a search to find data matching the keyword, and pull out the results
   // initial config:
   // - combine search terms with 'AND' ('OR' is the default)
   // - expand tokens, to better match substrings (default is false, to emphasize whole words)
-  let options = {bool: 'AND', expand: true};
+  // let options = {bool: 'AND', expand: true};
   // extract the fields to search, from the selected 'search category' options
   let category = $('select#search-category').val();
-  options['fields'] = CONFIG.search_categories[category];
-  var search_results = CONFIG.searchengine.search(keywords, options);
-  var results = [];
-  search_results.forEach(function(result) {
-    results.push(result.doc)
+  // options['fields'] = CONFIG.search_categories[category];
+  // var search_results = CONFIG.searchengine.search(keywords, options);
+  // var results = [];
+
+  var results = CONFIG.searchengine.search({
+    field: CONFIG.search_categories[category],
+    // bool: CONFIG.search_categories[category].length == 1 ? 'and' : 'or',
+    suggest: true,
+    query: query,
   });
 
+
+        var suggestions = $('div#suggestions').empty();
+        if (category == 'parent') {
+          suggestions.show();
+          var companies = _.uniq(_.map(results, 'parent'));
+          companies.forEach(function(company) {
+              var entry = $('<div>', {text: company}).appendTo(suggestions);
+              entry.mark(query);
+          });
+
+        }
+
+
+
+// debugger;
+            // // var first_result = data[results[0]];
+            // var autocomplete = document.getElementById("autocomplete");
+            // var first_result = results[0].parent;
+            // var match = first_result && first_result.toLowerCase().indexOf(query.toLowerCase());
+
+            // if(first_result && (match !== -1)){
+            //     console.log('here')
+            //     autocomplete.value = query + first_result.substring(match + query.length);
+            //     autocomplete.current = first_result;
+            // }
+            // else{
+
+            //     autocomplete.value = autocomplete.current = query;
+            // }
+
+
   // add to the results to map, table, legend
-  drawMap(results);                                 // update the map (and legend)
-  updateResultsPanel(results, keywords)             // update the results-panel
-  drawTable(results, keywords);                     // populate the table
-  $('form#nav-table-search input').val(keywords);   // sync the table search input with the keywords
-  CONFIG.selected_country.layer.clearLayers();      // clear any selected country
-  CONFIG.selected_country.name = '';                // ... and reset the name
-  $('div#country-results').show();                  // show the results panel, in case hidden
-  $('a.clear-search').show();                       // show the clear search links
+  drawMap(results);                              // update the map (and legend)
+  updateResultsPanel(results, query)             // update the results-panel
+  drawTable(results, query);                     // populate the table
+  $('form#nav-table-search input').val(query);   // sync the table search input with the query
+  CONFIG.selected_country.layer.clearLayers();   // clear any selected country
+  CONFIG.selected_country.name = '';             // ... and reset the name
+  $('div#country-results').show();               // show the results panel, in case hidden
+  $('a.clear-search').show();                    // show the clear search links
 
   return false;
 }

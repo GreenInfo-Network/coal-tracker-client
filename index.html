@@ -42,8 +42,11 @@
   <!-- polyfill for URLSearchParams -->
   <script type="text/javascript" src="https://unpkg.com/@ungap/url-search-params"></script>
 
-  <!-- Elasticlunr search -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/elasticlunr/0.9.6/elasticlunr.min.js"></script>
+  <!-- Flex search -->
+  <script src="https://cdn.jsdelivr.net/npm/flexsearch@0.6.30/dist/flexsearch.min.js"></script>
+
+  <!-- mark.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js"></script>
 
 <!-- Google analytics -->
 <script>
@@ -80,15 +83,20 @@
             <option value="year">start year</option>
           </select>
           <label class="hidden-xs" for="mapsearch">for</label>
+          <!-- <input id="autocomplete" class="form-control"></span> -->
           <input id="mapsearch" type="text" class="form-control" data-type="nav" placeholder="project name, company, country...">
           <a class="clear-search" title="click to clear the search"></span>clear<span class="hidden-xs hidden-sm"> search</span></a>
           <div id="search-icon-wrapper">
             <span class="glyphicon glyphicon-search"></span>
           </div>
+
         </div><!-- /input-group -->
       </form>
     </div>
   </div>
+
+  <!-- company suggestions for company search -->
+  <div id="suggestions"></div>
 
   <!-- navigation tabs. See below for tab content -->
   <input class="tab" type="radio" id="map-tab" name="tabs" data-tab="map" checked>
