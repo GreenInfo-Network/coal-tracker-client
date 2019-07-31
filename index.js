@@ -103,19 +103,9 @@ CONFIG.markercluster_colors = Object.keys(CONFIG.status_types).map(function(v) {
 CONFIG.search_categories = {
   'all': ['unit', 'plant', 'parent', 'region', 'country', 'subnational', 'year'],
   'unit': ['unit', 'plant'],
-  'parent': 'parent',
+  'parent': ['parent'],
   'location': ['region', 'country', 'subnational'],
-  'year': 'year',
-}
-
-// the table columns that the search categories refer to. See searchTableForText()
-CONFIG.search_category_columns = {
-  'all': [0,4,7,8,9,10],
-  'unit': [0],
-  'parent': [4],
-  'location': [7,8,9],
-  'year': [10],
-  'status': [6],
+  'year': ['year'],
 }
 
 // the placeholder to show, also depends on the select#search-category selection
@@ -574,52 +564,16 @@ function initTabs()    {
   });
 }
 
-// Init search for matching keywords entered in the input at top-right
-// we use ElasticLunr (https://github.com/weixsong/elasticlunr.js) as the search "engine"
+// A collection of things to init that support searching
 function initSearch() {
-  // config search engine with the fields and data to be searched
-  // which end up searched depends on selections made in select#search-categories and implemented at run time
-  // CONFIG.searchengine = elasticlunr(function () {
-  //   this.addField('sponsor');
-  //   this.addField('parent');
-  //   this.addField('unit');
-  //   this.addField('plant');
-  //   this.addField('country');
-  //   this.addField('region');
-  //   this.addField('subnational');
-  //   this.addField('year');
-  //   this.setRef('id');
-  // });
-  // DATA.tracker_data.forEach(function(document) {
-  //   CONFIG.searchengine.addDoc(document);
-  // })
-
-  CONFIG.searchengine = new FlexSearch({
-      tokenize: 'forward',
-      depth: 3,
-      doc: {
-          id: 'id',
-          field: [
-            'sponsor',
-            'parent',
-            'unit',
-            'plant',
-            'country',
-            'region',
-            'subnational',
-            'year'
-          ]
-      }
-  });
-  CONFIG.searchengine.add(DATA.tracker_data);
-  window.searchengine = CONFIG.searchengine;
-
   // update the placeholder text when search category is selected
   $('select#search-category').on('change', function() {
     let value = $(this).val();
     let placeholder = CONFIG.search_placeholder[value];
     // clear any search string on the search and update the placeholder
     $('input#mapsearch, input#tablesearch').attr('placeholder', placeholder);
+    // empty and hide the "suggestions" div
+    $('div#suggestions').empty().hide();
   });
 
   // init the "map search" form input itself
@@ -1054,59 +1008,41 @@ function removeCurrentBasemap() {
 ///// SEARCH FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// a simple search filter on an array of named fields
+// input "array" is assumed to be an array of objects:
+// [{'country': 'Canada', 'company': 'ABC'}, {'country': 'China', 'company', 'Acme Energy'}]
+// query is the query string
+// https://stackoverflow.com/a/44313087/1193155
+function searchFilter(array, query, fields) {
+  return array.filter(function (o) {
+    return fields.some(function (k) {
+      // if fields contain numbers, then cast to string with String(o[k])
+      return o[k].toLowerCase().includes(query.toLowerCase());
+    });
+  });
+}
+
 // searches all data for keyword(s)
 function searchForText() {
   // get the keywords to search
   var query = $('form#search input#mapsearch').val();
 
-  // Kick off a search to find data matching the keyword, and pull out the results
-  // initial config:
-  // - combine search terms with 'AND' ('OR' is the default)
-  // - expand tokens, to better match substrings (default is false, to emphasize whole words)
-  // let options = {bool: 'AND', expand: true};
   // extract the fields to search, from the selected 'search category' options
   let category = $('select#search-category').val();
-  // options['fields'] = CONFIG.search_categories[category];
-  // var search_results = CONFIG.searchengine.search(keywords, options);
-  // var results = [];
 
-  var results = CONFIG.searchengine.search({
-    field: CONFIG.search_categories[category],
-    // bool: CONFIG.search_categories[category].length == 1 ? 'and' : 'or',
-    suggest: true,
-    query: query,
-  });
+  // filter the object for the term in the included fields
+  var results = searchFilter(DATA.tracker_data, query, CONFIG.search_categories[category]);
 
-
-        var suggestions = $('div#suggestions').empty();
-        if (category == 'parent') {
-          suggestions.show();
-          var companies = _.uniq(_.map(results, 'parent'));
-          companies.forEach(function(company) {
-              var entry = $('<div>', {text: company}).appendTo(suggestions);
-              entry.mark(query);
-          });
-
-        }
-
-
-
-// debugger;
-            // // var first_result = data[results[0]];
-            // var autocomplete = document.getElementById("autocomplete");
-            // var first_result = results[0].parent;
-            // var match = first_result && first_result.toLowerCase().indexOf(query.toLowerCase());
-
-            // if(first_result && (match !== -1)){
-            //     console.log('here')
-            //     autocomplete.value = query + first_result.substring(match + query.length);
-            //     autocomplete.current = first_result;
-            // }
-            // else{
-
-            //     autocomplete.value = autocomplete.current = query;
-            // }
-
+  // suggestions: if the search category is "company", include a list of suggestions below 
+  var suggestions = $('div#suggestions').empty();
+  if (category == 'parent') {
+    suggestions.show();
+    var companies = _.uniq(_.map(results, 'parent'));
+    companies.forEach(function(company) {
+      var entry = $('<div>', {'class': 'suggestions', text: company}).appendTo(suggestions);
+      entry.mark(query);
+    });
+  }
 
   // add to the results to map, table, legend
   drawMap(results);                              // update the map (and legend)
