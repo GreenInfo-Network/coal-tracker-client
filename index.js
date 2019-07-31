@@ -290,6 +290,7 @@ function initButtons() {
   // the clear search button, clears the search input
   $('div.searchwrapper a.clear-search').on('click', function() {
     $(this).siblings('input').val('').trigger('keyup');
+    $('div#suggestions').hide();
     $(this).hide();
   });
 
@@ -571,6 +572,7 @@ function initSearch() {
     var query = this.innerText;
     $('form#search input').val(query);
     searchForText();
+    $('div#suggestions').hide();
   });
 
   // update the placeholder text when search category is selected
@@ -585,9 +587,9 @@ function initSearch() {
 
   // init the "map search" form input itself
   $('form#search input').keyup(_.debounce(function() {
-    // if the input is cleared, redo the 'everything' search (e.g. show all results)
+    // if the input is cleared, show all results
     // this is distinct from the case of "No results", in searchForText
-    if (!this.value) return render();
+    if (!this.value) return resetTheMap();
     // otherwise, just trigger the search
     $(this).submit();
   },300));
@@ -810,17 +812,16 @@ function updateClusters(data, fitbounds) {
     setTimeout(function() {
       // typically we'll just do this (e.g. on search)
       CONFIG.map.fitBounds(bounds);
-
       // first load: a trick to always fit the bounds in the map, see #20
       if (! CONFIG.homebounds) {
         let center = CONFIG.map.getCenter();
         let zoom = CONFIG.map.getBoundsZoom(bounds, true); // finds the zoom where bounds are fully contained
         CONFIG.map.setView([center.lat, center.lng], zoom);
         CONFIG.map.once("moveend zoomend", function() {
-          // wait til this animation is complete, then set homebounds, if it hasn't been set yet (or do nothing if it has)
-          CONFIG.homebounds = CONFIG.homebounds || CONFIG.map.getBounds();
+          // wait til this animation is complete, then set homebounds
+          CONFIG.homebounds = CONFIG.map.getBounds();
         });
-      }
+      } 
     }, 200)
   }
 }
