@@ -566,6 +566,13 @@ function initTabs()    {
 
 // A collection of things to init that support searching
 function initSearch() {
+  // when clicking on a "suggestion", put that text in the search input and search
+  $('div#suggestions').on('click', 'div.suggestion', function() {
+    var query = this.innerText;
+    $('form#search input').val(query);
+    searchForText();
+  });
+
   // update the placeholder text when search category is selected
   $('select#search-category').on('change', function() {
     let value = $(this).val();
@@ -1039,7 +1046,7 @@ function searchForText() {
     suggestions.show();
     var companies = _.uniq(_.map(results, 'parent'));
     companies.forEach(function(company) {
-      var entry = $('<div>', {'class': 'suggestions', text: company}).appendTo(suggestions);
+      var entry = $('<div>', {'class': 'suggestion', text: company}).appendTo(suggestions);
       entry.mark(query);
     });
   }

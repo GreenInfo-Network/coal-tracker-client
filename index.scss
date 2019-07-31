@@ -398,7 +398,7 @@ div#suggestions {
   padding: 5px;
   overflow-y: scroll;
   z-index: 10000;
-  div {
+  div.suggestion {
     cursor: pointer;
     padding: 2px 10px;
     margin-left: -5px;
