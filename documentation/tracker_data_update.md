@@ -6,17 +6,8 @@
 
 ## Steps
 - obtain the latest spreadsheet from the client, likely a link to a Google Spreadsheet, or an XLS file
-- download or save the data sheet as CSV 
-- rename fields with commas - these are problematic in `csvkit/csvcut` for some reason, e.g. "Subnational unit (province, state)" >> "Subnational unit (province/state)"
-- Use `csvcut` to extract cols to keep with `csvcut` (part of `csvkit`) (see below)
+- download or save the data sheet as CSV. Note: if given file is Excel, first upload to Sheets, then save as CSV (this should help evade UTF encoding issues)
 - Run the python script (see below) to clean up the data and convert to `json`
-
-## csvcut
-
-Run the following to reduce the CSV to only those fields we need
-```
-csvcut -e utf-8-sig -c 'Tracker ID','Unit','Chinese name','Plant','Wiki page','Sponsor','Parent','Capacity (MW)','Status','Region','Country','Subnational unit (province/state)','Latitude','Longitude','Year' coal.csv > trackers.csv
-```
 
 ## convert to json
 
