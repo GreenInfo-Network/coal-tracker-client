@@ -121,7 +121,11 @@ CONFIG.search_placeholder = {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function () {
   // data initialization first, then the remaining init steps
-  Promise.all([initData('./data/trackers.json'), initData('./data/countries.json'), initData('./data/country_lookup.csv')])
+  Promise.all([initData('./data/trackers.json'), 
+               initData('./data/countries.json'), 
+               initData('./data/country_lookup.csv'),
+               initData('./data/companies.txt'),
+              ])
     .then(function(data) {
       initDataFormat(data)    // get data ready for use
       initButtons();          // init button listeners
@@ -235,6 +239,9 @@ function initDataFormat(data) {
 
   // keep a reference to the tracker data JSON
   DATA.tracker_data = data[0];
+
+  // organize company data into an array of companies
+  DATA.companies = data[3].split('\n');
 }
 
 // init state from allowed params, or not
@@ -1021,13 +1028,20 @@ function removeCurrentBasemap() {
 // [{'country': 'Canada', 'company': 'ABC'}, {'country': 'China', 'company', 'Acme Energy'}]
 // query is the query string
 // https://stackoverflow.com/a/44313087/1193155
-function searchFilter(array, query, fields) {
+function searchObject(array, query, fields) {
   return array.filter(function (o) {
     return fields.some(function (k) {
       // if fields contain numbers, then cast to string with String(o[k])
       return o[k].toLowerCase().includes(query.toLowerCase());
     });
   });
+}
+
+// similar function to search a simple array of values by a string
+function searchArray(array, query) {
+  return array.filter(function(o) {
+    return o.toLowerCase().includes(query.toLowerCase());
+  })
 }
 
 // searches all data for keyword(s)
@@ -1039,13 +1053,13 @@ function searchForText() {
   let category = $('select#search-category').val();
 
   // filter the object for the term in the included fields
-  var results = searchFilter(DATA.tracker_data, query, CONFIG.search_categories[category]);
+  var results = searchObject(DATA.tracker_data, query, CONFIG.search_categories[category]);
 
   // suggestions: if the search category is "company", include a list of suggestions below 
   var suggestions = $('div#suggestions').empty();
   if (category == 'parent') {
     suggestions.show();
-    var companies = _.uniq(_.map(results, 'parent'));
+    var companies = searchArray(DATA.companies, query).sort();
     companies.forEach(function(company) {
       var entry = $('<div>', {'class': 'suggestion', text: company}).appendTo(suggestions);
       entry.mark(query);
@@ -1154,3 +1168,17 @@ function isMobile() { return $(window).width() < 768 }
 
 // reduce arrays to unique items
 const uniq = (a) => { return Array.from(new Set(a));}
+
+// String includes
+if (!String.prototype.includes) {
+  String.prototype.includes = function(search, start) {
+    'use strict';
+    if (typeof start !== 'number') start = 0;
+
+    if (start + search.length > this.length) {
+      return false;
+    } else {
+      return this.indexOf(search, start) !== -1;
+    }
+  };
+}
