@@ -160,7 +160,6 @@ function resize() {
   // 42px for the nav bar, 10px top #map, 10px top of #container = 42 + 20 + 10
   var winheight = $(window).height();
   var height = winheight - 54;
-  if (height > 1000) height = 1000; // on giant screens, we need a max height
 
   // resize the map
   $('div#map').height(height - 8);
