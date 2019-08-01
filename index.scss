@@ -516,10 +516,13 @@ div#table table.table {
 
 }
 
-@media screen and (max-width: 400px) {
-  div.table-container table.table { font-size:11px; }
+@media screen and (max-width: 430px) {
   /* because attribution takes up two lines on small screens, have to bump up the bottom on the layer control */
   div.layer-control {bottom: 37px;}
+}
+
+@media screen and (max-width: 400px) {
+  div.table-container table.table { font-size:11px; }
   div#layers-icon { bottom: 40px };
   div.tab-wrapper label.tab {padding: 10px 12px;}
   div#home-button-wrapper {float:right; display:inline; margin-top:4px;}
