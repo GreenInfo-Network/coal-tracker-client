@@ -301,6 +301,15 @@ function initButtons() {
     $(this).hide();
   });
 
+  // hide, but don't clear suggestions "menu" when clicking outside of it
+  $(document).click(function(event) { 
+    var $target = $(event.target);
+    if(!$target.closest('div#suggestions').length && 
+    $('div#suggestions').is(":visible")) {
+      $('div#suggestions').hide();
+    }        
+  });
+
   // init the zoom button that shows on the modal details for an individual coal plant
   $('#btn-zoom').click(function(){
     var target = this.dataset.zoom.split(',');
@@ -1138,6 +1147,7 @@ function searchCountry(name, bounds, delay=1) {
     CONFIG.map.fitBounds(bounds);
   }, delay)
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///// SHIMS AND UTILITIES: Various polyfills to add functionality
