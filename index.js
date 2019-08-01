@@ -136,6 +136,7 @@ $(document).ready(function () {
       initMapLayers();        // init some map layers and map feature styles
       initStatusCheckboxes(); // initialize the checkboxes to turn on/off trackers by status
       initPruneCluster();     // init the prune clustering library
+      initSearchBar();        // init viewport-specific search bar behavior
 
       initState();            // init app state given url options
 
@@ -151,7 +152,6 @@ $(document).ready(function () {
 $(window).resize(function() {
   // resize the map, table and content divs to fit the current window
   resize();
-  updateSearchBar();
 })
 
 // resize everything: map, content divs, table
@@ -183,10 +183,11 @@ function resize() {
   CONFIG.table.columns.adjust().draw();
 }
 
-function updateSearchBar() {
+// init some viewport-specific search bar behavior
+function initSearchBar() {
   var category = $('select#search-category').val();
   var placeholder = CONFIG.search_placeholder[category];
-  var search = $('input#mapsearch, input#tablesearch');
+  var search = $('input#mapsearch');
   var width = $(window).width();
   if (width < 768) {
     if (search.hasClass('collapsed')) return;
@@ -201,7 +202,7 @@ function updateSearchBar() {
         }, 300);
       } else {
         search.attr('placeholder',placeholder);
-        search.off('click');
+        // search.off('click');
       }
     });
   } else {
@@ -596,7 +597,7 @@ function initSearch() {
     let value = $(this).val();
     let placeholder = CONFIG.search_placeholder[value];
     // clear any search string on the search and update the placeholder
-    $('input#mapsearch, input#tablesearch').attr('placeholder', placeholder);
+    $('input#mapsearch').attr('placeholder', placeholder);
     // empty and hide the "suggestions" div
     $('div#suggestions').empty().hide();
   });
