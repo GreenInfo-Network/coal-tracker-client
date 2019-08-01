@@ -111,7 +111,6 @@ Bayer
 BECL
 BEH
 Beifang Yatai Energy
-Beijing Coal Group
 Beijing Guoli
 Beijing Huawei Hetian Investment
 Beijing Ruixing Asset Management
@@ -1297,9 +1296,7 @@ Socar Group
 Sojitz
 Sokolovská Uhelná
 Solvay
-Soma Energy Park
 Soma Holding
-Soma Kyodo Jikahatsu Kaihatsu godo kaisha
 Songji Group 嵩基集团
 South Mississippi Electric Power Association
 South Ocean Holdings
