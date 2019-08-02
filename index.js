@@ -299,6 +299,7 @@ function initButtons() {
     $(this).siblings('input').val('').trigger('keyup');
     $('div#suggestions').hide();
     $(this).hide();
+    DATA.filtered = null;
   });
 
   // hide, but don't clear suggestions "menu" when clicking outside of it
@@ -510,14 +511,15 @@ function initStatusCheckboxes() {
     $('div.layer-control div#status-layers input:checked').each(function(l) { 
       statuses.push(this.value);
     });
-    // let 
-    var data = DATA.tracker_data.filter(function(d) {
+    // filter the current set of filtered data, or all data if there is no current filter applied
+    let data_to_filter = DATA.filtered || DATA.tracker_data;
+    var filtered = data_to_filter.filter(function(d) {
       return statuses.indexOf(d.status) > -1
     })
-    drawTable(data, 'Status filtered');
+    drawTable(filtered, 'Status filtered');
 
     // 3) update the "results" panel
-    updateResultsPanel(data, 'Status filtered');
+    updateResultsPanel(filtered, 'Status filtered');
   });
 }
 
@@ -955,6 +957,7 @@ function resetTheMap() {
   // clear any existing country and feature selection
   CONFIG.selected_country.layer.clearLayers();
   CONFIG.selected_country.name = '';
+  DATA.filtered = null;
 
   // switch back to the map tab
   $('input#map-tab').click();
@@ -1062,7 +1065,7 @@ function searchForText() {
   let category = $('select#search-category').val();
 
   // filter the object for the term in the included fields
-  var results = searchObject(DATA.tracker_data, query, CONFIG.search_categories[category]);
+  DATA.filtered = searchObject(DATA.tracker_data, query, CONFIG.search_categories[category]);
 
   // suggestions: if the search category is "company", include a list of suggestions below 
   var suggestions = $('div#suggestions').empty();
@@ -1075,10 +1078,10 @@ function searchForText() {
     });
   }
 
-  // add to the results to map, table, legend
-  drawMap(results);                              // update the map (and legend)
-  updateResultsPanel(results, query)             // update the results-panel
-  drawTable(results, query);                     // populate the table
+  // add the results to map, table, legend
+  drawMap(DATA.filtered);                              // update the map (and legend)
+  updateResultsPanel(DATA.filtered, query)             // update the results-panel
+  drawTable(DATA.filtered, query);                     // populate the table
   $('form#nav-table-search input').val(query);   // sync the table search input with the query
   CONFIG.selected_country.layer.clearLayers();   // clear any selected country
   CONFIG.selected_country.name = '';             // ... and reset the name
