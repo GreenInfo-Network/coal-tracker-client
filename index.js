@@ -377,7 +377,8 @@ function initButtons() {
       // add the plain basemap - we could try to keep track of which basemap the user
       // was on before zooming in - but what if they zoom in to another? then the current
       // basemap becomes satellite - and tracking all this gets ridiculous
-      CONFIG.map.addLayer(CONFIG.basemaps['basemap']);
+      CONFIG.map.addLayer(CONFIG.basemaps.basemap);
+      CONFIG.map.addLayer(CONFIG.basemaps.labels);
 
       // keep the radio button in sync with the map
       $('#layers-base input[data-baselayer="basemap"]').prop('checked', true);
