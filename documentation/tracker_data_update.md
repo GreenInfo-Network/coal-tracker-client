@@ -6,7 +6,7 @@
 
 ## Steps
 - obtain the latest spreadsheet from the client, likely a link to a Google Spreadsheet, or an XLS file
-- download or save the data sheet as CSV. Note: if given file is Excel, first upload to Sheets, then save as CSV (this should help evade UTF encoding issues)
+- download or save the data sheet as CSV. Note: if given file is Excel, first upload to Sheets, then save as CSV (this should help with UTF encoding issues)
 - Run the python script (see below) to clean up the data and convert to `json`
 
 ## convert to json
