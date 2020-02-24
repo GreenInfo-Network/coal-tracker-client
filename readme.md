@@ -1,22 +1,21 @@
 # Coal Tracker Frontend Rebuild
-Project with [Coal Swarm](coalswarm.org) to rebuild coal_tracker as a front-end application. For the original application, see https://github.com/GreenInfo-Network/coal_tracker, which is hosted on Kattare (still running from there as of June 2019)
+Project with [Global Energy Monitor](https://globalenergymonitor.org/) to rebuild coal_tracker as a front-end application. For the original application, see https://github.com/GreenInfo-Network/coal_tracker
 
-* Quickbooks: CoalSwarm:Coal Plant Tracker 2019
-* URL: https://greeninfo-network.github.io/coal-tracker-client/
+https://greeninfo-network.github.io/coal-tracker-client/
 
 ## Hosting
 
-We will initially be hosting this on GH pages. Eventually that URL will be used as the embed source on this page: https://endcoal.org/global-coal-plant-tracker/
+The app is hosted on GH pages and the source is embedded on this page: https://endcoal.org/global-coal-plant-tracker/
 
 ## Development
 
 Pre-requisites:
-* Node and npm
-* Yarn
+* Node (>=10.0) and npm (>=5.6.0)
+* Yarn (>=1.17.0)
 
-To match the development node version:
+To match the development node version with `nvm`:
 ```
-npm use
+nvm use
 ```
 
 First time only:
