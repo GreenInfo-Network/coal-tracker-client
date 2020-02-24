@@ -487,6 +487,12 @@ div#table table.table {
 .prunecluster-large div { width: 34px; height: 34px; background-color: #f18017; background-color: rgba(241, 128, 23, 0.6);}
 .prunecluster-large div span { line-height: 34px; }
 
+
+// wiki page links on modal
+a[data-name="wiki_page"] {
+  font-weight: bold;
+}
+
 /* Media Queries */
 /* styles specific to larger screens: only apply above stated pixel width (greater or equal to); */
 @media (min-width:768px) {

@@ -927,8 +927,8 @@ function openTrackerInfoPanel(feature) {
 
   // wiki page needs special handling to format as <a> link
   var url = properties['url'];
-  var wiki = $('#tracker-modal .modal-content span').filter('[data-name="wiki_page"]').text('');
-  $('<a>', { text: url, href: url, target: "_blank"} ).appendTo(wiki);
+  var wiki = $('#tracker-modal .modal-content a').filter('[data-name="wiki_page"]');
+  wiki.attr('href', url);
 
   // format the zoom-to button data.zoom attribute. See initZoom();
   // this lets one zoom to the location of the clicked plant
