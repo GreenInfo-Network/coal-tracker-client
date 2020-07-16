@@ -16,7 +16,7 @@ const simplification = 0.009;
 const outfile            = 'countries.json';       // the output country geojson file we are createing
 const infile             = 'world.json';           // the country reference file
 const datafile           = 'coal.csv'; // the data with country names
-const country_name_index = 2                       // the column index for the country names
+const country_name_index = 4                       // the column index for the country names
 const lookupfile         = './country_lookup.csv'; // the lookup to match data to geojson 
 
 // define a helper for reducing arrays to unique items

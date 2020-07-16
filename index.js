@@ -70,7 +70,7 @@ CONFIG.attributes = {
 //          color: imported from CSS
 CONFIG.status_types = {
   'announced': {'id': 0, 'text': 'Announced', 'color': styles.status1 },
-  'pre-permit': {'id': 1, 'text': 'Pre-permit', 'color': styles.status2 },
+  'pre-permit development': {'id': 1, 'text': 'Pre-permit', 'color': styles.status2 },
   'permitted': {'id': 2, 'text': 'Permitted', 'color': styles.status3 },
   'construction': {'id': 3, 'text': 'Construction', 'color': styles.status4 },
   'shelved': {'id': 4, 'text': 'Shelved', 'color': styles.status5 },
@@ -86,7 +86,7 @@ CONFIG.status_types = {
 // NOTE: Keep in order by status type id (above), otherwise the clusters "pie charts" will not get the correct color
 CONFIG.status_markers = {
   'announced': {'markers': []},
-  'pre-permit': {'markers': []},
+  'pre-permit development': {'markers': []},
   'permitted': {'markers': []},
   'construction': {'markers': []},
   'shelved': {'markers': []},
