@@ -18,7 +18,7 @@ const DATA = {};
 
 // basemap definitions, no options here, just a single set of basemap tiles and labels above features. see initMap();
 CONFIG.basemaps = {
-  'hybrid': L.tileLayer('https://{s}.tiles.mapbox.com/v3/greeninfo.map-zudfckcw/{z}/{x}/{y}.jpg', { pane: 'hybrid' }),
+  'hybrid': L.gridLayer.googleMutant({ type: 'hybrid', pane: 'hybrid' }),
   'satellite': L.gridLayer.googleMutant({ type: 'satellite', pane: 'satellite' }),
   'basemap' : L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', { attribution: '©OpenStreetMap, ©CARTO', pane: 'basemap' }),
   'labels': L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}@2x.png', { pane: 'labels' }),
