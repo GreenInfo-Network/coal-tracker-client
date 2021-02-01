@@ -70,7 +70,7 @@ CONFIG.attributes = {
 //          color: imported from CSS
 CONFIG.status_types = {
   'announced': {'id': 0, 'text': 'Announced', 'color': styles.status1 },
-  'pre-permit development': {'id': 1, 'text': 'Pre-permit', 'color': styles.status2 },
+  'pre-permit': {'id': 1, 'text': 'Pre-permit', 'color': styles.status2 },
   'permitted': {'id': 2, 'text': 'Permitted', 'color': styles.status3 },
   'construction': {'id': 3, 'text': 'Construction', 'color': styles.status4 },
   'shelved': {'id': 4, 'text': 'Shelved', 'color': styles.status5 },
@@ -86,7 +86,7 @@ CONFIG.status_types = {
 // NOTE: Keep in order by status type id (above), otherwise the clusters "pie charts" will not get the correct color
 CONFIG.status_markers = {
   'announced': {'markers': []},
-  'pre-permit development': {'markers': []},
+  'pre-permit': {'markers': []},
   'permitted': {'markers': []},
   'construction': {'markers': []},
   'shelved': {'markers': []},
@@ -123,7 +123,6 @@ $(document).ready(function () {
   // data initialization first, then the remaining init steps
   Promise.all([initData('./data/trackers.json'), 
                initData('./data/countries.json'), 
-               initData('./data/country_lookup.csv'),
                initData('./data/companies.txt'),
               ])
     .then(function(data) {
@@ -226,22 +225,14 @@ function initData(url) {
 
 // data parsing and formatting, once data are on-board
 function initDataFormat(data) {
-  // set country data equal to the second data object from the initData() Promise()
-  DATA.country_data = data[1];
-
-  // set up a country-lookup, to map country names as provided in the raw spreadsheet data, to country names we have in the country topojson
-  var lookup = Papa.parse(data[2], {header: true});
-  DATA.country_lookup = {};
-  // make a simple lookup from country polygons to our tracker data
-  lookup.data.forEach(function(row, i) {
-    DATA.country_lookup[row['Name_map']] = row['Name_csv'];
-  });
-
   // keep a reference to the tracker data JSON
   DATA.tracker_data = data[0];
 
+  // set country data equal to the second data object from the initData() Promise()
+  DATA.country_data = data[1];
+
   // organize company data into an array of companies
-  DATA.companies = data[3].split('\n');
+  DATA.companies = data[2].split('\n');
 }
 
 // init state from allowed params, or not
@@ -254,10 +245,9 @@ function initState() {
     var params = new URLSearchParams(window.location.search);
     var place = params.get('country');
     if (place) {
-      let place_lookup = DATA.country_lookup[place.toTitleCase()];
       // find the country, zoom to it
       CONFIG.countries.eachLayer(function(layer) {
-        if (layer.name == place_lookup ) {
+        if (layer.name == place ) {
           var bounds = layer.getBounds();
           searchCountry(place, bounds, 2000);
           drawTable(DATA.tracker_data);
@@ -1119,8 +1109,7 @@ function searchCountry(name, bounds, delay=1) {
   // get the data for this country, *only* for updating the results panel
   // the map and table, continue to show all data
   var data = [];
-  // translate from the country data names to our tracker data names, then look for matches
-  var name = DATA.country_lookup[name];
+  // search the data for matches to the country name
   DATA.tracker_data.forEach(function(feature) {
     // look for matching names in feature.properties.countries
     if (name == feature.country) data.push(feature);
