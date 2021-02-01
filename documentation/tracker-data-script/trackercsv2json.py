@@ -1,5 +1,5 @@
 # trackercsv2json.py
-# usage: trackercsv2json.py infile.csv outfile.json
+# usage: python3 trackercsv2json.py infile.csv outfile.json
 import csv
 import json
 import sys
@@ -70,12 +70,12 @@ for index, row in enumerate(reader):
             # latitude and longitude: convert to float, and also skip empty values
             elif item == 'latitude' or item == 'longitude':
                 value = float("{0:.5f}".format(float(row[item])))
-            # status: make lower case
+            # status: make lower case and trim
             elif item == 'status':
-                value = row[item].lower()
+                value = row[item].lower().strip()
             # everything else: take it as-is
             else: 
-                value = row[item]
+                value = row[item].strip()
 
             # append it to the outrow
             outrow[field_lookup[item]] = value
