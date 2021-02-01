@@ -5,7 +5,7 @@ https://greeninfo-network.github.io/coal-tracker-client/
 
 ## Hosting
 
-The app is hosted on GH pages and the source is embedded on this page: https://endcoal.org/global-coal-plant-tracker/
+The app is hosted on GH pages and the source is embedded on this page: https://globalenergymonitor.org/projects/global-coal-plant-tracker/tracker/
 
 ## Data
 
