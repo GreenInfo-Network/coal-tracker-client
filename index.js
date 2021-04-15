@@ -237,26 +237,73 @@ function initDataFormat(data) {
 
 // init state from allowed params, or not
 function initState() {
-  // first check if we are loading from url params or not
-  var params = window.location.href;
   // if we have url params, get the params and use them to set state
-  if (params.indexOf('?') > -1) {
-    // get the params. The only one supported at the moment is "country"
-    var params = new URLSearchParams(window.location.search);
-    var place = params.get('country');
-    if (place) {
-      // find the country, zoom to it
-      CONFIG.countries.eachLayer(function(layer) {
-        if (layer.name == place ) {
-          var bounds = layer.getBounds();
-          searchCountry(place, bounds, 2000);
-          drawTable(DATA.tracker_data);
-          highlightCountryLayer(layer.feature);
-        }
-      })
-    } else {
-      resetTheMap();
+  if (window.location.search) {
+    // get the params. These are mutually exclusive at this point, and very special case,
+    // e.g. one partner wants to display a map of Germany, another wants a map of Africa, and so on
+    let params = new URLSearchParams(window.location.search);
+    // country param. In principal, should support any matching country name
+    if (params.has('country')) {
+      let country = params.get('country');
+      if (country) {
+        // find the country, zoom to it
+        CONFIG.countries.eachLayer(function(layer) {
+          if (layer.name == country ) {
+            let bounds = layer.getBounds();
+            searchCountry(country, bounds, 2000);
+            highlightCountryLayer(layer.feature);
+          }
+        })
+      }
     }
+    // region param. Currently this only supports one term "Africa"
+    if (params.has('region')) {
+      // check that this is equal to 'Africa'
+      let region = params.get('region');
+      if (region.toLowerCase() === 'africa') {
+        // nothing too special here, fit the map to Africa
+        // let bounds = L.latLngBounds([35.919, 63.466],[-35.3,-17.537]);
+        // render({ force_redraw: true, fitbounds: false });
+        // CONFIG.map.fitBounds(bounds);
+        // console.log(CONFIG);
+
+        // a list of african conunties for which to compile totals
+        let africa_country_list = ['Botswana','Democratic Republic of Congo','Egypt','Ghana','Guinea','Ivory Coast','Kenya','Madagascar','Malawi','Mauritius','Morocco','Mozambique','Namibia','Niger','Nigeria','Reunion','Senegal','South Africa','Sudan','Eswatini','Tanzania','Zambia','Zimbabwe'];
+
+        // set a name for the info panel
+        let name = 'Africa'
+
+        // get the data for this predefined collection of African countries, *only* for updating the results panel
+        // the map and table, continue to show all data
+        var data = [];
+        // search the data for matches to the country name
+        DATA.tracker_data.forEach(function(feature) {
+          // look for matching names in feature.properties.countries
+          if (africa_country_list.indexOf(feature.country) > -1) data.push(feature);
+        });
+
+        // because we are not filtering the map, but only changing the bounds
+        // results on the map can easily get out of sync due to a previous search filter
+        // so first we need to explicity render() the map with all data, but not the table or results
+        render({ name: name, map: true, results: false, table: false, fitbounds: false });
+        // THEN update results panel for *this* country data only
+        updateResultsPanel(data, name);
+        // THEN the table, with all data, but not with this name
+        // may seem superfluous, but important to keep the map/table in sync, and showing all data
+        drawTable(DATA.tracker_data);
+
+        // zoom the map to africa
+        let bounds = L.latLngBounds([35.919, 63.466],[-35.3,-17.537]);
+        setTimeout(function() {
+          CONFIG.map.fitBounds(bounds);
+        }, 2000);
+
+      } else {
+        // we have an undefined region
+        resetTheMap();
+      }
+    }
+  // no params
   } else {
     // the default init, if we don't have matching params
     resetTheMap();
