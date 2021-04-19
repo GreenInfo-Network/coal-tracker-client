@@ -268,6 +268,8 @@ function initState() {
         // console.log(CONFIG);
 
         // a list of african conunties for which to compile totals
+        // TODO: Shouldn't we just list all African countries here? Future updates might include a country not on this list
+        // the problem is, no way a-prior to know what country name GEM will use
         let africa_country_list = ['Botswana','Democratic Republic of Congo','Egypt','Ghana','Guinea','Ivory Coast','Kenya','Madagascar','Malawi','Mauritius','Morocco','Mozambique','Namibia','Niger','Nigeria','Reunion','Senegal','South Africa','Sudan','Eswatini','Tanzania','Zambia','Zimbabwe'];
 
         // set a name for the info panel
