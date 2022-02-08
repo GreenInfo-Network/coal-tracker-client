@@ -7,7 +7,7 @@
 # ensure that the input and output filenames are correct, below
 # python3 make_countries_json.py 
 
-# when complete, copy countries_fixed.json 
+# when complete, move countries.json to ../../data/countries.json 
 
 import csv
 import os

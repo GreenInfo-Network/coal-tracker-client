@@ -1,7 +1,6 @@
 # Update Tracker data from Spreadsheet
 
 ## Requirements
-* [csv kit](https://csvkit.readthedocs.io/en/latest/)
 * Python 3
 
 ## Steps
