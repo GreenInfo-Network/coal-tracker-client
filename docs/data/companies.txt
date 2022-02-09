@@ -1,3 +1,4 @@
+23 local communities from 4 countries
 24 Hour Company
 A Brown Company
 A1 Group
@@ -9,27 +10,21 @@ ABL Co. Ltd.
 Ableman Finance
 Aboitiz Group
 ACB (India) Limited
-ACC Limited
 Accord Energy
 Aci Energy
-Actherm
 ACWA Power
 Adani Group
 Adaro
-Adelaide Brighton
 Adhunik Group
 Aditya Birla Group
-Adularya Enerji
 AEI (Ashmore Energy International)
 AES
 African Energy Resources
 AGC Inc.
 AGL Energy
-Agrana Group
-Agrofert
 Ahmed Dogan
 Air Products & Chemicals
-Akemi Hatsuden
+Air Water
 Akfen Group
 Akkan Enerji A.Ş.
 Akkök Group
@@ -38,7 +33,6 @@ Al Nowais Investments
 Al-Mirqab Capital
 Alarko Holding A.Ş.
 Albayrak Group
-Albioma
 Albioma
 Alcantara Group
 Alcoa
@@ -56,7 +50,6 @@ Altona Resources
 Aluminji
 Ambuja Cements
 Ameren
-American Consumer Industries
 American Electric Power
 American Municipal Power
 Ames Electric Services
@@ -78,27 +71,24 @@ Anshan Iron & Steel Group
 Anyang Economy Development Group
 Anyang Steel & Iron Group
 APGENCO
-Apri Sviluppo S.p.A
 Aq Sora
 ArcelorMittal
 Archer Daniels Midland
 Arcil
 ArcLight Capital Partners
 Ares Holdings
-Ares Management
 Arizona Electric Power Coop
-Arkhangel'skiy TsBK
 ARM Cement Limited
 Arrissan Power Limited
 Arroyo Energy
 ARS Metals
 Asahan Aluminium (Inalum)
-Asahi Glass
 Asahi Kasei Group
 ASEAN Potash Mining
 Ashuganj Power Station Company
 Asia Power
 Asia Pulp & Paper
+Asia Symbol Rizhao Pte. Ltd.
 Asia World
 Asiawide Chemicals
 Assam Power Generation Corporation
@@ -108,11 +98,11 @@ ASTARC Power
 Astoria İç ve Dış Ticaret A.Ş.
 Astra International
 Atakaş Group
-ATCO Group
 Athena Energy Ventures
 Atlantic Power
 Atlas Holdings
 Atlas Power Limited
+Austin Energy
 Austin Utilities
 Avantha Group
 Avdan Madencilik Enerji San. ve Tic. A.Ş.
@@ -122,16 +112,12 @@ AVIC International Holding Corporation
 Avista
 Axiall Corp
 Ayala Corporation
-Ayas Enerji Üretim Veticaret A.Ş.
-Aydem Holding
-Ayeyar Hinthar Holdings
 Ayreshire Power
 Azrataş Elektrik Üretim
 Babcock & Wilcox
 Baganuur Power LLC
 BAGR Berliner Aluminiumwerk
 Bahçepınar Enerji Üretim ve İnşaat A.Ş.
-Bahía las Minas SA
 Baikal Municipality
 Bairui Trust
 Bajaj Group
@@ -144,21 +130,19 @@ Banpu
 Baoding Construction Investment
 Baoqing Asset Managment
 Baotou Zhineng Waste Coal Power Company
+Barak Fund Management
 Basin Electric Power Coop
 Bassel Group
 Bayer
-Beacon PowerGen Holdings
 BECL
 BEFAR Group
 BEH
 Beifa Investments (Pvt) Ltd
 Beifang Yatai Energy
-Beijing Coal Group
 Beijing Energy Group
 Beijing Furun New Energy Investment
 Beijing Fuze Energy Investment
 Beijing Guohong Hua'an Energy Investment
-Beijing Guoli
 Beijing Guotai Xinhua Industry
 Beijing Huarui Century Investment Group
 Beijing Huawei Hetian Investment
@@ -168,6 +152,7 @@ Beijing Normal University Real Estate Development
 Beijing Ruixing Asset Management
 Beijing Saideli Technology Co
 Beijing Shenwu Group
+Beijing Willard Technology Company Limited
 Beijing Zhongqin
 Benbu Investment Group
 Bendis Enerji
@@ -193,8 +178,6 @@ Binlong Mining Company
 Bintang Delapan
 Binzhou Financial Investment Group
 Birla Energy
-Biyskenergo
-Bıçakcılar Çandarlı Elektrik Üretim A.Ş.
 Bk Birla Group
 BLA Group
 BLA Power
@@ -203,7 +186,6 @@ Black Stallion Energy Center
 BlackGold Group
 Blackstone Group
 Blue Energy & Environment Company
-BMCE Bank
 BMM Ispat
 BOC
 Bodal Chemicals
@@ -211,8 +193,6 @@ Bodi International Group
 Bosawa Corporation
 Botswana Power Corporation
 Bow City Power
-BPPL
-Bramhani Industries
 Brazos Electric Power
 Brikel EAD
 Brunei Government
@@ -221,7 +201,6 @@ BTN Power
 Buckeye Power
 Bulgarian Energy Holding (BEH)
 Bulgarian National Electric Company
-Bumi Pertiwi Lestari
 Burj Capital
 Burnaz Elektrik Üretim A.Ş.
 Bushveld Minerals
@@ -234,21 +213,18 @@ Cang County Construction Investment
 Cangzhou Construction Energy Investment
 Canham Mining International
 CAP
+Capital Advisors
 Capital Power Corporation
 Carbonifera Metropolitan
-Carlyle Group
 Carpaterra Capital Partners
-Cascade Investment
 Casecade Power
 Catalyst Paper
 Cauvery Power Generation
 Cavalier Corporation
 Cayagan Electric Power & Light (CEPALCO)
 CDEEE
-Çebi Enerji
 Cedar Falls Utilities
 Çelikler Holding
-Celsia Sa
 Cement Manufacturing Company Ltd.
 Cementos Progreso
 Cemtech
@@ -276,8 +252,7 @@ CHALCO
 Chambal Fertilizers & Chemicals
 Chang Chun Group
 Changchun City Development Group
-Changchun Jiliang Tianyu Biological Engineering
-"Changchun Northeast Metal Trading Center Co., Ltd."
+Changchun Northeast Metal Trading Center Co., Ltd.
 Changde Economic Construction Investment Group
 Changji AP Asset Investment Management Group
 Changji City Asset Investment Managment
@@ -300,17 +275,18 @@ Chettinad Group
 Cheung Kong Infrastructure
 Cheung Sheng Global Holdings (CSG)
 Chifeng Fulong Utility Group
-Chifeng Urban Construction Investment (Group) Co Ltd.
 Chifeng Urban Construction Investment Group
 China Africa Sunlight Energy
 China Agricultural Development Fund
 China Baowu Steel Group
+China CAMC Engineering Company Limited
 China Chengtong Holding Group
-China Cogeneration Corporation
 China Communication Construction Group
 China Datang
+China Energy Conservation and Environmental Protection Group Co., Ltd.
 China Energy Engineering Corporation
 China General Nuclear Power Group
+China Guodian
 China Hongqiao Group
 China Huadian
 China Huaneng
@@ -318,19 +294,21 @@ China Huayang Economic and Trade Group
 China Kingho Group
 China Kinho
 China National Gold Group Corporation
+China National Heavy Machinery Corporation
 China National Petroleum Corporation
+China National Salt Industry Corporation
 China National Tobacco Corporation
 China Nonferrous Metal Industry's Foreign Engineering and Construction
 China Nonferrous Metal Mining Group
 China North Industries Group Co.
 China Paper Corporation
 China Pingmei Shenma Group
-"China Power Engineering Consulting Group North China Electric Power Design Institute Co., Ltd."
+China Power Engineering Consulting Group North China Electric Power Design Institute Co., Ltd.
 China Railway International
 China Resources
+China Shenhua Energy
 China Sinogy Electric Group
 China Southern Power Grid
-China State Construction Engineering Corporation
 China Three Gorges Corporation
 China Tianrui Group
 China Wanda Group
@@ -341,26 +319,23 @@ ChinaPower
 Chittagong Power Company Limited
 Chongqing Chemical & Pharmaceutical Group
 Chongqing Energy Investment Group
+Chongqing Feihua Environmental Science and Technology Co., Ltd.
 Chongqing Fuling Water & Hydro
-Chongqing Huineng Industial Co.
 Chongqing Longdian Industry Development
-Chongqing Tianfu Mining
 Chongqing Yufu Asset Management Group
-Chosun Refractories
+Chongqing Zhongyuan Coal Industry
 Chow Tai Fook Enterprises
 Chubu Electric Power
 Chugoku Electric Power
 Chunlan Group
 CIC Energy
-CIL
 Ciner Holding
 CITIC Group
-Citic Pacific
 City of Frankfurt (Oder)
 City of Grenoble
 City of Halle
 City of Kassel
-City of Linkoeping
+City of Kramatorsk
 City of Mudanjiang
 CIty of Muenster
 City of Turku
@@ -368,7 +343,6 @@ City Point Energy Center
 City Public Service Board of San Antonio
 Çınar Enerji
 CK Hutchison Holdings
-Clarendon Alumina Partners
 Cleco
 Cleveland Public Power
 Cliffs Natural Resources
@@ -378,7 +352,6 @@ CMEC
 CMS Energy
 Coal & Oil Group
 Coal India
-Coal Power Generation Company Bangladesh
 Coastal Sirohi Power
 Cobb EMC
 Codelco
@@ -389,19 +362,17 @@ Colenso Power
 Colgener SA
 Colorado Springs Utilities
 Comisión Federal de Electricidad
-Comp Therm Belle Vue (Ctvb)
-Compagnie Thermique Bois-Rouge
-Compagnie Thermique du Sud (CTDS)
-Compagnie Thermique Savannah
+Commercial Development Company, Inc.
 Complexul Energetic Craiova
 Complexul Energetic Hunedoara
 Complexul Energetic Oltenia
-Comptoir Balland-Brugneaux
 Comsar Energy
 Comune di Brescia et al
 Comune di Milano
 Cong Thanh Thermal Power Joint Stock Company
+CONSOL Energy
 Consolidated Growth Holdings
+Constanza LLC
 Constellation Energy
 Consunji Group
 ContourGlobal
@@ -409,7 +380,6 @@ Copelmi
 Corn Belt Power Coop
 Corona Power
 Corpoelec
-Corporación Energías de Guatemala
 Corporación San Diego
 CPECC
 CPGCBL
@@ -429,9 +399,9 @@ Dahua Group
 Daicel Corporation
 Daigas G&P Solution
 Dainik Bhaskar Group
+Daio Paper
 Dairyland Power Coop
 Dalian Construction Investment Group
-Dalian Nishinakajima Energy Limited
 Dalian Thermoelectric Group
 Dalian Xinhong Real Estate Group
 Dalmia Group
@@ -439,24 +409,21 @@ Damodar Valley Corporation
 Dandong Dongdian Yalujiang Trade General
 Dangote Group
 Daqing Gaoxin Boyuan Cogen Power Company
-Daqing Hegong New Energy & Technology
-"Datang Overseas Energy Investment Co., Ltd."
+Datang Overseas Energy Investment Co., Ltd.
 Datong Coal Mining Group
 Datong Yunfeng Asset Management
 Datuhe Mining Company
 DCM Shriram
 DCO Energy
-Deba Madencilik
 Delta Electricity
 Delta N.V.
 Demir Madencilik
 Dengfeng Power Plant Group
-Denggao Group
+Descon
 Deseret Power
 Dezheng Resources Holding
 Diamond Palace Services
 Diler Holding
-Dimosia Epicheirisi Ilektrismou
 Dingxin Group
 Diverse Power
 DMCI Holdings
@@ -465,14 +432,13 @@ Dominion
 Donbassenergo
 Dongbu Group
 Dongfang Electric Corporation
-Dongfang Xiwang Aluminum Co
 Dongfeng Motor Corp
 Dongguan Dianhua Shiye
 Dongguan Dongtang Company
 Dongguan Jianhui Paper Company
 Dongguan Power Chemical Industry Co. Ltd
-Dongguan Zhongke Huanbao Power
 Dongtang Group
+Doosan
 Dorbod Asset Management
 DOSAB
 Double A Power
@@ -484,20 +450,18 @@ Drax Group
 DTE Energy
 DTEK
 Duc Giang Chemical
-Duc Giang Detergent and Detergent Joint Stock Company
 Dufenergy Italia
 Duke Energy
 Dun'an Holding Group
-Durgapur Projects Limited
 Duyun City
-Dynegy
+Dynamic Ever Investments Limited
+E.Connect
 E.ON
 East Hope Group
 East Kentucky Power Coop
 East-West Power Generation Co. Ltd.
-Eastman Chemical
 Eastwind Power Partners
-EBX Group
+Eden Group
 Edenville Energy
 EDF Group
 Edison International
@@ -508,14 +472,10 @@ EGCO Group
 Ege Trade
 Egemer Elektrik Üretim
 Egyptian Electricity Holding Company
-EIF Management
 Eins Energie in Sachsen GmbH
-El Sewedy
 Electra Jacui
-Electricheskiye Stantsii JSC
 Electricidad de Mozambique
 Electricite du Laos
-Electrobras
 Elektrani na Severna Makedonija
 Elektrarny Opatovice AS
 Elektrim
@@ -524,13 +484,13 @@ Elektroprivreda BIH (EPBIH)
 Elektroprivreda Crne Gore
 Elektroprivreda Republike Srpske
 Elektroprivreda Srbije (EPS)
-ELEM
 Eletrobras
+Elion Group
 Ellora Paper Mills
 Elsan Elektrik
 Emami Group
 EmberClear Corp.
-EMCO Energy
+EMCO
 Emera
 Emirate of Ras al-Khaimah
 Empee Group
@@ -542,29 +502,23 @@ Endesa
 Enea
 Enel
 Enemona
-Enercal
+ENERCAL
 ENERGA
 Energeticky A Prumyslovy Hold
-Energetika Kopřivnice
-Energetika Ljubljana
 Energetika Trinec As
 Energi Andalan
 Energi Musi Makmur
 Energia Italiana
 Energia MK
+Energia Solution & Service
 Energie AG
 Energo Group
 Energoinvest Holding
-Energostroy Karaganda
 Energy Capital Partners
-Energy China
 Energy Company of Ukraine
-Energy Future Holdings
-Energy Investors Funds Group
 Enerjisa Enerji Üretim A.Ş.
 Enervie Gruppe
 Eneva
-ENEX Electric Power
 Engie
 ENKA
 ENRC
@@ -575,24 +529,22 @@ EP Energy
 EP HZHB
 ERA Group (Zambia)
 Era Infra Engineering
+Eramet
 Erdenes Mongol
-Erdos Hongjun Electric Power
+Erdos Group
 Eren Holding
-ERG Elektrik
 Erora Group
 ESB Group
 Eskom
 Essar Group
 Essel Group
 Eswatini Electricity Company
-ESWE Versorgung AG
-eTEC E&C
+Eternal Tsingshan Group
 ETİ Maden İşletmeleri Genel Müdürlüğü
-Etimaden
 EÜAŞ
 Eurasian Resources Group
+Euro Reconstruction LLC
 Europea Energy Communications SRL
-EuroSibEnergo
 Evergreen Group
 Evergy
 EVN
@@ -604,13 +556,13 @@ Excelsior EMC
 Excelsior Energy
 Exelon
 Exsperimentalnaya TES
-Exxaro
 FACOR Group
 Fatima Group
 Fauji Foundation
 Fei County Asset Management
 Filinvest Development Corp
 Finolex
+First Light Industry Company of Rizhao City
 First Quantum Minerals
 First Reserve Corporation
 FirstEnergy
@@ -620,20 +572,19 @@ Footprint Power
 Formosa Plastics Group
 Fortis
 Fortum
-Fortune Raise International Development
-Foshan Huaheng Petrochemical
 Foshan Nanhai Jinglong Investment Holdings
 Foshan Public Utility Holding
 Foster Wheeler Italiana S.p.A.
-FPL
+FRAM Capital
 Fremont Dept of Utilities
 Fugu Aowei Jianeng Coking-Electricity-Chemical Company
-Fugu Jinwantong Electric Power Company
 Fugu Xingmao Group
+Fuhua Gulei Petrochemical Co Ltd
 Fujian Energy Group
+Fujian Funeng Co., Ltd.
+Fujian Refining Factory
 Fujian Taisheng Industrial Company
 Fujian Zhongde Energy
-Furukawa
 Fushun Mining Group
 Fushun Xinya Power
 Future Power LLC
@@ -649,14 +600,12 @@ Gaoping Yuanye Coal Industry
 Gaotang County Xingke Soy Protein Food Science & Tech Co.
 Garuda Thermal Power Private Limited
 Gas Natural SDG
-Gayatree Associates
 Gayatri Projects
 Gazprom
 GCL Poly Energy Holdings
 GCM Resources
 GDF Suez
-GE Power
-Gecamines-Genl Carrieres Mines
+Gecamines
 Gecelca SAESP
 Geleximco Group
 Genco Power
@@ -669,66 +618,54 @@ Genesis Energy
 GenOn
 Gensa
 Genting Group
-Georgian Industrial Group
 GETEC Energie Holding GmbH
 GEW Köln AG
 Ghantoot Group
 Gimcheon Energy
 GIPCL
 Glencore
-Glendal Trading
-Glendale Trading
 Global Adviser
 Global Aluminium International
-Global Business Power
-Global Infrastructure Partners
 Global Power & Steel
 Global Power Synergy Public Company
 Global Powmin
 Global Yatırım Holding
 GMR Group
 Golden Valley Electric Association
-Goldman Sachs
 Gongzhuling Kaixuan Cogen Power Company
 Gongzhuling Shenglong Cogen Power Company
 Government of Dominican Republic
-Government of Malawi
 Government of Odisha
 Government of Sindh
 Government of Uttar Pradesh
-GPU
 Grand Haven Board of Power and Light
 Grand Island Utilities
 Grand River Dam Authority
 Grange Holdings
 Granite Shore Power
 Great Northern Power Development
-Great Plains Energy
 Great River Energy
 Green Valley Energy Ventures
 GreyStone Power
 Grupa Azoty
 Grupo Argos
-Grupo Energía de Bogotá
 Grupo Linda
 Grupo México
 Grupo Sniace
-GS E&R
+GS Holdings Corp
 GSD Holding
 GSECL
-GT Capital Holdings
 Guangdong Baolihua Group
 Guangdong East Sun Alumimumn Industrial Development
+Guangdong Guangxin Holdings Group
 Guangdong Guoyue Investment Group
 Guangdong Holdings
 Guangdong Humen Fumin Group
 Guangdong Jinma Tourism Group
 Guangdong KingSun Power Group
-Guangdong Panyu Meishan Sugar
 Guangdong Power Grid Corporation
 Guangdong Shaoguan Energy Group
 Guangdong Yudean Group
-Guangdong Zhongshan Power
 Guangxi Baise Development Investment Group
 Guangxi Baise Mining Group
 Guangxi Baise Power
@@ -738,16 +675,16 @@ Guangxi Guidong Power
 Guangxi Investment Group
 Guangxi Jinmeng Manganese Co
 Guangxi SASAC
+Guangxi Times Lithium Materials Co., Ltd.
 Guangxi Zhongji Electric Power Investment
 Guangzhou Development Group
-Guangzhou Development Industry Holdings
 Guangzhou Development Nansha Investment Management
 Guangzhou Hengyun Enterprises Group
 Guangzhou Meishan Property Management
-Guangzhou Pearl River Power
 Guangzhou Power
 Guangzhou Sanxin Holding
-Guangzhou Yuanchun Paper
+Guangzhou State-owned Development Holding Co., Ltd.
+Guangzhou Yuexiu Group Co., Ltd
 Guiyang Energy Group
 Guizhou Anshun Shiji Huarong Investment
 Guizhou Guangda United Investment
@@ -762,23 +699,21 @@ Guizhou Wanfeng Electric Power Co
 Gujarat Mineral Development Corporation
 Gujarat Power Corporation
 Gulf Energy
+Guodian Kangneng
 Guoxin Hongsheng Investment Company
 Gupta Group
 GVK
 H & WB Asia Pacific
 Habaş Group
-Haibei Coal Development
 Hakan Madencilik ve Elektrik Üretim Sanayi Ticaret
 Hamilton Municipal Utilities
 Han Seng Coal Mine
-Hancheng Black Cat Carbon
-Hancheng Mining Bureau
 Handan Construction & Investment Group
 Hangzhou Jinjiang Group
 Hanjo
 Hanju Corp
 Hanoi Industrial Construction and Investment
-Hanwha Group
+Hanwha Corporation
 Haoyu Materials Group
 Harbin Electric
 Hari Hareshwar Power Company
@@ -788,7 +723,6 @@ Hassan Thermal Power Limited
 Hastings Utilities
 Hattat Holding
 HBL Bank
-HC Enerji
 Heavy Water Board
 Hebei Chenlong Technical Development
 Hebei Construction & Investment Group
@@ -803,17 +737,14 @@ Helsingin Energia
 Helsinki City
 Henan Energy & Chemical Industry Group
 Henan Energy and Chemical Industry Group
-Henan Huangfu Power Plant
 Henan Huarong Energy Development
 Henan Investment Group
 Henan Jiuyu Longyuan Electric Power Development Group
 Henan Lihua Industry Development
 Henan Mengdian Group
-Henan Shengrui Investment & Management Co
 Henan Shenhuo Group
 Henan Tangtai Railway
 Henan Xinwang Group
-Henan Yingyang Power Plant
 Henan Zhongcheng Real Estate Development Group
 Henderson Power & Light
 Hengli Group
@@ -829,26 +760,23 @@ Heze Investment Development Holding
 Heze Merchants International Investment
 Hiang Seng Fibre Container
 Hibra Power
-Hindalco Industries
 Hindustan Powerprojects
 Hira Group
 Hiranmaye Energy
 Hiroshima Gas
 HNPCL
 Hoa Dau Son Limited Company
-Hoa Phat Group
 HOFOR
 Hohhot National Electric Power Company
 Hokkaido Electric Power
 Hokuriku Electric Power Company
 Hokuzai Transport
+Holcim Group
 Hongda Industrial
 Hongkong Hengfa Century
 Hoosier Energy Rural Electric Cooperative
 Hopewell Group
-Hornonitrianske bane Prievidza (HBP) (Hungary)
 HOS Powertech Sdn Bhd
-House of Habib
 HPGCL
 HPPCL
 HPPPL
@@ -868,6 +796,7 @@ Huantai County Power Plant
 Huasheng Jiangquan Group
 Hubco
 Hubei Energy Group
+Hubei Golden Phoenix Industry Co., Ltd.
 Hubei Hongyuan Power Engineering
 Hubei Xingfu Industry
 Hubei Yihua Chemical Industry
@@ -878,21 +807,18 @@ Hunan Development Group
 Hunan Shaoyang Zengshi Group
 Hunan Wuqiang Group
 Hunan Xiangtou International Investment
+Hunan Yingke Medical Technology Co., Ltd
 Hungarian Electricity Works (MVM)
 Hunton Energy
 Hydro
-Hydro Alumetal
 I Squared Capital
 Iberdrola
-IC Holding
 IC İbrahim Çeçen Investment Holding
-IC İÇTAŞ Enerji
 İÇDAŞ
 İDÇ Steel
 Idemitsu Kosan
 IDFC Projects
 IDI Infrastructures
-IDI Infrastructures F-Power
 Ihi
 IL&FS
 Ili Xintian Coal-Chemical Company
@@ -901,7 +827,6 @@ IMFA
 Ind-Barath Power
 Independence Power and Light
 India Power Corporation
-India Power Development Board
 Indiabulls Group
 Indian Farmers Fertilizer Cooperative
 Indian Integrated Energy Ltd
@@ -914,12 +839,10 @@ Indorama Corporation
 Indorama Ventures
 Indraprastha Power Generation
 Indu Group
-Inepar Energia
 Infraserve Gmbh & Co Hoechst
 Ingenio Madre Tierra
 Ingenio Magdalena (Magdalena Sugar Mill)
 Ingenio Palo Gordo
-Ingenio Palo Gordo Sa
 Ingenio Santa Ana (Santa Ana Sugar Mill)
 Inland Group
 Inner Mongolia Asset Management Bureau
@@ -927,33 +850,29 @@ Inner Mongolia Bayannur Langhua Property Development Co
 Inner Mongolia Dongyuan Technology Co
 Inner Mongolia Eerduosi Resourses Company Limited
 Inner Mongolia Energy Engineering
-Inner Mongolia Energy Generation & Investment Group
 Inner Mongolia Guangna Coal Industry
 Inner Mongolia Halun Energy
+Inner Mongolia Hengdong Energy Group Co
+Inner Mongolia Hongyuan Coal Group Co
 Inner Mongolia Huineng Coal Electricity Group
-Inner Mongolia Junzheng Energy
 Inner Mongolia Junzheng Energy & Chemical Group
-Inner Mongolia Lianyuan Cogen Power
 Inner Mongolia Mining Group
 Inner Mongolia Pingzhang Coal Industry
 Inner Mongolia Power Group
 Inner Mongolia Qinghua Group
 Inner Mongolia Urad Hengwang Heat & Electricity Generation
 Inner Mongolia Yellow River Group
+Inner Mongolia Yidong Investment Group
 Inner Mongolia Yidong Resources Group
 Inner Mongolia Yitai Group
 Inner Mongolia Yuanyuan Energy Co.
 Inner Mongolia Yuanyuan Energy Group
-Inner Mongolia Zhunda Power
-Integrys Energy
 Inter RAO
 InterEnergy Holdings
 Intergen
 Intermountain Power Agency
 International Paper
-International Power
 Intra Energy
-Intrao Penta
 IPCL
 İpekyolu Enerji
 IPGCL
@@ -968,7 +887,6 @@ Ismt Ltd
 ISO Tech Group
 Israel Electric Corporation
 ISS Global Mining
-Istroenergo Group
 Italian-Thai Development
 Itochu
 Itochu Enex
@@ -983,14 +901,13 @@ Jaiprakash Associates
 JAKS Resources
 Jamalco
 Janakuasa SDN BHD
-Japan Energy Partners
 Japan OJI Paper
 Jastrzebska Spolka Weglowa Sa
+Javni Holding Ljubljana
 Jawa Pos Group
 Jaya Thermal Power
 Jayaswal Neco Industries
 Jaypee Group
-Jcp Sturovo As
 JEA
 JFE Holdings
 JG Summit Holdings
@@ -1003,6 +920,7 @@ Jiangsu Coastal Highway Management
 Jiangsu Delong Nickel Industry Co
 Jiangsu Electric Power Development
 Jiangsu Energy Group
+Jiangsu Guoxin Corp. Ltd.
 Jiangsu Guoxin Investment Group
 Jiangsu Hengli Group
 Jiangsu Honghai Investment
@@ -1016,37 +934,36 @@ Jiangsu Shagang Group
 Jiangsu Suqian-Huai'an-Yancheng Highway Management
 Jiangsu Tianyu Energy Chemical Group
 Jiangsu Transportation Holding
+Jiangsu Yancheng Hengrun Equity Investment Partnership
 Jiangsu Yueda Group
+Jiangsu Zhongsheng Clean Energy Co., Ltd.
 Jiangxi Energy Group
 Jiangxi Provincial Investment Group
-Jiangxi Selon Industrial Co
 Jiangyin Cogen Power
 Jiangyin Electric Power Investment
 Jiangyin Maoyuan Investment
+Jianli Fengyuan City Investment Development Co., Ltd.
 Jiantao Chlor-Alkali
 Jiaozuo Mining Group
 Jilin Chemical Fibre Group
-Jilin Dongguan Power Plant
 Jilin Electric Power
-Jilin Haoyu Group & Xiexin Group
 Jilin Hongze Investment
 Jilin Yuguang Daling Cogen Company
 Jimah Energy Ventures
-Jinan Cogen
 Jinan Energy Investment
 Jinan Senyuan Holding Company
+Jinan Thermal Power Group Co., Ltd
 Jinbhuvish Energy (East)
 Jinbhuvish Power Generations
 Jincheng Anthracite Mining Group
 Jinchuan Group
 Jindal Group
-Jinghai State Asset Management Bureau
-Jingmei Group
 Jingmen City Construction Investment
+Jining Water Supply Group General Company
 Jinmei Group
 Jinneng Group
+Jinshiqi International Holdings Co., Ltd.
 Jinxin Construction Investment Company
-Jiulong Paper Industry Limited Company
 Jiuquan Iron & Steel Group
 Jixi Heating Supply
 Jiyuan City Investment
@@ -1054,30 +971,23 @@ Jiyuan Xingyuan Energy
 Jizhong Energy Group
 JK Organization
 Joban Joint Power
-Joban Kosan
-Joban Kyodo Power
 JP Elektroprivreda BiH
 JP Morgan Chase
 JSC Cherkasy Khimvolokno
-JSC Darnytska TETS
-Jsc Rao Energy System Of East
-JSC Severodonetsk CHP
 JSW Group
 Juhua Group
-JXTG Holdings
 Kailuan Group
 Kalyon Group
 Kamachi Group
 Kamertan Madencilik ve Elektrik Üretim
+Kansai Electric Power Company
 Kansas City Board of Public Utilities
 KAPCO
-Kapıcıoğlu Holding
 Kaptan Şirketler Group
 Karat Elektrik Üretim ve Ticaret
 Karataş Termik Üretim Santral Elektrik Madencilik Sanayi ve Ticaret
 Kardemir A.Ş.
 Karo Resources
-Kazakhenergo
 Kazakhmys
 Kazancı Holding
 KDB Infrastructure
@@ -1095,59 +1005,46 @@ Kibo Energy
 Kimberly-Clark
 Kipas Holding
 Kobe Steel
-Koç Holding
 Koch Industries
 Kohinoor Power (Pvt) Ltd
 Kolin Group
 Kompania Weglowa
-Komterm
 Konya Şeker
 Korea Midland Power
-Korea Zinc Co Ltd
 Korean South Eastern Power
 KORES
 Korla Asset Management
 Kosovo Energy Corporation
 KPCL
-Kraftwerk Mehrum GmbH
-Kraseco
 KSBG
 KSK Energy Ventures
 KU Thermal Power
-Kulak Group
 Kulczyk Holding
 Kumho Petrochemical
-Kumvest
-Kunshan Gaoxin Investment Company
 Kuqa County Asset Management
 Kureha
-Kushiro Coal Mine
 Kuyasa Mining
 KVK Energy & Infrastructure
 KWM (Kraftwerke Mainz/Wiesbaden AG)
 Kwong Fong Industries Group
 Kyaw Kyaw Phyo Company
 Kyushu Electric Power
-Lafarge
+Lafrica Resources
 Lahti Energia
 Laiwu Economy Development Investment
 Laixi Foreign Industrial Investment
 Lakeland Electric
 Lalbhai Group
-LAMA Group
 LANCO Group
-Lanexang Property and Power
 Lansing Board of Water & Light
 LANXESS
 Lao State Holding Enterprise
 Larsen & Toubro
 Latvenergo
-LCP Group
 Leader Universal Holdings
 Lecheng Group
 Lee & Man Paper
 Lenexis Energy
-Lenzing Ag
 LEPL
 LG Group
 Lianmei Quantum Holdings
@@ -1159,23 +1056,17 @@ Liaoning Energy Investment Group
 Liaoning Nanpiao Coal
 Liaotung Chemical Corp
 Liaoyang Chemical Fiber Co
-Liaoyuan Kaibo Cogen Power Company
-Liberty House Group
 Liberty Utilities
 Limak Holding
-Lineng Group
 Linfen Hexi Theremal Power Company
 Lingshi Deguangyi Investment Trade
 Lingshi Xinyuan Investment Trade
 Linkou Hailang Cogen Co.
 Linqing Deneng Biotech Company
 Linyi Investment Development
-Linyi Xincheng Jinluo Meat Manufactory Group
 Linyi Xincheng Jinluo Meat Products
 Liqin Investment Company
-Lnj Bhilwara Group
 Long Chen Paper Co.
-Long Van Limited Company
 Lotte Group
 Lower Colorado River Authority
 LS Power Group
@@ -1191,11 +1082,10 @@ Luohe City Construction Investment
 Luohe City Development Investment
 Luoyang Longyu Group
 Luoyang Zhongyou Power Co
+Lushang Health Industry Development Co., Ltd
 Luxi Chemical Group
-Luxin Group
 Luz de Atacama
 Luzhou Investment
-LYP Group
 Maanshan Iron and Steel Co
 MacPherson Oil
 Macquarie Group
@@ -1204,10 +1094,8 @@ Madison Gas & Electric
 Maeda Corporation
 Magamba Coal
 Magdalena Sugar
-Magna Resources
 Magnitogorsk Iron and Steel Works
 MAHAGENCO
-Mahanadi Coal Fields
 Maharashtra State
 Mahavir Global Coal Limited (MGCL)
 Mainova
@@ -1215,7 +1103,6 @@ Makomo Resources
 Mälarenergi
 Malaxmi Group
 Manitoba Hydro
-Manitowoc Public Utilities
 Manshi Group
 Mäntän Energia Oy
 Mantri Power
@@ -1229,11 +1116,9 @@ Marusumi Paper Co.
 Mauritius CT Power
 Maxim Power
 MAXpower Group
-Maytas
 Mayur Resources
 Mazda
 MCC Group
-MCHC
 Mchenga Coal Mines
 MCM Energy
 MDU Resources Group
@@ -1242,36 +1127,33 @@ Medco Energi Internasional
 Meenakshi Group
 Meghavaram Power
 Meghna Group
-Meikai Power
 Meiko Trans
-Melodeon Exports
 Mengtai Coal Power Group
 Merak Energi
 MERALCO
 Mesco Steel
 Metalcorp
 Metalloinvest
-Metsa Group
 MG Power Projects
 Mianchi County Finance Bureau
 Michigan South Central Power
-Miike Thermal Power Co
 Milhouse International
-MIM (Mariza Iztok Mining Company)
 Mimag Enerji
+Minaj Holdings Limited
 Mineralogy
 Ministry of Mineral Resources and Energy
 Minnkota Power Coop
 Mirach Energy
 Missouri Joint Municipal Electric Utility Commission
-Mitsubishi
+Mitsubishi Chemical
+Mitsubishi Corporation
+Mitsubishi Electric
+Mitsubishi Heavy Industries
+Mitsubishi Materials
 Mitsui
 Mmc Ajman
 MMC Corporation
-Modern Cement and Mining Company (Al Manaseer)
-Modern Karton
 Mogul Power
-Momentive
 Mondi Group
 Mongolia Ministry of Energy
 Monnet Group
@@ -1281,22 +1163,17 @@ MP Power Management Company
 MPPGCL
 MTAA Super
 Mudajaya Group
-Mudu Power Bureau
 Mughal Group Industries
-Mulilo Group
 Muscatine Power & Water
 MVV Energie
 My Home Power Ltd.
-Myanmar Economic Corporation
-Myanmar Ministry of Electric Power
 Myllykoski Corp
-Myojo Cement
 N.S. Associates
+Naftogaz
 Nagarjuna Construction Company
 Nagpur Municipal Corporation
 Nakayama Steel Works
 Nakoso IGCC Management
-Naksan Holding
 NALCO
 Namal Elektrik Üretim
 Namane Group
@@ -1316,7 +1193,6 @@ Nantong Xinyuan Investment Development
 Nanyang Gaoxin District Investment
 Nanyang Hengsheng Energy Development
 Nanyang Yongsheng Investment
-Nanyu Corp.
 Naren Enerji Elektrik Üretim A.ş.
 Nareva Holding
 National Development Corporation
@@ -1330,6 +1206,7 @@ Nava Bharat Ventures
 NB Power
 NC Energy
 NC Power Holdings
+NCC Limited
 Ncondezi Energy
 Nebras Power QSC
 Nebraska Public Power District
@@ -1340,7 +1217,6 @@ New Asia Mining Group
 New Colombia Resources
 New World Development
 New Zone India
-Newcom
 Newmont Mining Corporation
 NextEra Energy
 Neyveli Lignite Corporation
@@ -1348,14 +1224,13 @@ NGLE Pushan Power
 NHDC Limited
 NHPC
 Nickel Mines Limited
-Nigeria Coal Projects
 Nihon Kaisui
 Nine Dragons Paper Holdings
 Ningbo Development Investment Group
 Ningbo Electric Power Development Company
 Ningbo Hesheng Group
 Ningbo Lygend
-"Ningxi Dadi Circular Development Co, Ltd"
+Ningxi Dadi Circular Development Co, Ltd
 Ningxia Baofeng Energy Group
 Ningxia Baota Group
 Ningxia Electric Power Investment
@@ -1370,53 +1245,45 @@ Nippon Paper
 Nippon Steel
 Nishat Group
 NiSource
-Nisshin Shoji
 Nitin Thermal Power
 NLC India
 NMDC
 NMDC Limited
-Noble Group
 Nong'an Shengde Heating Company
-Nongsanshi Power Company
-Nongyishi Electric Power Company
+Nonghyup Bank
 NORINCO
 North American Power Group
-NorthEast China Electric Power
 Northern Illinois Municipal Power Agency
 Northern Star Generation
-Northwest China Electric Power
 NorthWestern Energy
 NRG Energy
 NSL Group
 NTPC
 NuCoastal Power Corporation
 Nurol Enerji Üretim
-Nykomb Synergetics
 Oba Yatırım A.Ş.
-"Oceanwide Holdings Co., Ltd."
+Oceanwide Holdings Co., Ltd.
+OCI
 Odaş Enerji
 Off Routes
 OGE Energy
 Oji Group
 OJSC Barki Tojik
 Okinawa Electric Power
-Oklahoma Gas & Electric
 Old Dominion Electric Coop
 Olympic Group
+Olympus Power
 Omaha Public Power District
 Omnicane Thermal Energy Operations La Baraque
 Omnicane Thermal Energy Operations Saint-Aubin
 ONA Energy
 One Nation Energy
 ONEE
-Onesteel
 Onexim Group
 Ontario Power Generation
 OOO UC Siberian Generating Company Group
 OPG Power Ventures
-Opus Global
 Oracle Coalfields
-Orascom Construction
 Ordabasy Corporation
 Ordos Junzheng Energy & Chemistry Co
 Ordos Share Holding Group
@@ -1428,8 +1295,6 @@ Orion Pacific Prime Energy
 Orix Corporation
 Orlando Utilities Commission
 Ørsted A/S
-Osaki CoolGen Corp.
-Ostrovská teplárenská
 Oswal Chemical And Fertiliser
 Other
 Ottana Energia
@@ -1448,13 +1313,12 @@ Pantaleón Group
 Panzhihua Iron & Steel
 Papatya Elektrik Üretim
 Parekh Aluminex
-Pargas Kalksberg Ab
+Park Holding A.Ş.
 PASAR
 Pataula EMC
 Patel Energy
 Patni Energy
 Patni Power Projects
-Pcc Rokita Sa
 PCKL
 PDVSA
 Peabody Energy
@@ -1466,10 +1330,8 @@ Penna Group
 PER Lusulu Power
 Perennial Power
 Permak Group
-PetroChina
 Petroleum Trading Lao Public Company Limited
 Petrovietnam
-Petrovis
 PGE
 PGNiG
 Philippine National Oil Company
@@ -1477,17 +1339,14 @@ Phinma Group
 Pingquan Yangshuling Mining
 Pinnacle West Capital
 Pitanes Elektrik
-Pitanes Elektrik Üretim A.ş.
 Pixelle Specialty Solutions
 Pizhou Power Generation
 PKN Orlen S.A.
 Platte River Power Authority
-Plzeňská Teplárenská
 PNM Resources
 PNOC
 Pohjolan Voima
 Polat Elektrik
-Polat Madencilik
 Polenergia
 Polish Power
 Południowy Koncern Energetyczny
@@ -1525,13 +1384,11 @@ PT Cemindo Gemilang
 PT Cikarang Listrindo
 PT Dian Swastatika Sentosa Tbk
 PT Gunung Gahapi
-PT Halmahera Persada Lygend
 PT Indocement
 PT Indonesia Power
 PT Intraco Penta
 PT Jawa Energy
 Pt Panasia Indosyntec Tbk
-PT Pembangkitan Jawa Bali
 PT Pembangunan Kota Batam
 PT Pembangunan Perumahan
 PT Petra Unggul Sejahtera
@@ -1541,29 +1398,28 @@ PT Puncakjaya Power
 PT Satya Abadi Semesta
 PT Semen Indonesia
 PT Star Vyobros
-PT Sugico Graha
 PT Sumberdaya Sewatama
 PT Timah
 PT Toba Bara Sejahtra Tbk
 PT Truba Alam Manunggal Engineering
-PT Walsin Nickel Industrial Indonesia
-PT Youshan Nickel
+PT Wanxiang Steel Indonesia
 PT. MahkotaKarya Utama
 PTCL
-PTT
 Public Power Corp.
 Puget Sound Energy
 Pulp Mill Holding Gmbh
-Punjab Power Development Company Limited
 Punjab state
 Purdue University
 Puxian Hongyuan Coal Group
 Puyang Yupu Asset Management
+Q Power LLC
 Qiandongnan Qianshui Electric Power
 Qiannan Investment
 Qingdao Antaixin Group
 Qingdao Guoxin Industry
-Qingdao Hengshun Zhongsheng Group
+Qingdao Urban Construction Investment (Group) Co., Ltd.
+Qingdao West Coast Public Utility Group Energy Heating Co., Ltd.
+Qingdao Xiyuan Holdings Co., Ltd.
 Qinghai Mingde Energy Logistics Group
 Qinghai Ningbei Electricity Generation Company
 Qinghai Provincial Investment Group
@@ -1573,7 +1429,6 @@ Qinglong County Industrial Investment Co.
 Qingshuihe Cogen Project
 Qingyuan Yanhu Investment
 Qixing Group
-Quantum Group
 Quantum Utility Generation
 R.A. Activitati Nucleare
 Rajasthan RV Utpadan Nigam
@@ -1585,10 +1440,10 @@ RCR Tomlinson
 Red Hawk Energy
 Redbank Energy
 Regal Energy
-Rei Agro
 Reliable Thermal Power
 Reliance Group
-Rengo Group
+Reliance Industries Limited
+Rengo Co.
 Renova Group
 Renxing Group
 Repower
@@ -1600,25 +1455,23 @@ Ridder TETS AO
 Rio Tinto
 RioZim
 Riverstone Holdings
-"Rizhao Economic and Technological Development Zone Ruida Urban Development Co., Ltd."
-"Rizhao Linghai Hotel Co., Ltd."
-"Rizhao Linghai Sugar Industry Co., Ltd."
+Rizhao Economic and Technological Development Zone Ruida Urban Development Co., Ltd.
+Rizhao Linghai Hotel Co., Ltd.
+Rizhao Linghai Sugar Industry Co., Ltd.
 Rizhao Shengyu Trade Company
-"Rizhao Zhengyuan Chemical Machinery Manufacturing Co., Ltd."
+Rizhao Zhengyuan Chemical Machinery Manufacturing Co., Ltd.
 RJ Reynolds Tobacco
 Rk Powergen
 RMU Banovici
 RMU Kamengrad
 Robinson Power Company
 Rochester Public Utilities
-Rock-Tenn
 Rockland Capital
 Rodamas
 Rongxin Group
-Rostec
+Rosatom
 Royal Group
 RPG Group
-Rungta Group
 Rural Power Company Limited
 Rusal
 RusHydro
@@ -1626,15 +1479,10 @@ Russian Railways
 RWE
 S Alam Group
 Sabah Electricity
-Sabancı Holding
-Saemangeum Development Agency
 Saha-Union Plc
 Sahara India Power Corporation
-Sahaviriya Steel Industries
 Saideli Jiangxi Chemical Fiber
-Salcon Group
 Salt River Project
-Samruk Energo
 Samruk-Kazyna
 Samsung
 Samtan
@@ -1643,7 +1491,6 @@ Sanko Holding
 Sanmen County Technological Inovation Investment Company
 Sanmenxia Investment
 Santee Cooper
-Sappi
 Sarawak Energy
 Sarda Energy & Minerals Ltd
 Sargas
@@ -1654,8 +1501,6 @@ Sasol
 SC Electrocentrale Oradea
 SCANA
 SCM Holdings
-Scottish and Southern Energy
-Scottish Power
 SCS Energy
 SDEPCI (Shandong Electric Power Engineering Consulting Institute)
 SDIC
@@ -1664,15 +1509,16 @@ Sembawang Group
 Sembcorp Industries
 Seminole Electric Coop
 Sena Kalyan Sangstha
+Senegalese government
+SENELEC
 SEP Shandong Energy Ventures
 SEPC Power
-SEPCO Electric Power Construction Corporation
 SEPCO III
 Serbian Oil Company (NIS)
 Servis Group
 Sev.en Energy AG
-Severní Energetická
 Sew Infrastructure
+SGC Energy
 SGCC
 Shaan County Thermal Power Company
 Shaanxi Coal and Chemical Industry Group
@@ -1681,10 +1527,8 @@ Shaanxi Electric Power Group
 Shaanxi Fugu Energy Development Company
 Shaanxi Haotian Group
 Shaanxi Hengyuan Coal & Electricity Group
+Shaanxi Hengyuan Investment Group
 Shaanxi Honghao Energy Group
-Shaanxi Hydropower Development
-Shaanxi Jitai Investment Group
-Shaanxi Laide Group
 Shaanxi Non-ferrous Metals Holding Group
 Shaanxi Provincial Investment Group
 Shaanxi Yahua Coal Electricity Group
@@ -1693,9 +1537,8 @@ Shaanxi Youser Group
 Shaanxi Yulin Energy Group
 Shaanxi Yulin Kaiyue Coal Chemical Company
 Shalivahana Power Corp
-Shandong Bohui Group
+Shan Yoma Nagar
 Shandong Boshan Enterprise Group
-Shandong Chenming Paper Holdings
 Shandong Chuangxin Group
 Shandong Dadi Salt Chemical Group
 Shandong Development Investment Holding Group
@@ -1703,7 +1546,7 @@ Shandong Dongming Petrochemistry
 Shandong Electric Power Construction Corporation
 Shandong Energy Group
 Shandong Fenghui Investment
-Shandong Fengxiang Group
+Shandong Guangfu Group Co., Ltd
 Shandong Haihua Group
 Shandong Hengshun Heat Supply Co
 Shandong Hongliyuan Co
@@ -1712,7 +1555,6 @@ Shandong Huatai Paper Group
 Shandong Huipu Gangue Electric Power Stock Corporation
 Shandong International Trust
 Shandong Iron and Steel Group
-Shandong Jikuang Group
 Shandong Jining Mining Group
 Shandong Jinling Group
 Shandong Linglong Group
@@ -1720,33 +1562,27 @@ Shandong Lubei Enterprise Group
 Shandong Port Public Heat Supply Co
 Shandong Province Prison Administration
 Shandong Qingquan Group
-"Shandong Qitong Investment Co., Ltd."
+Shandong Qitong Investment Co., Ltd.
 Shandong Ruyi Technology Group
 Shandong Senyuan Heavy Industry Group
 Shandong Shifeng Group
 Shandong Shiji Yangguang Paper Group
 Shandong Sunshine Holdings Group
-Shandong Tianyuan Thermoelectric
+Shandong Taishan Steel Group Co., Ltd.
 Shandong Tianze Industry Group
-Shandong Wanjie Gaoke
 Shandong Weiqiao Group
 Shandong Xingguang Sugar Industrial Co
 Shandong Xinhai Tech Co
 Shandong Xinlai Soy Beans BioTech Co
 Shandong Xinlong Group
 Shandong Yuhuang Chemical Co
-Shandong Zibo Fushan Industry Group
-Shanghai Baosteel Group
-Shanghai Decent Investment Group
 Shanghai Electric Group
 Shanghai Energiser Company
-Shanghai Forward High Tech
-Shanghai Taison Pulp and Paper Group
+Shanghai Huayi (Group) Company
 Shantou Power Investment Corporation
 Shanwei Asset Management
 Shanxi Ancheng Technical Development Company
 Shanxi Aoda Electric Power Development Company
-Shanxi Binchang Mining Group
 Shanxi Boyu Coal & Electricity Development
 Shanxi Coal Import & Export Group
 Shanxi Coking Coal Group
@@ -1754,7 +1590,6 @@ Shanxi Construction Engineering Group
 Shanxi Dubao New Energy Group
 Shanxi Guanlü Group
 Shanxi Haizi Coking
-Shanxi Huarui Coal Industry Company
 Shanxi International Electricity Group
 Shanxi International Energy Group
 Shanxi Jincheng Chunguang Cogen Power Co
@@ -1762,7 +1597,6 @@ Shanxi Jincheng Coal Chemical Development Company
 Shanxi Jinhui Energy Group
 Shanxi Jinliu Energy
 Shanxi Jinyu Coal Industry Group
-Shanxi Jitai Investment Group
 Shanxi Lingshi Tianju Xinyuan Coal Industry
 Shanxi Luxin Energy Group
 Shanxi Meijin Group
@@ -1771,7 +1605,6 @@ Shanxi Wenfeng Coking Technical Company
 Shanxi Xinlei Energy Group
 Shanxi Xinyou Group
 Shanxi Xinyou Investment Group
-Shanxi Xinzhou Guangyu
 Shanxi Yinhe Group
 Shanxi Yuansheng Electric Power
 Shanxi Zhenxing Group
@@ -1781,16 +1614,11 @@ Shaoguan Public Asset Management
 Shaoxing Shaoneng Electric Power Investment Company
 Shaoyang Economic Construction Investment
 Shapoorji Pallonji Energy
-Shaxi Xinyou Investment Group
 Shenergy Group
-Shenghong Sinopec Lianyungang
 Shengli Oil Field Daming Group
 Shenmu Derun Electricity Generation
 Shenmu Electrichemical Company
-Shenmu Hengdong Electric Power
-Shenmu Tengyuan Coal Chemical Company
-Shenmu Zhugaita Resources
-Shenneng
+Shenmu Financial Holding Group Co., Ltd.
 Shente China Investment
 Shenwan Hongyuan Securities
 Shenyang Coal Industry Group
@@ -1799,11 +1627,9 @@ Shenzhen Guangju Energy
 Shenzhen Haigangcheng Industry Development
 Shenzhen Yihe Real Estate
 Shenzhou Yuanyuan Investment Group
-Sherritt International
 Sheshadri Power & Infrastructure
 Shihezi Jinhui Energy Investment
 Shihezi Jinlong Energy Industrial Chain
-Shihezi State-owned Assets Management Group Company
 Shijiazhuang City Energy Investment
 Shikoku Electric Power
 Shine Energy
@@ -1814,26 +1640,21 @@ Shouguang Jincai Asset Management
 Shouguang Jvneng Cogen Development
 Shree Cement
 Shree Renuka Sugars
-Shree Virangana Steels
-Shri Ramrupai Balaji Steels
 Shuangxin Energy Group
 Shuangyashan Asset Management
 Shuicheng Coal Mining Group
-Shuicheng Mining
 Shuifa Group
 Shulan Hongyuan Waste Coal Cogen Power Company
 Shumba Energy
 Shyam Group
 Siam Cement (SGC)
 Sibanye Gold
-Sibeko
 Sichuan Beineng
 Sichuan Coal Mine Group
 Sichuan Hongda Group
 Sichuan Investment Group
 Sichuan No 3 Power Construction Company
 Sichuan Qiya Aluminium Industry Group
-Sichuan Qiya Aluminum Industry Group
 Sichuan Shisheng Investment Group
 Sichuan Western Energy
 Sichuan Yongxiang Company
@@ -1844,9 +1665,9 @@ Sigma Infrarop Ltd
 Sikeston Board of Municipal Utilities
 SIMEC Group
 Sinar Mas Group
+Sinar Mas Paper (China) Investment
 Sinarmas Pulp & Paper
 Sindh Engro Coal Mining Company
-Singa Energy Solutions (Thailand)
 Singapore Mainland Adversary Company
 Singapore United Energy
 Sinochem Group
@@ -1858,7 +1679,6 @@ Sintex Group
 SINTEZ Group
 Sitara Group
 Sithe Global
-SK Construction
 SK Group
 SKIL Group
 SKS Ispat & Power
@@ -1867,16 +1687,14 @@ Sloane Energy Group
 SMC Global Power Holdings
 Smith Cogeneration
 Snapping Shoals EMC
-SNC-Lavalin
 Snedai Group
 Sniace Sa
 Socar Group
 Sojitz
 Sokolovská Uhelná
 Solvay
-Soma Energy Park
 Soma Holding
-Soma Kyodo Jikahatsu Kaihatsu godo kaisha
+Soma Kyodo Power
 Songji Group 嵩基集团
 Sources California Energy
 South Asia Energy Investment Company
@@ -1887,7 +1705,6 @@ Southern Company
 Southern Cross Group
 Southern Illinois Power Coop
 Southwest Energy and Mineral
-Sovetsk Pulp and Paper Mill
 Soyak Holding
 Sparkling Commodities
 SPC Power
@@ -1895,13 +1712,11 @@ SPGL
 SPI Group
 Spice Energy Group
 SPML
-Spolka Energetyczna Jastrzebie
 SPR Infrastructure India
 Springfield City Utilities
 Springfield City Water & Light
 Sravanthi Group
 SREI Infra
-SRI Energy
 Sri Jagannath Steel
 Srirampur Coalfields
 SSE
@@ -1915,26 +1730,21 @@ Stadtwerke Flensburg
 Stadtwerke Hannover
 Stadtwerke Kiel Ag
 Stadtwerke Köln GmbH (100% City of Cologne)
-Stadtwerke Mainz (100% City of Mainz)
 Stadtwerke München
-Standard Bank of South Africa
 Stanwell
 Starwood Energy Group
 State of Arizona
 State Oil Company of Azerbaijan (SOCAR)
 State Power Investment Corporation
-STAWAG
+State Power Investment Group GCL Binhai Power Generation Co., Ltd.
 STEAG
 Steel Authority of India
 Steel Exchange India
 STG Development Group
 Stora Enso
-Stx Energy Co Ltd
-Suba Enerji Üretim
 Sudama Mahavir Power
 Suedwestdeutsche Stromhandels GmbH
 SUEK
-Sugar Investment Trust
 Suluova Enerji
 Sumberenergi
 Sumitomo
@@ -1951,6 +1761,7 @@ Surana Industries Limited
 Suryachakra Group
 Suryadev Alloys & Power
 Suxiaoming
+Suzhou Ascend Pulp & Paper Co., Ltd.
 Suzhou Trust Company
 Sverdlovsk Energogazovaya
 Svilosa
@@ -1961,7 +1772,6 @@ T Plus Group
 Tacheng Asset Investment Management
 Taekwang Group
 Taiheiyo Cement
-Taiheiyo Kouhatsu Inc.
 Taiheyo Cement
 Taipower
 Taishan Gypsum Company
@@ -1974,7 +1784,6 @@ Tan Tao Group
 TANGEDCO
 Tangshan Construction Investment
 Tangshan Sanyou Group
-Taonan Cogen Power Company
 TAQA
 Taşyapı Group
 Tata Group
@@ -1982,7 +1791,7 @@ Tauron Group
 tbd
 TBEA
 TCC Group
-Tebian Electric Apparatus
+Technova LLC
 TECO Energy
 Teknotes
 Teko
@@ -1992,29 +1801,22 @@ Tengri Holding
 Tennessee Valley Authority
 Tenughat Vidyut Nigam Ltd
 TEPCO
-Teplárna České Budějovice
-Teplarny Brno As
-Tereos
 Termica SA Suceava
 Termoelectrarna Sostanj (TES)
 Termoeléctrica de Benga
 Termoelectrica SA
 Terra Mauricia Ltd.
-Terragen Ltd
 Texas Municipal Power Agency
 Texhong Group
 Teyo Yatırım ve Dış Ticaret A.Ş.
 Thai Kraft Paper
-Thai Samart
 Thal Limited
 Than Phyo Thu Mining
-Thermo Color Bt
 Tiancheng Chemical Industry
 Tianjin Binhai Investment Group
 Tianjin Changlu Hangu Salt Field Company
 Tianjin Energy Investment Group
 Tianjin Jinneng Investment Company
-Tianjin Jinsheng Power Station
 Tianjin Shanghua New Energy Company
 Tianjin Taida Investment Holding
 Tianlong Mining
@@ -2024,10 +1826,8 @@ Tinjin Gas Group
 TMSF
 TNB
 Toba Bara
-Tobe Corp.
-Tohigh Holding
+Toesca Infraestructura II
 Tohoku Electric Power
-Tokai Kyodo Electric Power
 Tokson Asset Investment Management
 Tokuyama
 Tokyo Century Corporation
@@ -2035,7 +1835,7 @@ Tokyo Gas
 Tondu
 Tonen General Sekiyu
 Tongliao Asset Management
-"Tongyu Heavy Industry Co., Ltd."
+Tongyu Heavy Industry Co., Ltd.
 TOO Karaganda Energy Center
 Toplofikacia Sliven EAD
 Toplofikatsiya Ruse EAD
@@ -2045,13 +1845,10 @@ Torrent Power
 Toshiba
 Tosoh
 Tosyalı Holding
-Total
 Toyo Engineering
 Toyo Ink Group
-Toyo Soda Manufacturing
 Toyota Group
 TPI Polene
-Tractebel
 Transalloys
 TransAlta
 Tri-State G&T Association
@@ -2066,22 +1863,18 @@ TSME
 Tulsyan NEC Ltd
 Tun Thwin Mining
 Tunas Enerji Elektrik Üretim A.Ş.
-Turkish Coal Enterprise
 Turku Energia
-Turquoise Hill Resources
 TVO
 U.S. Department of Energy
 U.S. Steel
 Ube Industries
 UC Rusal
 Ugi Corp
-Ulsan Petrochemical Service
 Uniper
-Unipetrol
 Unitech Machines
+United Energy Corporation
 United Laboratories Group
 United Pulp & Paper
-United Refineries Botswana
 Universal Crescent Power
 Universal Success Enterprise Limited
 Universitat Freiburg
@@ -2089,19 +1882,16 @@ UPM
 UPPCL
 UPRVUNL
 Upson EMC
-Upstate New York Power Producers
 Ural Mining and Metallurgical Company (UMMC)
-Urumuqi Huanpeng Co Ltd.
+USA No.1 China Power Corporate
 Usha Martin Industries
 Uttam Galva Steels Ltd
-Uttar Pradesh Rajya Vidyut
 Uzbekenergo
 Vakkal Energy
 Vale
 Vandanaa Group
 Vantaa City
 Vantage Company
-Vardham Group
 Vaskiluodon Voima
 Vattenfall
 Vectren
@@ -2125,15 +1915,13 @@ Visaka Thermal Power
 Vistra
 Vivant Corp.
 Volkswagen
-Vologdaenergo
 Volta River Authority
 VSF Projects
 Wabash Valley Power Association
-WAKGROUP
 Walsin Lihwa
 Wanbei Coal-Electricity Group
-Wanergy Group
 Wanhua Chemical Group
+Wanhua Industrial Group
 Wanji Holding Group
 Wantong Haixin holding Co Ltd.
 Wanxi Electricity Generation
@@ -2142,22 +1930,19 @@ Waste Management Inc
 Waterberg Coal
 WBPDCL
 WEC Energy Group
-WEG S.A.
 Weifang Shengtai Pharmaceutical Company
 Weihai Asset Management
 Weihai Cogen Power Group
 Weihai Electric Power Development
 Weihai Haoyang Group
 Weihua Group
-Weiqiao Textile
-Weiqu Energy Investments
 Weirong Investment
 Wellington Development
 Welspun Group
 Wenergy Group
 Wenzhou Electric Power Investment Company
 Wenzhou Industry Investment Group
-Westar Energy
+West Africa Energy
 Western Coal and Energy Company
 Western Farmers Elec Coop
 Westgen
@@ -2171,30 +1956,23 @@ Wolverine Power Cooperative
 WPS Power Development
 Wren House
 Wuchang Tianbao Heating Supply Co
-Wuhai City
-Wuhan Boiler Group
-Wuhan East Lake High Technology Group
-Wuhan Gedian Chemical Corp
 Wuhan Iron & Steel
 Wuhan Kaidi Power Investment
 Wuppertaler Stadtwerke
 Wuxi Huaguang Boiler
 Wuxi Local Electric Power
-Wuyang Iron and Steel Co
 Wyandotte Muni Services
 Xcel Energy
 Xi'an Jinxuan Investment Management
-Xi'an Xijiao Heating Co
 Xiamen Jinyuan Industrial Development
 Xiamen Luneng Power
 Xiamen Xiangyu Group
 Xiamen Xinxuneng Heating Supply
 Xianghuan Mine Group
+Xianglu Dragon Group
 Xiangshan Dongfang Energy Investment Company
 Xiangyang Energy Group
 Xianyang Financial Holding Group
-Xiexin Group
-Xiexin Power
 Xilingol Asset Management
 Xinbi Group
 Xinda Construction Investment Development
@@ -2211,21 +1989,19 @@ Xinjiang Electric Power Design Institute
 Xinjiang Energy
 Xinjiang Esmill Iron & Steel
 Xinjiang Guanghui Industry Investment Group
-Xinjiang Ili Nangang Investment Co
 Xinjiang Ili Nangang Investment Co. Ltd.
-Xinjiang Jingheyuan New Material Company
-Xinjiang Jinlong Power
 Xinjiang Keda Construction Group
 Xinjiang Production and Construction Corps
 Xinjiang Qianhai Group
 Xinjiang State Asset Management Group
 Xinjiang Tianfu Group
-Xinjiang Tianshan Power
 Xinjiang Tianye Group
 Xinjiang Zhongtai Chemical Company
 Xinjinag Xinhua Hydropower Investment
 Xinjing Xinyu Hydropower Construction Development
 Xinma Cogen Group
+Xintai Huizhong Trade Co., Ltd.
+Xinwen Mining Group Co., Ltd.
 Xinxiang Investment Group
 Xinxing Ductile Pipe Group
 Xishui County Asset Management
@@ -2239,10 +2015,10 @@ Xuzhou Mining Group
 Xvji Group
 Yacimientos Carboníferos de Río Turbio
 Yalin Enerji Sanayi A.Ş.
+Yancheng National Energy Investment Co., Ltd.
 Yaneng United Development Co
 Yang Quan Coal Industry Group
 Yanggu Senquan Thermal Power Co
-Yanggu Xiangguang Copper Industry
 Yangquan Asset Management Investment
 Yangquan Coal Industry Group
 Yangzhou Yangzi River Investment Development Group
@@ -2254,10 +2030,8 @@ Yaojie Coal Electricity Group
 Yenidere Termik Enerji
 Yesildag Enerji Proje Insaat A.Ş.
 Yfy Group
-Yi Coal Mine Group
 Yibin City Investment
 Yibin Tianyuan Group
-Yichang Yihua Pacific Cogen
 Yidian Holding Group
 Yili Resource Group
 Yima Mine Group
@@ -2271,8 +2045,7 @@ Yongtai Group
 YTL Corporation
 Yuanda Group
 Yuanhao Investment
-"Yucheng Zhongyi Urban and Rural Construction Investment Co., Ltd."
-Yudean Group
+Yucheng Zhongyi Urban and Rural Construction Investment Co., Ltd.
 Yueyang City Construction Investment Group
 Yueyang Huihua Investment Development
 Yufeng Industrial Group
@@ -2285,26 +2058,20 @@ Yulin Yuyang District Energy Investment Company
 Yuncheng Thermal Company
 Yunfu Yunda Investment Holding
 Yunnan Coal Chemical Group
-Yunnan Dali Xiangyun Feilong Company
 Yunnan Dianneng Group
-Yunnan Dongyuan Coal Power
 Yunnan Energy investment Group
 Yunnan Linkun Investment Group
 Yunnan Nanlin Group
 Yunnan Xiaolongtan Mining Bureau
 Yunnan Yaorong Electric Power
-Yuntianhua Group
 Yurginsky Machinery
 Yutian Chunyu Cogen Power Company
 Yuxia ZhongXin Coking Company
-Zak Koksownicze Powstancow
 Zakłady Azotowe Kędzierzyn
-Zaklady Przetworcze Siarki
-Zaklady Wlokien Chemicznych Sa
+Zambezi Gas and Coal Mine
 ZAO Novorostovskaya GRES
 Zaozhuang Mining Group
 Zaozhuang Nanjiao Cogen Power Co.
-Železiarne Podbrezová
 ZEPAK
 ZeroGen
 ZESA Holdings
@@ -2315,7 +2082,7 @@ Zhangqiu Asset Management
 Zhanjiang Tengsheng Asset Managment
 Zhaoyuan Xinmao Mining Machinery
 Zhejiang Electric Power Construction
-Zhejiang Huayou Cobalt Co.
+Zhejiang Huajun Investment Co., Ltd.
 Zhejiang Jiahua Industrial Park Investment & Development Company
 Zhejiang Jindun Holding Group Company
 Zhejiang Materials Industry Co
@@ -2324,20 +2091,15 @@ Zhenfeng County Power Investment Co.
 Zhengzhou Taixiang Cogen Power Co.
 Zhengzhou Zhengdong New District
 Zhenshi Holding Group
-Zhijin Biyun Energy Co.
 Zhonglongjian Power Construction
 Zhongmai Investment Group
 Zhongmu Company
-Zhongtai Chemical
 Zhongyu Guoxin Energy
 Zhouji Energy
-Zhoukou Longda Electric Power Co
 Zhoushan Ocean General Development & Investment Company
 Zhuhai Electric Power Development Group
 Zhumadian Investment
-Zhuozi County Energy Construction Investment Group
 Zhuzhou Asset Investment Holding Group
-Zibo Cogen Power Group
 Zibo Hongda Thermal Power
 Zibo Linzi Asset Management
 Zorlu Group
