@@ -53,7 +53,7 @@ CONFIG.attributes = {
   'chinese_name': {name: 'Chinese name'},
   'plant': {name: 'Plant'},
   'url': {name: 'Wiki page'},
-  'sponsor': {name: 'Sponsor'},
+  // 'sponsor': {name: 'Sponsor'}, no longer in the data 7/202200
   'parent': {name: 'Parent'},
   'capacity': {name: 'Capacity (MW)'},
   'status': {name: 'Status'},
@@ -584,6 +584,7 @@ function initTable() {
     obj['title'] = value.name;
     colnames.push(obj);
   });
+
   // initialize and keep a reference to the DataTable
   CONFIG.table = $('#table-content table').DataTable({
     data           : [],
@@ -826,7 +827,7 @@ function updateClusters(data, fitbounds) {
     var statusId = CONFIG.status_types[status]['id'];
     var cssClass = `status${statusId + 1}`;
     var marker = new PruneCluster.Marker(parseFloat(feature.lat), parseFloat(feature.lng), {
-      title: feature.unit,
+      title: feature.plant,
       icon: L.divIcon({
           className: 'circle-div ' + cssClass, // Specify a class name we can refer to in CSS.
           iconSize: [15, 15] // Set the marker width and height
