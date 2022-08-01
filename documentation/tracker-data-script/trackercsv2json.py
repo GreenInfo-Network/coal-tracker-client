@@ -22,7 +22,7 @@ field_lookup = {
     'unit': 'unit',
     'plant': 'plant',
     'chinese name': 'chinese_name',
-    'sponsor': 'sponsor',
+    'owner': 'owner',
     'parent': 'parent',
     'capacity (mw)': 'capacity',
     'status': 'status',

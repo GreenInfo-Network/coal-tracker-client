@@ -53,7 +53,7 @@ CONFIG.attributes = {
   'chinese_name': {name: 'Chinese name'},
   'plant': {name: 'Plant'},
   'url': {name: 'Wiki page'},
-  // 'sponsor': {name: 'Sponsor'}, no longer in the data 7/202200
+  'owner': {name: 'Owner'}, 
   'parent': {name: 'Parent'},
   'capacity': {name: 'Capacity (MW)'},
   'status': {name: 'Status'},
