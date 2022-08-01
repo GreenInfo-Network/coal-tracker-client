@@ -90,5 +90,5 @@ for index, row in enumerate(reader):
 json.dump(output, jsonfile)
 
 
-print('Warning: The following fields could not be found: ' + ', '.join(missing_fields))
+print('Warning: The following extra fields were skipped in the output: ' + ', '.join(missing_fields))
 print('All done!')
