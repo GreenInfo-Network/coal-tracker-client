@@ -10,7 +10,7 @@ The app is hosted on GH pages and the source is embedded on this page: https://g
 ## Data
 
 #### Companies
-The client provides a hard-coded list of companies, which we use to populate "company search". To update, simply save the list as `data/companies.txt`. Additional details: `documentation\update-companies-list.md`
+See initDataFormat().
 
 #### Trackers
 The coal plants themselves are managed by the client in XLS. Export to CSV, and then run it through this script `documentation/tracker-data-script/trackers2json.py` to generate the data in `json` format. When complete, replace `data/trackers.json` with the new file. More information: `documentation\tracker_data_update.md`
