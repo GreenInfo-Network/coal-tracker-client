@@ -103,7 +103,7 @@ CONFIG.markercluster_colors = Object.keys(CONFIG.status_types).map(function(v) {
 CONFIG.search_categories = {
   'all': ['unit', 'plant', 'parent', 'region', 'country', 'subnational', 'year'],
   'unit': ['unit', 'plant'],
-  'parent': ['parent'],
+  'parent': ['owner','parent'],
   'location': ['region', 'country', 'subnational'],
   'year': ['year'],
 }
@@ -122,7 +122,8 @@ CONFIG.search_placeholder = {
 $(document).ready(function () {
   // data initialization first, then the remaining init steps
   Promise.all([initData('./data/trackers.json'), 
-               initData('./data/countries.json'), 
+               initData('./data/countries.json'),
+               initData('./data/companies.txt'),
               ])
     .then(function(data) {
       initDataFormat(data)    // get data ready for use
@@ -230,19 +231,8 @@ function initDataFormat(data) {
   // set country data equal to the second data object from the initData() Promise()
   DATA.country_data = data[1];
 
-  // organize parent company data into an array of companies for company search, which is actually a search on parent
-  // Assumptions: semi-colon delimited list, with percent ownership in [10%] brackets (we replace)
-  let companies = [];
-  data[0].forEach(function(item) {
-    let items = item.parent.replace(/ \[[\s\S]*?\]/g, '').split(';');
-    items.forEach(function(i) {
-      i = i.trim();
-      if (i == 'other') return;
-      companies.push(i);
-    });
-  });
-  DATA.companies = uniq(companies);
-  console.log(DATA.companies);
+  // organize company data into an array of companies
+  DATA.companies = data[2].split('\n');
 }
 
 // init state from allowed params, or not

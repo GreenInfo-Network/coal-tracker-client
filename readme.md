@@ -10,7 +10,7 @@ The app is hosted on GH pages and the source is embedded on this page: https://g
 ## Data
 
 #### Companies
-See initDataFormat().
+Typically the client will send a unique list of parent companies. Save this as `data/companies.txt`
 
 #### Trackers
 The coal plants themselves are managed by the client in XLS. Export to CSV, and then run it through this script `documentation/tracker-data-script/trackers2json.py` to generate the data in `json` format. When complete, replace `data/trackers.json` with the new file. More information: `documentation\tracker_data_update.md`
