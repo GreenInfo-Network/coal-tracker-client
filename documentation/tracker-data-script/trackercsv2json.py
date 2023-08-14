@@ -15,18 +15,18 @@ def lower_first(iterator):
 # the following dictionary maps our fieldnames to those in the incoming CSV (lower cased here to avoid one area of potential conflict)
 # The script will note missing fields
 field_lookup = {
-    'tracker id': 'id',
-    'wiki page': 'url',
+    'gem unit/phase id': 'id',
+    'wiki url': 'url',
     'country': 'country',
     'subnational unit (province, state)': 'subnational',
-    'unit': 'unit',
-    'plant': 'plant',
-    'chinese name': 'chinese_name',
+    'unit name': 'unit',
+    'plant name (local)': 'plant',
+    'plant name (other)': 'plant_other',
     'owner': 'owner',
     'parent': 'parent',
     'capacity (mw)': 'capacity',
     'status': 'status',
-    'year': 'year',
+    'start year': 'year',
     'region': 'region',
     'latitude': 'lat',
     'longitude': 'lng',
@@ -56,7 +56,7 @@ for index, row in enumerate(reader):
         continue
     if row['status'] == '':
         continue
-    if row['tracker id']== '':
+    if row['gem unit/phase id']== '':
         continue
 
     # seems like we're generally good. Now iterate this rows values, and clean and cast as needed
@@ -65,7 +65,7 @@ for index, row in enumerate(reader):
         # make sure this item is in our list
         if item in lookup_keys:
             # id: create a numeric id, as this is faster for the search index
-            if item == 'tracker id':
+            if item == 'gem unit/phase id':
                 value = index + 1
             # latitude and longitude: convert to float, and also skip empty values
             elif item == 'latitude' or item == 'longitude':
