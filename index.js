@@ -50,8 +50,8 @@ CONFIG.country_no_style = { opacity: 0, fillOpacity: 0 };
 CONFIG.attributes = {
   'id': {name: 'Tracker ID'},
   'unit': {name: 'Unit'},
-  'plant': {name: 'Plant name (local)'},
-  'plant_other': {name: 'Plant name (other)'},
+  'plant': {name: 'Plant name'},
+  'plant_local': {name: 'Plant name (local)'},
   'url': {name: 'Wiki page'},
   'owner': {name: 'Owner'}, 
   'parent': {name: 'Parent'},
